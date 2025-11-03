@@ -1,0 +1,24 @@
+<div class="container">
+  <h1>{{ perguntaFiltro }}</h1>
+  <div class="div-btns">
+    <input
+      type="radio"
+      [id]="'esquerda' + nameFiltro"
+      [name]="nameFiltro"
+      [value]="escolhasFiltro[0]"
+      [(ngModel)]="escolha"
+      (click)="atualizaFiltro(escolhasFiltro[0])"
+      checked
+    />
+    <label [for]="'esquerda' + nameFiltro" class="label-btn">{{ escolhasFiltro[0] }}</label>
+    <input
+      type="radio"
+      [id]="'direita' + nameFiltro"
+      [name]="nameFiltro"
+      [value]="escolhasFiltro[1]"
+      [(ngModel)]="escolha"
+      (click)="atualizaFiltro(escolhasFiltro[1])"
+    />
+    <label [for]="'direita' + nameFiltro" class="label-btn">{{ escolhasFiltro[1] }}</label>
+  </div>
+</div>

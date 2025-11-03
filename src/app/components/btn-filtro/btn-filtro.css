@@ -1,0 +1,58 @@
+.container {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 5em 0;
+}
+
+h1 {
+  width: 100%;
+  font-size: 2.5em;
+}
+
+.div-btns {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.label-btn {
+  display: inline-block;
+  padding: 0.7rem 1.2rem;
+  border-radius: 10px;
+  background: rgba(8, 51, 68, 0.06);
+  color: #000000;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: background 0.18s ease, transform 0.08s ease, border-color 0.12s ease;
+  min-width: 160px;
+  text-align: center;
+}
+
+/* Oculta o input original */
+input[type='radio'] {
+  display: none;
+}
+
+/* Quando o radio estiver selecionado */
+input[type='radio']:checked + .label-btn {
+  transform: translateY(-2px);
+  background: linear-gradient(90deg, #66ff00 0%, #c8f10f 100%);
+}
+
+/* Efeito hover */
+.label-btn:hover {
+  background-color: #f2ffe6;
+}
+
+@media (max-width: 400px) {
+  .label-btn {
+    display: inline-block;
+    padding: 0px 0px;
+  }
+}

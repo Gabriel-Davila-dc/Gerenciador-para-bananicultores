@@ -1,0 +1,182 @@
+/*  ---------------------------------------  HEADER  --------------------------------------------------------------------------------------*/
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 100%;
+  background: rgb(166, 255, 0);
+  padding: 0px 0px;
+  color: white;
+  transition: top 0.3s;
+
+  top: 0;
+  z-index: 500;
+}
+img {
+  max-width: 3.5em;
+}
+
+#nav-mobile {
+  display: flex;
+  size: 0;
+}
+
+#menus-mobilenoshow {
+  display: none;
+}
+
+#menus-mobile {
+  display: flex;
+  top: 0;
+  bottom: 0;
+  padding: 0px 0px;
+  margin: 0px;
+
+  width: 100%;
+  background-color: #a6ff00;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 2000; /* acima do header */
+  transform: translateX(100%); /* começa fora da tela */
+  transition: transform 0.3s ease-in-out;
+  transform: translateX(0); /* entra na tela */
+
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#menus-mobile li a {
+  padding: 0.2em 2em;
+  font-size: 3em;
+  text-decoration: none;
+
+  color: #ffffff;
+}
+#menus-mobile li a:hover {
+  text-decoration: underline;
+  text-decoration-color: #ffffff;
+  text-decoration-thickness: 3px;
+}
+#menus-mobile li {
+  padding: 1.5em 0em;
+  list-style: none;
+}
+#menus-mobile li:last-child a {
+  background: linear-gradient(to right, rgb(60, 255, 0), rgb(207, 243, 0));
+  border: 1pxsolid black;
+  transition: 2s;
+  border-radius: 17px;
+}
+#menus-mobile li:last-child a:hover {
+  background: linear-gradient(to right, rgb(96, 214, 0), rgb(69, 243, 0));
+  border-radius: 17px;
+  text-decoration: none;
+}
+#menus-mobile ul {
+  list-style: none;
+}
+
+/* LOGO */
+#header .logo {
+  font-size: 1rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+/* BURG */
+#burg {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+}
+
+/* MENU */
+#header nav ul {
+  list-style: none;
+  display: flex;
+  min-width: 100%;
+  gap: 1vw;
+  margin-right: 15px;
+}
+
+#header nav a {
+  text-decoration: none;
+  color: white;
+  font-size: 1.7rem;
+  padding: 1vh 1vw;
+  border-radius: 14px;
+  transition: color 0.3s;
+  background: rgba(179, 255, 3, 0.219);
+}
+
+#header nav a:hover {
+  background: rgba(43, 255, 0, 0.733);
+}
+
+@media (max-width: 650px) {
+  #header nav {
+    display: flex;
+    flex-direction: row;
+  }
+
+  #burg {
+    display: flex;
+    font-size: 3.5rem;
+    margin-right: 5vw;
+    left: 20px;
+    color: #f0f0f0;
+  }
+
+  #header #menus {
+    display: none;
+  }
+}
+
+@media (max-width: 1500px) {
+  html {
+    font-size: 0.9rem;
+  }
+}
+@media (max-width: 1000px) {
+  html {
+    font-size: 0.9rem;
+  }
+}
+@media (max-width: 900px) {
+  html {
+    font-size: 0.8rem;
+  }
+}
+@media (max-width: 800px) {
+  html {
+    font-size: 0.7rem;
+  }
+}
+@media (max-width: 700px) {
+  html {
+    font-size: 0.6rem;
+  }
+}
+@media (max-width: 500px) {
+  html {
+    font-size: 0.55rem;
+  }
+}
+@media (max-width: 450px) {
+  html {
+    font-size: 0.5rem;
+  }
+}
+@media (max-width: 400px) {
+  html {
+    font-size: 0.45rem;
+  }
+}
+@media (max-width: 350px) {
+  html {
+    font-size: 0.4rem;
+  }
+}
