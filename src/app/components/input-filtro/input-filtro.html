@@ -1,0 +1,46 @@
+<div class="container">
+  <label>Peso da Caixa</label>
+
+  <input
+    type="number"
+    [(ngModel)]="peso"
+    placeholder="20kg"
+    (keyup)="calcular(peso, preco, quantidade)"
+  />
+
+  <label>{{ inputFiltro.title }}</label>
+
+  <input
+    type="number"
+    [(ngModel)]="preco"
+    [name]="inputFiltro.name"
+    placeholder="R$40"
+    (keyup)="calcular(peso, preco, quantidade)"
+  />
+
+  <label>Quantidade de Caixas</label>
+
+  <input
+    type="number"
+    [(ngModel)]="quantidade"
+    placeholder="100"
+    (keyup)="calcular(peso, preco, quantidade)"
+  />
+
+  <div class="resultado">
+    <div class="resumos">
+      <label for="">Valor Total:</label>
+      <label id="resultado-valor">{{ resultados[0] }}</label>
+    </div>
+    <div class="resumos">
+      <label id="resultado-peso">Peso Total:</label>
+      <label id="resultado-valor">{{ resultados[1] }}</label>
+    </div>
+    <div class="resumos">
+      <label id="resultado-caixa">{{ inputFiltro.result }}</label>
+      <label id="resultado-valor">{{ resultados[2] }}</label>
+    </div>
+  </div>
+
+  <button>Salvar</button>
+</div>

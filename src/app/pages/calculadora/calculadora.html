@@ -11,4 +11,6 @@
   [nameFiltro]="name2"
   (filtroEscolhido)="setFiltroPeso($event)"
 ></app-btn-filtro>
-<p>Você escolheu: {{ filtroPeso }}</p>
+
+<app-input-filtro [inputFiltro]="filtroPeso === 'Caixa' ? inputPrecoCaixa : inputPrecoQuilo">
+</app-input-filtro>
