@@ -29,8 +29,11 @@ export class InputFiltro {
       return;
     }
     const c = new Contas();
-    //Chama o servise parafazer  a  conta e retornar um array
-    this.resultados = c.caixa(peso, preco, quantidade);
+    //Chama o servise para fazer a conta e retornar um array
+    this.inputFiltro.name === 'precoCaixa'
+      ? (this.resultados = c.caixa(peso, preco, quantidade))
+      : (this.resultados = c.quilo(peso, preco, quantidade));
+
     console.log(this.resultados[0]);
   }
 }

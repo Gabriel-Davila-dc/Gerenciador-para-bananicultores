@@ -1,16 +1,18 @@
-<app-btn-filtro
-  [perguntaFiltro]="pergunta1"
-  [escolhasFiltro]="escolha1"
-  [nameFiltro]="name1"
-  (filtroEscolhido)="setFiltroNegocio($event)"
-></app-btn-filtro>
-<p>Você escolheu: {{ filtroNegocio }}</p>
-<app-btn-filtro
-  [perguntaFiltro]="pergunta2"
-  [escolhasFiltro]="escolha2"
-  [nameFiltro]="name2"
-  (filtroEscolhido)="setFiltroPeso($event)"
-></app-btn-filtro>
+<div class="container">
+  <app-btn-filtro
+    [perguntaFiltro]="pergunta1"
+    [escolhasFiltro]="escolha1"
+    [nameFiltro]="name1"
+    (filtroEscolhido)="setFiltroNegocio($event)"
+  ></app-btn-filtro>
 
-<app-input-filtro [inputFiltro]="filtroPeso === 'Caixa' ? inputPrecoCaixa : inputPrecoQuilo">
-</app-input-filtro>
+  <app-btn-filtro
+    [perguntaFiltro]="pergunta2"
+    [escolhasFiltro]="escolha2"
+    [nameFiltro]="name2"
+    (filtroEscolhido)="setFiltroPeso($event)"
+  ></app-btn-filtro>
+
+  <app-input-filtro [inputFiltro]="filtroPeso === 'Caixa' ? inputPrecoCaixa : inputPrecoQuilo">
+  </app-input-filtro>
+</div>

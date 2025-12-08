@@ -116,7 +116,7 @@ img {
   background: rgba(43, 255, 0, 0.733);
 }
 
-@media (max-width: 650px) {
+@media (max-width: 800px) {
   #header nav {
     display: flex;
     flex-direction: row;
@@ -133,6 +133,10 @@ img {
   #header #menus {
     display: none;
   }
+
+  html {
+    font-size: 0.7rem;
+  }
 }
 
 @media (max-width: 1500px) {
@@ -148,11 +152,6 @@ img {
 @media (max-width: 900px) {
   html {
     font-size: 0.8rem;
-  }
-}
-@media (max-width: 800px) {
-  html {
-    font-size: 0.7rem;
   }
 }
 @media (max-width: 700px) {

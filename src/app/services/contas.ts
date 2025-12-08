@@ -11,4 +11,11 @@ export class Contas {
 
     return [valorTotal, pesoTotal, valorPorQuilo];
   }
+  quilo(peso: number, preco: number, quantidade: number): number[] {
+    const valorTotal = preco * (quantidade * peso); // 💰 total em dinheiro
+    const pesoTotal = peso * quantidade; // ⚖️ total em quilos
+    const valorPorCaixa = preco * peso; // 🧮 preço médio por quilo
+
+    return [valorTotal, pesoTotal, valorPorCaixa];
+  }
 }
