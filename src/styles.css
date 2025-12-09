@@ -9,4 +9,10 @@ body {
 body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
+
+  min-height: 100vh;
+  background: linear-gradient(180deg, #ffffff 70%, rgba(94, 255, 0, 0.733));
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
 }

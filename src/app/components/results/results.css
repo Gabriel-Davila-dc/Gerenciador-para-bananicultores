@@ -1,0 +1,27 @@
+.resultado {
+  display: flex;
+  min-width: 98%;
+  flex-direction: column;
+  justify-content: center;
+  justify-self: center;
+  align-items: start;
+  margin: 2em 0;
+  background-color: rgb(255, 255, 255);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.335);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.447);
+
+  padding: 2em 0em;
+}
+label {
+  font-size: 1.8em;
+  margin: 0.5em;
+  color: rgb(0, 0, 52);
+}
+.resumos {
+  color: rgb(0, 0, 52);
+  font-size: 1.2em;
+  border-radius: 7px;
+
+  margin: 1.5em 0em;
+}

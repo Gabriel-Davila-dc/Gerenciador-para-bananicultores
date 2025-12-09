@@ -12,7 +12,17 @@
     [nameFiltro]="name2"
     (filtroEscolhido)="setFiltroPeso($event)"
   ></app-btn-filtro>
+  <div class="calculos">
+    <app-input-filtro
+      [inputFiltro]="filtroPeso === 'Caixa' ? inputPrecoCaixa : inputPrecoQuilo"
+      (valoresEscolhidos)="setValores($event)"
+    >
+    </app-input-filtro>
 
-  <app-input-filtro [inputFiltro]="filtroPeso === 'Caixa' ? inputPrecoCaixa : inputPrecoQuilo">
-  </app-input-filtro>
+    <app-results
+      [inputFiltro]="filtroPeso === 'Caixa' ? inputPrecoCaixa : inputPrecoQuilo"
+      [resultados]="resultados"
+    ></app-results>
+    <button>Salvar</button>
+  </div>
 </div>
