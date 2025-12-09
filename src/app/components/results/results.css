@@ -1,4 +1,4 @@
-.resultado {
+.resultado-simples {
   display: flex;
   min-width: 98%;
   flex-direction: column;
@@ -13,6 +13,45 @@
 
   padding: 2em 0em;
 }
+.resultado-boa {
+  display: flex;
+  min-width: 95%;
+  flex-direction: column;
+  justify-content: center;
+  justify-self: center;
+  align-items: start;
+  margin: 0.5em 0;
+  background-color: rgb(255, 255, 255);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.335);
+  border-left: 0.4em solid rgb(157, 255, 0);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.447);
+
+  padding: 2em 0em;
+}
+.resultado-fraca {
+  display: flex;
+  min-width: 95%;
+  flex-direction: column;
+  justify-content: center;
+  justify-self: center;
+  align-items: start;
+  margin: 0.5em 0;
+  background-color: rgb(255, 255, 255);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.335);
+  border-left: 0.4em solid rgb(242, 255, 0);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.447);
+
+  padding: 2em 0em;
+}
+
+.resultado-simples label {
+  font-size: 1.8em;
+  margin: 0.5em;
+  color: rgb(0, 0, 52);
+}
+
 label {
   font-size: 1.8em;
   margin: 0.5em;
@@ -20,8 +59,8 @@ label {
 }
 .resumos {
   color: rgb(0, 0, 52);
-  font-size: 1.2em;
+  font-size: 1em;
   border-radius: 7px;
-
+  padding: 0em 3em 0em 0em;
   margin: 1.5em 0em;
 }

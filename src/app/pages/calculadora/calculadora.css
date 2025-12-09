@@ -11,7 +11,7 @@
   flex-direction: column;
 
   border-radius: 1em;
-  padding: 1em 1px;
+  padding: 0em 1px;
   width: 97%;
 }
 
@@ -41,6 +41,15 @@ button:hover {
 
 @media (min-width: 1024px) {
   .container {
-    width: 50%;
+    width: 55%;
+  }
+  .tela-grande {
+    display: flex;
+    max-width: 100%;
+    flex-direction: row;
+    justify-items: center;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 2em;
   }
 }

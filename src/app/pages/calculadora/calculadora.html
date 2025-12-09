@@ -1,4 +1,5 @@
 <div class="container">
+  <!-- Primeiros filtros -->
   <app-btn-filtro
     [perguntaFiltro]="pergunta1"
     [escolhasFiltro]="escolha1"
@@ -12,17 +13,55 @@
     [nameFiltro]="name2"
     (filtroEscolhido)="setFiltroPeso($event)"
   ></app-btn-filtro>
-  <div class="calculos">
-    <app-input-filtro
-      [inputFiltro]="filtroPeso === 'Caixa' ? inputPrecoCaixa : inputPrecoQuilo"
-      (valoresEscolhidos)="setValores($event)"
-    >
-    </app-input-filtro>
 
+  <div class="calculos">
+    <!-- ✅ se for simples -->
+    <ng-container *ngIf="filtroNegocio === 'Simples'">
+      <app-input-filtro
+        [inputFiltro]="filtroPeso === 'Caixa' ? inputPrecoCaixa : inputPrecoQuilo"
+        (valoresEscolhidos)="setValores($event, 'simples')"
+      ></app-input-filtro>
+    </ng-container>
+
+    <!-- ✅ se for classificada -->
+    <ng-container *ngIf="filtroNegocio === 'Classificada'">
+      <div class="tela-grande">
+        <app-input-filtro
+          [inputFiltro]="filtroPeso === 'Caixa' ? inputPrecoCaixa : inputPrecoQuilo"
+          [qualidade]="'boa'"
+          (valoresEscolhidos)="setValores($event, 'boa')"
+        ></app-input-filtro>
+        <app-input-filtro
+          [inputFiltro]="filtroPeso === 'Caixa' ? inputPrecoCaixa : inputPrecoQuilo"
+          [qualidade]="'fraca'"
+          (valoresEscolhidos)="setValores($event, 'fraca')"
+        ></app-input-filtro>
+      </div>
+    </ng-container>
+
+    <!-- ✅ se for classificada: mostrar resultados extras -->
+    <ng-container *ngIf="filtroNegocio === 'Classificada'">
+      <div class="tela-grande">
+        <app-results
+          [inputFiltro]="filtroPeso === 'Caixa' ? inputPrecoCaixa : inputPrecoQuilo"
+          [qualidade]="'boa'"
+          [resultados]="resultadosBoa"
+        ></app-results>
+
+        <app-results
+          [inputFiltro]="filtroPeso === 'Caixa' ? inputPrecoCaixa : inputPrecoQuilo"
+          [qualidade]="'fraca'"
+          [resultados]="resultadosFraca"
+        ></app-results>
+      </div>
+    </ng-container>
+
+    <!-- ✅ resultado geral sempre visível -->
     <app-results
       [inputFiltro]="filtroPeso === 'Caixa' ? inputPrecoCaixa : inputPrecoQuilo"
       [resultados]="resultados"
     ></app-results>
+
     <button>Salvar</button>
   </div>
 </div>
