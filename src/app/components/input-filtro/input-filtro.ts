@@ -11,16 +11,23 @@ import { FormsModule } from '@angular/forms';
 export class InputFiltro {
   @Input() inputFiltro!: { name: string; title: string };
   @Input() qualidade!: string;
+  @Input() valores!: any[];
 
   @Output() valoresEscolhidos = new EventEmitter<number[]>();
 
-  peso!: number;
-  preco!: number;
-  quantidade!: number;
+  peso: number = this.valores ? this.valores[0] : null;
+  preco: number = this.valores ? this.valores[1] : null;
+  quantidade: number = this.valores ? this.valores[2] : null;
   resultados: number[] = [0, 0, 0];
   estiloEscolhido: string = 'container-simples';
 
   ngOnChanges() {
+    this.peso = this.valores && this.valores[0] !== 0 ? this.valores[0] : null;
+    this.preco = this.valores && this.valores[1] !== 0 ? this.valores[1] : null;
+    this.quantidade = this.valores && this.valores[2] !== 0 ? this.valores[2] : null;
+    console.log(this.qualidade, '   ', this.valores);
+
+    console.log(this.peso);
     if (this.qualidade === 'boa') {
       this.estiloEscolhido = 'container-boa';
     } else if (this.qualidade === 'fraca') {

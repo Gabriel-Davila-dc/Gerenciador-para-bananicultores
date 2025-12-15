@@ -1,7 +1,13 @@
 <div [ngClass]="estiloEscolhido">
   <label>Peso da Caixa</label>
 
-  <input type="number" [(ngModel)]="peso" placeholder="20kg" (keyup)="atualizaInput()" />
+  <input
+    type="number"
+    [value]="peso"
+    [(ngModel)]="peso"
+    placeholder="20kg"
+    (keyup)="atualizaInput()"
+  />
 
   <label>{{ inputFiltro.title }}</label>
 
@@ -9,11 +15,18 @@
     type="number"
     [(ngModel)]="preco"
     [name]="inputFiltro.name"
+    [value]="preco"
     placeholder="R$40"
     (keyup)="atualizaInput()"
   />
 
   <label>Quantidade de Caixas</label>
 
-  <input type="number" [(ngModel)]="quantidade" placeholder="100" (keyup)="atualizaInput()" />
+  <input
+    type="number"
+    [value]="quantidade"
+    [(ngModel)]="quantidade"
+    placeholder="100"
+    (keyup)="atualizaInput()"
+  />
 </div>

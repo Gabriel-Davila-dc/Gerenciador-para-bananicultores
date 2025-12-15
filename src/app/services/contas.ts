@@ -28,10 +28,17 @@ export class Contas {
 
     return [ValorTotal, PesoTotal, valorPorQuilo];
   }
-  mediaQuilo(boa: number[], fraca: number[]): number[] {
+  mediaQuilo(
+    boa: number[],
+    fraca: number[],
+    quantidadeBoa: number,
+    quantidadeFraca: number
+  ): number[] {
     const ValorTotal = boa[0] + fraca[0];
     const PesoTotal = boa[1] + fraca[1];
-    const valorPorQuilo = (ValorTotal / PesoTotal) * boa[0];
+    const caixas = quantidadeBoa + quantidadeFraca;
+    const valorPorQuilo = (ValorTotal / PesoTotal) * (PesoTotal / caixas);
+    console.log(ValorTotal + '|' + PesoTotal + ' x ' + (PesoTotal + '|' + caixas));
 
     return [ValorTotal, PesoTotal, valorPorQuilo];
   }

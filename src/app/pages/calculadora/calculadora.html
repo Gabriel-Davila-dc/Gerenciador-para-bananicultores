@@ -19,6 +19,7 @@
     <ng-container *ngIf="filtroNegocio === 'Simples'">
       <app-input-filtro
         [inputFiltro]="filtroPeso === 'Caixa' ? inputPrecoCaixa : inputPrecoQuilo"
+        [valores]="valores"
         (valoresEscolhidos)="setValores($event, 'simples')"
       ></app-input-filtro>
     </ng-container>
@@ -29,11 +30,13 @@
         <app-input-filtro
           [inputFiltro]="filtroPeso === 'Caixa' ? inputPrecoCaixa : inputPrecoQuilo"
           [qualidade]="'boa'"
+          [valores]="valoresBoa"
           (valoresEscolhidos)="setValores($event, 'boa')"
         ></app-input-filtro>
         <app-input-filtro
           [inputFiltro]="filtroPeso === 'Caixa' ? inputPrecoCaixa : inputPrecoQuilo"
           [qualidade]="'fraca'"
+          [valores]="valoresFraca"
           (valoresEscolhidos)="setValores($event, 'fraca')"
         ></app-input-filtro>
       </div>
@@ -41,6 +44,7 @@
 
     <!-- ✅ se for classificada: mostrar resultados extras -->
     <ng-container *ngIf="filtroNegocio === 'Classificada'">
+      <h3>Resultados classificados:</h3>
       <div class="tela-grande">
         <app-results
           [inputFiltro]="filtroPeso === 'Caixa' ? inputPrecoCaixa : inputPrecoQuilo"
@@ -57,6 +61,7 @@
     </ng-container>
 
     <!-- ✅ resultado geral sempre visível -->
+    <h3>resultado:</h3>
     <app-results
       [inputFiltro]="filtroPeso === 'Caixa' ? inputPrecoCaixa : inputPrecoQuilo"
       [resultados]="resultados"
