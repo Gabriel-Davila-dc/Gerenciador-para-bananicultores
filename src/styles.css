@@ -16,3 +16,28 @@ body {
   background-attachment: fixed;
   background-size: cover;
 }
+
+:root {
+  /* CORES PRINCIPAIS */
+  --azul-escuro: rgb(0, 0, 52);
+  --azul-escuro-2: rgb(0, 0, 54);
+
+  --verde-principal: rgb(170, 255, 0);
+  --verde-hover: rgb(157, 255, 0);
+  --verde-bom: rgb(82, 205, 0);
+  --verde-fraco: rgb(207, 244, 0);
+  --verde-fundo: rgba(226, 252, 58, 0.467);
+
+  /* BACKGROUNDS */
+  --bg-claro: rgb(245, 245, 245);
+  --bg-branco: rgb(250, 250, 250);
+  --bg-input: rgba(240, 248, 255, 0.501);
+
+  /* BORDAS E SOMBRAS */
+  --borda-preta: rgb(0, 0, 0);
+  --borda-cinza: rgba(0, 0, 0, 0.335);
+  --borda-input: rgb(107, 108, 107);
+  --sombra: 0 8px 24px rgba(0, 0, 0, 0.447);
+}
+
+/* ========================= */

@@ -1,13 +1,12 @@
 .card {
   display: flex;
-  border: 1px solid #a1bc36;
+  border: 1px solid var(--verde-bom);
   border-radius: 8px;
   flex-direction: column;
   min-width: 80vw;
   padding-bottom: 1em;
   height: auto;
-
-  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--sombra-leve);
 }
 
 .resumo {
@@ -19,12 +18,9 @@
 }
 
 label {
-  margin: 1em 0em;
+  margin: 1em 1em 8px;
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 8px;
-  margin-left: 1em;
-  margin-right: 1em;
 }
 
 @media (min-width: 1000px) {

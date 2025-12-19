@@ -1,5 +1,5 @@
 export interface Categoria {
-  tipo: 'boa' | 'fraca' | 'simples';
+  tipo: string;
   pesoCaixa: number;
   precoCaixa: number;
   caixas: number;

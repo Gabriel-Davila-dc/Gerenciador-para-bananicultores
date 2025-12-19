@@ -21,12 +21,18 @@ export class Contas {
     return [valorTotal, pesoTotal, valorPorCaixa];
   }
 
-  mediaCaixa(boa: number[], fraca: number[]): number[] {
+  mediaCaixa(
+    boa: number[],
+    fraca: number[],
+    quantidadeBoa: number,
+    quantidadeFraca: number
+  ): number[] {
     const ValorTotal = boa[0] + fraca[0];
     const PesoTotal = boa[1] + fraca[1];
     const valorPorQuilo = ValorTotal / PesoTotal;
-
-    return [ValorTotal, PesoTotal, valorPorQuilo];
+    const caixas = quantidadeBoa + quantidadeFraca;
+    const valorPorCaixa = (ValorTotal / PesoTotal) * (PesoTotal / caixas);
+    return [ValorTotal, PesoTotal, valorPorQuilo, valorPorCaixa];
   }
   mediaQuilo(
     boa: number[],
@@ -36,10 +42,10 @@ export class Contas {
   ): number[] {
     const ValorTotal = boa[0] + fraca[0];
     const PesoTotal = boa[1] + fraca[1];
+    const valorPorQuilo = ValorTotal / PesoTotal;
     const caixas = quantidadeBoa + quantidadeFraca;
-    const valorPorQuilo = (ValorTotal / PesoTotal) * (PesoTotal / caixas);
-    console.log(ValorTotal + '|' + PesoTotal + ' x ' + (PesoTotal + '|' + caixas));
+    const valorPorCaixa = (ValorTotal / PesoTotal) * (PesoTotal / caixas);
 
-    return [ValorTotal, PesoTotal, valorPorQuilo];
+    return [ValorTotal, PesoTotal, valorPorCaixa, valorPorQuilo];
   }
 }

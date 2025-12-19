@@ -25,9 +25,7 @@ export class InputFiltro {
     this.peso = this.valores && this.valores[0] !== 0 ? this.valores[0] : null;
     this.preco = this.valores && this.valores[1] !== 0 ? this.valores[1] : null;
     this.quantidade = this.valores && this.valores[2] !== 0 ? this.valores[2] : null;
-    console.log(this.qualidade, '   ', this.valores);
 
-    console.log(this.peso);
     if (this.qualidade === 'boa') {
       this.estiloEscolhido = 'container-boa';
     } else if (this.qualidade === 'fraca') {

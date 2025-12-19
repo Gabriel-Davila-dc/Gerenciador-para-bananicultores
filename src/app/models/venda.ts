@@ -6,10 +6,12 @@ export interface Venda {
 
   nome: string;
   data: Date;
+  tipo: string;
+
+  simples: Categoria;
 
   boa: Categoria;
   fraca: Categoria;
 
   valorTotal: ResumoTotal;
 }
-

@@ -6,11 +6,12 @@
   justify-self: center;
   align-items: center;
   text-align: center;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.447);
-  background-color: rgb(250, 250, 250);
+  box-shadow: var(--sombra);
+  background-color: var(--bg-branco);
   border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.335);
+  border: 1px solid var(--borda-cinza);
 }
+
 .container-boa {
   display: flex;
   width: 98%;
@@ -19,12 +20,12 @@
   justify-self: center;
   align-items: center;
   text-align: center;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.447);
-  background-color: rgb(250, 250, 250);
+  box-shadow: var(--sombra);
+  background-color: var(--bg-branco);
   margin-top: 0.5em;
   border-radius: 20px;
-  border: 1px solid rgba(0, 0, 0, 0.335);
-  border-left: 0.5em solid rgb(82, 205, 0);
+  border: 1px solid var(--borda-cinza);
+  border-left: 0.5em solid var(--verde-bom);
 }
 
 .container-fraca {
@@ -36,31 +37,32 @@
   align-items: center;
   text-align: center;
   margin-top: 0.5em;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.447);
-  background-color: rgb(250, 250, 250);
+  box-shadow: var(--sombra);
+  background-color: var(--bg-branco);
   border-radius: 20px;
-  border: 1px solid rgba(0, 0, 0, 0.335);
-  border-left: 0.5em solid rgb(207, 244, 0);
+  border: 1px solid var(--borda-cinza);
+  border-left: 0.5em solid var(--verde-fraco);
 }
 
 label {
   font-size: 1.8em;
   margin: 0.5em;
-  color: rgb(0, 0, 54);
+  color: var(--azul-escuro-2);
 }
+
 input {
-  color: rgb(0, 0, 52);
+  color: var(--azul-escuro);
   width: 80%;
   font-size: 2.5em;
   border-radius: 7px;
-  background-color: rgba(240, 248, 255, 0.501);
-  border-right: 3px solid rgb(107, 108, 107);
+  background-color: var(--bg-input);
+  border-right: 3px solid var(--borda-input);
   margin-bottom: 1em;
 }
+
 .resumos {
-  color: rgb(0, 0, 52);
+  color: var(--azul-escuro);
   font-size: 1.2em;
   border-radius: 7px;
-
   margin: 1.5em 0em;
 }
