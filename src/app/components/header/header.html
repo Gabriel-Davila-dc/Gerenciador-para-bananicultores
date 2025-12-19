@@ -6,17 +6,18 @@
   <nav>
     <div id="burg" (click)="showMenu()">☰</div>
     <ul id="menus">
-      <li><a href="#sec1">Início</a></li>
-      <li><a href="#sec1">Gerenciador</a></li>
-      <li><a href="#sobre">Sobre</a></li>
-      <li><a href="#contato">Contato</a></li>
+      <li><a routerLink="/">Início</a></li>
+      <li><a routerLink="/gerenciador">Gerenciador</a></li>
+      <li><a routerLink="/sobre">Sobre</a></li>
+      <li><a routerLink="/contato">Contato</a></li>
     </ul>
   </nav>
 </header>
 <nav id="nav-mobile">
   <ul [id]="menusMobile" (click)="noShowMenu()">
-    <li><a href="#sec1">Calculadora</a></li>
-    <li><a href="#sobre">Sobre</a></li>
-    <li><a href="#contato">Vendas</a></li>
+    <li><a routerLink="/">Início</a></li>
+    <li><a routerLink="/gerenciador">Gerenciador</a></li>
+    <li><a routerLink="/sobre">Sobre</a></li>
+    <li><a routerLink="/contato">Contato</a></li>
   </ul>
 </nav>

@@ -5,11 +5,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { Calculadora } from './pages/calculadora/calculadora';
 import { Header } from './components/header/header';
+import { Gerenciador } from './pages/gerenciador/gerenciador';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MatSlideToggle, MatToolbarModule, MatButtonModule, Calculadora, Header],
+  imports: [RouterOutlet, MatSlideToggle, MatToolbarModule, MatButtonModule, Header],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
