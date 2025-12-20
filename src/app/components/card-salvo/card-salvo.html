@@ -16,11 +16,11 @@ aparece só quando pequeno
   <div *ngIf="minimizado">
     <div class="resumo">
       <label for="">Quilo:</label>
-      <label for="">{{ ResumoFinal.mediaQuilos }}</label>
+      <label for="">{{ formatar.dinheiro(ResumoFinal.mediaQuilos) }}</label>
     </div>
     <div class="resumo">
       <label for="">Valor:</label>
-      <label for="">R$ {{ ResumoFinal.valor }}</label>
+      <label for="">R$ {{ formatar.dinheiro(ResumoFinal.valor) }}</label>
     </div>
   </div>
   <!--
@@ -36,38 +36,59 @@ aparece quando grande
       <label for="">{{ venda.tipo }}</label>
     </div>
 
-    <div class="resumo">
-      <label for="">Peso da Caixa:</label>
-      <label for="">{{ venda.simples.pesoCaixa }} kg</label>
+    <div *ngIf="venda.tipo === 'Simples'">
+      <app-result-card
+        [tipo]="venda.tipo"
+        [preco]="venda.simples.precoCaixa"
+        [peso]="venda.simples.pesoCaixa"
+        [quantidade]="venda.simples.caixas"
+      ></app-result-card>
     </div>
 
-    <div class="resumo">
-      <label for="">Valor da Caixa:</label>
-      <label for="">R$ {{ venda.simples.precoCaixa }}</label>
+    <div *ngIf="venda.tipo === 'Classificada'">
+      <app-result-card
+        [tipo]="venda.boa.tipo"
+        [preco]="venda.boa.precoCaixa"
+        [peso]="venda.boa.pesoCaixa"
+        [quantidade]="venda.boa.caixas"
+        [valorfinal]="venda.boa.valorTotal"
+        [pesofinal]="venda.boa.pesoTotal"
+        [quilo]="venda.boa.precoQuilo"
+      ></app-result-card>
+
+      <app-result-card
+        [tipo]="venda.fraca.tipo"
+        [preco]="venda.fraca.precoCaixa"
+        [peso]="venda.fraca.pesoCaixa"
+        [quantidade]="venda.fraca.caixas"
+        [valorfinal]="venda.fraca.valorTotal"
+        [pesofinal]="venda.fraca.pesoTotal"
+        [quilo]="venda.fraca.precoQuilo"
+      ></app-result-card>
     </div>
 
-    <div class="resumo">
-      <label for="">quantidade:</label>
-      <label for=""> {{ venda.simples.caixas }}</label>
-    </div>
+    <!--
+sempre aparece o result
+-->
 
+    <p>Valor Final</p>
     <div class="resumo">
       <label for="">Valor Total:</label>
-      <label for="">R$ {{ venda.simples.valorTotal }}</label>
+      <label for="">R$ {{ formatar.dinheiro(ResumoFinal.valor) }}</label>
     </div>
     <div class="resumo">
-      <label for="">peso :</label>
-      <label for=""> {{ venda.simples.pesoTotal }} kg</label>
+      <label for="">Peso Total:</label>
+      <label for=""> {{ ResumoFinal.pesos }} kg</label>
     </div>
     <div class="resumo">
       <label for="">Quilo:</label>
-      <label for="">R$ {{ venda.simples.precoQuilo }}</label>
+      <label for="">R$ {{ formatar.dinheiro(ResumoFinal.mediaQuilos) }}</label>
     </div>
-    <div class="resumo"></div>
   </div>
 
+  <!-- BOTÕES -->
   <div class="div-botoes">
-    <button mat-icon-button color="warn">
+    <button mat-icon-button color="warn" (click)="apagar()">
       <mat-icon>delete</mat-icon>
     </button>
 

@@ -13,6 +13,9 @@ import { Venda } from '../../models/venda';
 import { Categoria } from '../../models/categoria';
 import { ResumoTotal } from '../../models/resumo-total';
 import { Salvar } from '../../services/salvar';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 /* =====================
    Tipos auxiliares
@@ -24,7 +27,17 @@ type Resultados = [valor: number, peso: number, preco: number];
 @Component({
   selector: 'app-calculadora',
   standalone: true,
-  imports: [CommonModule, BtnFiltro, InputFiltro, Results, MatButtonModule, MatIconModule],
+  imports: [
+    CommonModule,
+    BtnFiltro,
+    InputFiltro,
+    Results,
+    MatButtonModule,
+    MatIconModule,
+    MatFormField,
+    MatInputModule,
+    FormsModule,
+  ],
   templateUrl: './calculadora.html',
   styleUrl: './calculadora.css',
 })
@@ -40,6 +53,8 @@ export class Calculadora {
   pergunta2 = 'Como você mede o preço?';
   name2 = 'pesa';
   escolha2 = ['Caixa', 'Quilo'];
+
+  moverCaminhao = false;
 
   /* =====================
      Inputs
@@ -77,10 +92,10 @@ export class Calculadora {
 
   nome: string = '';
   data: string = new Date().toLocaleDateString('pt-BR', {
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric',
-});
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
 
   venda: Venda = this.Vendendo();
 
@@ -136,7 +151,7 @@ export class Calculadora {
      Cálculo principal
   ===================== */
   calcular(valores: Valores, tipo: 'boa' | 'fraca' | 'simples'): void {
-    if (!valores[0] || !valores[1]) {
+    if ((!valores[0] || !valores[1]) && (this.valoresBoa[0] === 0 || this.valoresFraca[0] === 0)) {
       this.resultados = [0, 0, 0];
       return;
     }
@@ -150,6 +165,7 @@ export class Calculadora {
         : contas.quilo(valores[0], valores[1], valores[2]);
 
     if (tipo === 'boa') {
+      
       this.resultadosBoa = resultado as Resultados;
     } else if (tipo === 'fraca') {
       this.resultadosFraca = resultado as Resultados;
@@ -252,11 +268,26 @@ export class Calculadora {
   }
 
   salvarVenda(): void {
+    if (!this.nome) {
+      alert('Por favor, insira o nome do comprador antes de salvar a venda.');
+
+      return;
+    }
+    this.ativarAnimacao();
+
     //coloca tudo dentro de venda pela função Vendendo
     this.venda = this.Vendendo();
     //cria o service
     const salvar = new Salvar();
     //manda para o service
     salvar.salvarVenda(this.venda);
+  }
+
+  ativarAnimacao() {
+    this.moverCaminhao = true;
+
+    setTimeout(() => {
+      this.moverCaminhao = false;
+    }, 0);
   }
 }

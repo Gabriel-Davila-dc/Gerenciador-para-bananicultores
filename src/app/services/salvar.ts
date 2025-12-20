@@ -11,6 +11,7 @@ export class Salvar {
     //se tiver vendas joga pro array de vendas "vendidas", ou cria um vazio
     const vendidas: Venda[] = vendasSalvas ? JSON.parse(vendasSalvas) : [];
     //colocas as novas vendas no array de vendas
+    venda.id = vendidas.length + 1;
     vendidas.push(venda);
     //transforma o array atualizado em Json
     const vendasJSON = JSON.stringify(vendidas, null, 2);
@@ -28,8 +29,12 @@ export class Salvar {
     return vendidas;
   }
 
-  apagarVendas(): void {
-    localStorage.removeItem('vendas');
-    console.log('Todas as vendas foram apagadas.');
+  apagarVenda(id: number): void {
+    const vendasSalvas = localStorage.getItem('vendas');
+    const vendidas: Venda[] = vendasSalvas ? JSON.parse(vendasSalvas) : [];
+    const vendasFiltradas = vendidas.filter((venda) => venda.id !== id);
+    const vendasJSON = JSON.stringify(vendasFiltradas, null, 2);
+    localStorage.setItem('vendas', vendasJSON);
+    console.log(`Venda com ID ${id} foi apagada.`);
   }
 }

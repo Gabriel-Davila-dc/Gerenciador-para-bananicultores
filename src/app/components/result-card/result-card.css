@@ -1,0 +1,42 @@
+.container {
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  padding: 16px;
+}
+.container-boa {
+  border: 1px solid #cccccc;
+  border-left: 1em solid var(--verde-bom);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.container-fraca {
+  border: 1px solid #cccccc;
+  border-left: 1em solid var(--verde-fraco);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.resumo {
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.valores {
+  border: 1px solid #cccccc;
+  border-radius: 0.8em;
+}
+
+label {
+  margin: 1em 1em 8px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+p {
+  text-align: center;
+  margin: 1px 0px;
+  font-size: 20px;
+}

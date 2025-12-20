@@ -1,7 +1,7 @@
 <div [ngClass]="estiloEscolhido">
   <div class="resumos">
     <label for="">Valor Total:</label>
-    <label id="resultado-valor">{{ resultados[0] }}</label>
+    <label id="resultado-valor">{{ formatar.dinheiro(resultados[0]) }}</label>
   </div>
   <div class="resumos">
     <label id="resultado-peso">Peso Total:</label>
@@ -9,6 +9,6 @@
   </div>
   <div class="resumos">
     <label id="resultado-caixa">{{ inputFiltro.result }}</label>
-    <label id="resultado-valor">{{ resultados[2] }}</label>
+    <label id="resultado-valor">{{ formatar.dinheiro(resultados[2]) }}</label>
   </div>
 </div>

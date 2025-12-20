@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { Formatar } from '../../services/formatar';
 
 @Component({
   selector: 'app-results',
@@ -12,13 +13,18 @@ export class Results {
   @Input() resultados!: [peso: number, preco: number, quantidade: number];
   @Input() qualidade!: string;
 
+  formatar = new Formatar();
+
   estiloEscolhido: string = 'resultado-simples';
 
   ngOnChanges() {
+    const formatar = new Formatar();
+
     if (this.qualidade === 'boa') {
       this.estiloEscolhido = 'resultado-boa';
     } else if (this.qualidade === 'fraca') {
       this.estiloEscolhido = 'resultado-fraca';
+      console.log('bug final:' + this.resultados);
     } else {
       this.estiloEscolhido = 'resultado-simples';
     }

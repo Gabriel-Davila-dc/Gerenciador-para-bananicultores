@@ -1,0 +1,29 @@
+<div [ngClass]="classe">
+  <div class="resumo">
+    <label for="">preço da Caixa:</label>
+    <label for="">R$ {{ formatar.dinheiro(preco) }}</label>
+  </div>
+  <div class="resumo">
+    <label for="">peso da Caixa:</label>
+    <label for=""> {{ peso }} kg</label>
+  </div>
+  <div class="resumo">
+    <label for="">caixas:</label>
+    <label for="">{{ quantidade }}</label>
+  </div>
+
+  <div class="valores" *ngIf="tipo != 'Simples'">
+    <div class="resumo">
+      <label for="">Valor Boa:</label>
+      <label for="">R$ {{ formatar.dinheiro(valorfinal) }}</label>
+    </div>
+    <div class="resumo">
+      <label for="">Peso Boa:</label>
+      <label for=""> {{ pesofinal }} kg</label>
+    </div>
+    <div class="resumo">
+      <label for="">Quilo:</label>
+      <label for="">{{ formatar.dinheiro(quilo) }}</label>
+    </div>
+  </div>
+</div>

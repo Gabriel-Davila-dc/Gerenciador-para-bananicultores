@@ -22,4 +22,10 @@ export class Gerenciador {
     const salvar = new Salvar();
     this.vendas = salvar.pegarVendas();
   }
+
+  apagar(id: number) {
+    const salvar = new Salvar();
+    salvar.apagarVenda(id);
+    this.pegarVendas();
+  }
 }

@@ -67,6 +67,15 @@
       [resultados]="resultados"
     ></app-results>
 
+    <!-- Nome do Cliente -->
+    <mat-form-field appearance="outline">
+      <mat-label>Nome</mat-label>
+
+      <mat-icon matPrefix class="truck-icon" *ngIf="moverCaminhao"> local_shipping </mat-icon>
+
+      <input matInput [(ngModel)]="nome" />
+    </mat-form-field>
+
     <button mat-raised-button id="button" (click)="salvarVenda()">
       <mat-icon></mat-icon>
       Salvar Venda

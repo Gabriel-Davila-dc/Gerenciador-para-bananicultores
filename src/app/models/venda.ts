@@ -2,7 +2,7 @@ import { Categoria } from './categoria';
 import { ResumoTotal } from './resumo-total';
 
 export interface Venda {
-  id?: string;
+  id?: number;
 
   nome: string;
   data: string;

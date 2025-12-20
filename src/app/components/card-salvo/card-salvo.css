@@ -4,7 +4,8 @@
   background-color: white;
   border-radius: 8px;
   flex-direction: column;
-  min-width: 80vw;
+  border: 1px solid #cccccc;
+  min-width: 90vw;
   padding-bottom: 1em;
   height: auto;
   box-shadow: var(--sombra-leve);
@@ -22,6 +23,13 @@ label {
   margin: 1em 1em 8px;
   font-size: 24px;
   font-weight: bold;
+}
+
+p {
+  text-align: center;
+  margin-top: 1.5em;
+  margin-bottom: 0em;
+  font-size: 20px;
 }
 
 .div-botoes {

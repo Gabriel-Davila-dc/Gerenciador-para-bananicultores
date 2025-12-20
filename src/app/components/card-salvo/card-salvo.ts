@@ -1,18 +1,22 @@
 import { ResumoTotal } from './../../models/resumo-total';
 import { CommonModule } from '@angular/common';
 import { Venda } from '../../models/venda';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { ResultCard } from '../result-card/result-card';
+import { Formatar } from '../../services/formatar';
 
 @Component({
   selector: 'app-card-salvo',
-  imports: [MatButtonModule, MatIconModule, CommonModule],
+  imports: [MatButtonModule, MatIconModule, CommonModule, ResultCard],
   templateUrl: './card-salvo.html',
   styleUrl: './card-salvo.css',
 })
 export class CardSalvo {
   @Input() infos!: Venda;
+  @Output() apagarVenda = new EventEmitter<number>();
+  formatar = new Formatar();
   venda!: Venda;
   minimizado: boolean = true;
   ResumoFinal: ResumoTotal = {
@@ -26,10 +30,15 @@ export class CardSalvo {
     console.log('Vendas recebidas no card:', this.infos);
     this.venda = this.infos;
     this.definir(this.venda);
+    const formatar = new Formatar();
   }
 
   verDetalhes() {
     this.minimizado = !this.minimizado;
+  }
+
+  apagar() {
+    this.apagarVenda.emit(this.venda.id);
   }
 
   definir(venda: Venda): ResumoTotal {

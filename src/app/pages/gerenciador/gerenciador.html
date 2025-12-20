@@ -1,6 +1,6 @@
 <div class="container">
   <h1>Vendas feitas</h1>
-  <div *ngFor="let venda of vendas">
-    <app-card-salvo [infos]="venda"></app-card-salvo>
+  <div *ngFor="let venda of vendas" class="card-salvo">
+    <app-card-salvo [infos]="venda" (apagarVenda)="apagar($event)"></app-card-salvo>
   </div>
 </div>
