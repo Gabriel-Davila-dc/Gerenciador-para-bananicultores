@@ -5,7 +5,7 @@ export interface Venda {
   id?: string;
 
   nome: string;
-  data: Date;
+  data: string;
   tipo: string;
 
   simples: Categoria;

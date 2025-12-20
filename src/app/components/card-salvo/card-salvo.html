@@ -1,26 +1,77 @@
+<!--
+Informações de venda
+-->
 <div class="card">
   <div class="resumo">
     <label for="">Cliente:</label>
-    <label for="">David</label>
+    <label for="">{{ venda.nome }}</label>
   </div>
   <div class="resumo">
     <label for="">Data:</label>
-    <label for="">17/12/2025</label>
+    <label for="">{{ venda.data }}</label>
   </div>
-  <div class="resumo">
-    <label for="">Quilo:</label>
-    <label for="">R$ 2,50</label>
+  <!--
+aparece só quando pequeno
+-->
+  <div *ngIf="minimizado">
+    <div class="resumo">
+      <label for="">Quilo:</label>
+      <label for="">{{ ResumoFinal.mediaQuilos }}</label>
+    </div>
+    <div class="resumo">
+      <label for="">Valor:</label>
+      <label for="">R$ {{ ResumoFinal.valor }}</label>
+    </div>
   </div>
-  <div class="resumo">
-    <label for="">Valor:</label>
-    <label for="">R$ 2.000,00</label>
+  <!--
+aparece só quando pequeno
+-->
+
+  <!--
+aparece quando grande
+-->
+  <div *ngIf="!minimizado">
+    <div class="resumo">
+      <label for="">Tipo:</label>
+      <label for="">{{ venda.tipo }}</label>
+    </div>
+
+    <div class="resumo">
+      <label for="">Peso da Caixa:</label>
+      <label for="">{{ venda.simples.pesoCaixa }} kg</label>
+    </div>
+
+    <div class="resumo">
+      <label for="">Valor da Caixa:</label>
+      <label for="">R$ {{ venda.simples.precoCaixa }}</label>
+    </div>
+
+    <div class="resumo">
+      <label for="">quantidade:</label>
+      <label for=""> {{ venda.simples.caixas }}</label>
+    </div>
+
+    <div class="resumo">
+      <label for="">Valor Total:</label>
+      <label for="">R$ {{ venda.simples.valorTotal }}</label>
+    </div>
+    <div class="resumo">
+      <label for="">peso :</label>
+      <label for=""> {{ venda.simples.pesoTotal }} kg</label>
+    </div>
+    <div class="resumo">
+      <label for="">Quilo:</label>
+      <label for="">R$ {{ venda.simples.precoQuilo }}</label>
+    </div>
+    <div class="resumo"></div>
   </div>
-  <div class="resumo">
+
+  <div class="div-botoes">
     <button mat-icon-button color="warn">
       <mat-icon>delete</mat-icon>
     </button>
 
-    <button mat-raised-button color="primary">
+    <button mat-raised-button color="primary" (click)="verDetalhes()">
       <mat-icon>visibility</mat-icon>
       Ver Detalhes
     </button>

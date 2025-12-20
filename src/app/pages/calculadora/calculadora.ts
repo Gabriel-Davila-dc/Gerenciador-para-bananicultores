@@ -76,7 +76,11 @@ export class Calculadora {
   mediaNaoMostrada: number = 0;
 
   nome: string = '';
-  data: Date = new Date();
+  data: string = new Date().toLocaleDateString('pt-BR', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+});
 
   venda: Venda = this.Vendendo();
 
