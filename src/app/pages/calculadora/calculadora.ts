@@ -106,11 +106,13 @@ export class Calculadora {
   setFiltroNegocio(valor: string): void {
     this.filtroNegocio = valor;
     this.calcular(this.valores, 'simples');
+    this.atualizarPagina();
   }
 
   setFiltroPeso(valor: string): void {
     this.filtroPeso = valor;
     this.calcular(this.valores, 'simples');
+    this.atualizarPagina();
   }
 
   /* =====================
@@ -165,7 +167,6 @@ export class Calculadora {
         : contas.quilo(valores[0], valores[1], valores[2]);
 
     if (tipo === 'boa') {
-      
       this.resultadosBoa = resultado as Resultados;
     } else if (tipo === 'fraca') {
       this.resultadosFraca = resultado as Resultados;
@@ -268,9 +269,9 @@ export class Calculadora {
   }
 
   salvarVenda(): void {
+    // se o nome faltar no input, avisa e não deixa salvar
     if (!this.nome) {
       alert('Por favor, insira o nome do comprador antes de salvar a venda.');
-
       return;
     }
     this.ativarAnimacao();
@@ -289,5 +290,15 @@ export class Calculadora {
     setTimeout(() => {
       this.moverCaminhao = false;
     }, 0);
+  }
+
+  atualizarPagina() {
+    this.valoresBoa = [0, 0, 0];
+    this.valoresFraca = [0, 0, 0];
+
+    this.resultados = [0, 0, 0];
+    this.resultadosBoa = [0, 0, 0];
+    this.resultadosFraca = [0, 0, 0];
+    this.mediaNaoMostrada = 0;
   }
 }

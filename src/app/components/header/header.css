@@ -62,14 +62,15 @@ img {
   padding: 1.5em 0em;
   list-style: none;
 }
-#menus-mobile li:last-child a {
-  background: linear-gradient(to right, rgb(60, 255, 0), rgb(207, 243, 0));
-  border: 1pxsolid black;
+li:nth-child(2) a {
+  background: var(--verde-bom);
+  border: 1px solid black;
   transition: 2s;
   border-radius: 17px;
 }
-#menus-mobile li:last-child a:hover {
-  background: linear-gradient(to right, rgb(96, 214, 0), rgb(69, 243, 0));
+li:nth-child(2) a:hover {
+  background: var(--verde-fraco);
+  color: var(black);
   border-radius: 17px;
   text-decoration: none;
 }
