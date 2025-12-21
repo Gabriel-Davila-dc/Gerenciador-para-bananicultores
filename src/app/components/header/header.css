@@ -5,14 +5,15 @@ header {
   justify-content: space-between;
   align-items: center;
   max-width: 100%;
-  background: rgb(166, 255, 0);
+  background: var(--verde-principal);
   padding: 0px 0px;
-  color: white;
+  color: var(--bg-branco);
   transition: top 0.3s;
 
   top: 0;
   z-index: 500;
 }
+
 img {
   max-width: 3.5em;
 }
@@ -32,14 +33,15 @@ img {
   bottom: 0;
   padding: 0px 0px;
   margin: 0px;
+  border-radius: 0px 0px 15px 15px;
 
   width: 100%;
-  background-color: #a6ff00;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+  background-color: var(--verde-principal);
+
   z-index: 2000; /* acima do header */
-  transform: translateX(100%); /* começa fora da tela */
+  transform: translateX(100%);
   transition: transform 0.3s ease-in-out;
-  transform: translateX(0); /* entra na tela */
+  transform: translateX(0);
 
   flex-direction: column;
   align-items: center;
@@ -50,30 +52,38 @@ img {
   padding: 0.2em 2em;
   font-size: 3em;
   text-decoration: none;
+  color: var(--bg-branco);
+}
 
-  color: #ffffff;
-}
-#menus-mobile li a:hover {
+li a:hover {
   text-decoration: underline;
-  text-decoration-color: #ffffff;
+  text-decoration-color: var(--bg-branco);
+  background: var(--verde-hover);
   text-decoration-thickness: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.458);
+  border-radius: 17px;
 }
+
 #menus-mobile li {
   padding: 1.5em 0em;
   list-style: none;
 }
+
 li:nth-child(2) a {
   background: var(--verde-bom);
-  border: 1px solid black;
-  transition: 2s;
+  border: 1px solid var(--borda-preta);
+  color: black;
+  transition: 0.3s;
   border-radius: 17px;
 }
+
 li:nth-child(2) a:hover {
   background: var(--verde-fraco);
-  color: var(black);
+  color: var(--borda-preta);
   border-radius: 17px;
   text-decoration: none;
 }
+
 #menus-mobile ul {
   list-style: none;
 }
@@ -91,7 +101,7 @@ li:nth-child(2) a:hover {
   display: none;
   background: none;
   border: none;
-  color: white;
+  color: var(--bg-branco);
 }
 
 /* MENU */
@@ -105,17 +115,18 @@ li:nth-child(2) a:hover {
 
 #header nav a {
   text-decoration: none;
-  color: white;
+  color: var(--bg-branco);
   font-size: 1.7rem;
   padding: 1vh 1vw;
   border-radius: 14px;
-  transition: color 0.3s;
-  background: rgba(179, 255, 3, 0.219);
+  transition: color 0.3s, background 0.3s;
 }
 
 #header nav a:hover {
-  background: rgba(43, 255, 0, 0.733);
+  background: var(--verde-hover);
 }
+
+/* RESPONSIVO */
 
 @media (max-width: 800px) {
   #header nav {
@@ -128,7 +139,7 @@ li:nth-child(2) a:hover {
     font-size: 3.5rem;
     margin-right: 5vw;
     left: 20px;
-    color: #f0f0f0;
+    color: var(--bg-claro);
   }
 
   #header #menus {
