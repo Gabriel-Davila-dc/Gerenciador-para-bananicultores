@@ -31,8 +31,9 @@
 
 label {
   margin: 1em 1em 8px;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: bold;
+  white-space: nowrap;
 }
 
 p {

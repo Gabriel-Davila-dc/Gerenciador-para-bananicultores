@@ -33,6 +33,7 @@ h1 {
   transition: background 0.18s ease, transform 0.08s ease, border-color 0.12s ease;
   min-width: 160px;
   text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.297);
 }
 
 /* Oculta o input original */
@@ -44,6 +45,8 @@ input[type='radio'] {
 input[type='radio']:checked + .label-btn {
   transform: translateY(-2px);
   background: linear-gradient(90deg, var(--verde-principal) 0%, var(--verde-fraco) 100%);
+  border: none;
+  box-shadow: 1px 1px 1px black;
 }
 
 /* Efeito hover */

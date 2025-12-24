@@ -21,7 +21,7 @@ body {
 :root {
   /* CORES PRINCIPAIS */
   --azul-escuro: rgb(0, 0, 52);
-  --azul-escuro-2: rgb(0, 0, 54);
+  --azul-escuro-2: rgb(0, 0, 35);
 
   --verde-principal: rgb(170, 255, 0);
   --verde-hover: rgb(157, 255, 0);
