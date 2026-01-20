@@ -14,18 +14,18 @@ import { CommonModule } from '@angular/common';
 export class Gerenciador {
   vendas: Venda[] = [];
 
+  constructor(private salvar: Salvar) {}
+
   ngOnInit() {
     this.pegarVendas();
   }
 
   pegarVendas() {
-    const salvar = new Salvar();
-    this.vendas = salvar.pegarVendas();
+    this.vendas = this.salvar.pegarVendas();
   }
 
   apagar(id: number) {
-    const salvar = new Salvar();
-    salvar.apagarVenda(id);
+    this.salvar.apagarVenda(id);
     this.pegarVendas();
   }
 }

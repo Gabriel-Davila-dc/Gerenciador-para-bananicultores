@@ -99,6 +99,8 @@ export class Calculadora {
 
   venda: Venda = this.Vendendo();
 
+  constructor(private salvar: Salvar) {}
+
   /* =====================
      Setters de Filtro
   ===================== */
@@ -182,13 +184,13 @@ export class Calculadora {
             this.resultadosBoa,
             this.resultadosFraca,
             this.valoresBoa[2],
-            this.valoresFraca[2]
+            this.valoresFraca[2],
           ) as Resultados)
         : (contas.mediaQuilo(
             this.resultadosBoa,
             this.resultadosFraca,
             this.valoresBoa[2],
-            this.valoresFraca[2]
+            this.valoresFraca[2],
           ) as Resultados);
     this.resultados = [resulMedia[0], resulMedia[1], resulMedia[2]];
     this.mediaNaoMostrada = resulMedia[3];
@@ -278,10 +280,8 @@ export class Calculadora {
 
     //coloca tudo dentro de venda pela função Vendendo
     this.venda = this.Vendendo();
-    //cria o service
-    const salvar = new Salvar();
     //manda para o service
-    salvar.salvarVenda(this.venda);
+    this.salvar.salvarVenda(this.venda);
   }
 
   ativarAnimacao() {

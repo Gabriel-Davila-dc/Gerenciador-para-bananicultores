@@ -42,3 +42,6 @@ body {
 }
 
 /* ========================= */
+button.mat-mdc-raised-button.btn-entrar {
+  color: rgb(0, 6, 51) !important;
+}
