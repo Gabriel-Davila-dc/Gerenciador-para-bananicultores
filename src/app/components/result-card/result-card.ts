@@ -20,6 +20,7 @@ export class ResultCard {
   formatar = new Formatar();
 
   ngOnInit() {
+    console.log('Tipo recebido no ResultCard:', this.tipo);
     const formatar = new Formatar();
 
     if (this.tipo === 'boa') {

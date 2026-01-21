@@ -16,4 +16,11 @@ export class Formatar {
 
     return formatado;
   }
+
+  data(data: string): string {
+    const dataFormatada = new Date(data).toLocaleDateString('pt-BR');
+    console.log(dataFormatada);
+    // 21/01/2026
+    return dataFormatada;
+  }
 }

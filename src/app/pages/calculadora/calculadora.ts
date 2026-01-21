@@ -201,6 +201,7 @@ export class Calculadora {
   ===================== */
 
   Vendendo(): Venda {
+    //boa
     const Caixaboa: Categoria = {
       tipo: 'boa',
       pesoCaixa: this.valoresBoa[0],
@@ -216,7 +217,7 @@ export class Calculadora {
       Caixaboa.precoCaixa = this.resultadosBoa[2];
       Caixaboa.precoQuilo = this.valoresBoa[1];
     }
-
+    //fraca
     const Caixafraca: Categoria = {
       tipo: 'fraca',
       pesoCaixa: this.valoresFraca[0],

@@ -9,7 +9,7 @@ import { Header } from './components/header/header';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MatSlideToggle, MatToolbarModule, MatButtonModule, Header],
+  imports: [RouterOutlet, MatToolbarModule, MatButtonModule, Header],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
@@ -18,7 +18,7 @@ export class App {
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     // Ver se o usuario permanece logado verificando o token
     const tokenValido = localStorage.getItem('token');
 
@@ -40,7 +40,6 @@ export class App {
           error: () => {
             console.log('Token inválido ou expirado, limpando sessão');
             alert('❌ Você não está logado.');
-            //localStorage.removeItem('token');
           },
         });
     }

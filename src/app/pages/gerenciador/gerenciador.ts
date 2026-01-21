@@ -20,8 +20,9 @@ export class Gerenciador {
     this.pegarVendas();
   }
 
-  pegarVendas() {
-    this.vendas = this.salvar.pegarVendas();
+  async pegarVendas() {
+    this.vendas = await this.salvar.pegarVendas();
+    console.log('Vendas no Gerenciador:', this.vendas);
   }
 
   apagar(id: number) {
