@@ -5,6 +5,7 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { Header } from './components/header/header';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-root',
@@ -16,14 +17,21 @@ import { Header } from './components/header/header';
 export class App {
   protected title = 'Calculadora de Banana';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private snackBar: MatSnackBar,
+  ) {}
 
   async ngOnInit(): Promise<void> {
     // Ver se o usuario permanece logado verificando o token
     const tokenValido = localStorage.getItem('token');
 
     if (!tokenValido) {
-      alert('❌ Faça login novamente.');
+      this.snackBar.open(' Você não está logado!', '⚠️', {
+        duration: 2500,
+        verticalPosition: 'top',
+        horizontalPosition: 'right',
+      });
     } else {
       console.log('TokenValido:', tokenValido);
       this.http
@@ -35,11 +43,18 @@ export class App {
         .subscribe({
           next: (user) => {
             console.log('Token válido, usuário logado:', user);
-            alert('✅ Você está logado.');
+            this.snackBar.open(' Você está logado!', '✅', {
+              duration: 2500,
+              verticalPosition: 'top',
+              horizontalPosition: 'center',
+            });
           },
           error: () => {
-            console.log('Token inválido ou expirado, limpando sessão');
-            alert('❌ Você não está logado.');
+            this.snackBar.open(' Você não está logado!', '⚠️', {
+              duration: 2500,
+              verticalPosition: 'top',
+              horizontalPosition: 'right',
+            });
           },
         });
     }

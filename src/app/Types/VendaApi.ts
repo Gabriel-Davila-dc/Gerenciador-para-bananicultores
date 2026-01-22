@@ -29,7 +29,7 @@ export interface VendaApi {
   fracaPrecoQuilo: number | null;
 
   valorTotal: number;
-  pesosTotal: number;
+  pesoTotal: number;
 
   mediaQuilo: number;
   mediaCaixa: number;

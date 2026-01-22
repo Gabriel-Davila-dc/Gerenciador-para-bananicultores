@@ -2,6 +2,7 @@
 Informações de venda
 -->
 <div class="card">
+  <label class="labelCentral" for="">{{ venda.tipo }}</label>
   <div class="resumo">
     <label for="">Cliente:</label>
     <label for="">{{ venda.nome }}</label>
@@ -31,11 +32,6 @@ aparece só quando pequeno
 aparece quando grande
 -->
   <div *ngIf="!minimizado">
-    <div class="resumo">
-      <label for="">Tipo:</label>
-      <label for="">{{ venda.tipo }}</label>
-    </div>
-
     <div *ngIf="venda.tipo === 'Simples'">
       <app-result-card
         [tipo]="venda.tipo"

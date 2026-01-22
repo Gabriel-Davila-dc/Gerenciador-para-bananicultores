@@ -38,10 +38,13 @@ body {
   --borda-preta: rgb(0, 0, 0);
   --borda-cinza: rgba(0, 0, 0, 0.335);
   --borda-input: rgb(107, 108, 107);
-  --sombra: 0 8px 24px rgba(0, 0, 0, 0.447);
+  --sombra: 0 8px 24px rgba(0, 0, 0, 0.795);
 }
 
 /* ========================= */
 button.mat-mdc-raised-button.btn-entrar {
   color: rgb(0, 6, 51) !important;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -3,6 +3,7 @@ import { Venda } from '../models/venda';
 import { HttpClient } from '@angular/common/http';
 import { VendaService } from './venda-service';
 import { VendaApi } from '../Types/VendaApi';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ export class Salvar {
   constructor(
     private http: HttpClient,
     private vendaService: VendaService,
+    private snackBar: MatSnackBar,
   ) {}
 
   async salvarVenda(venda: Venda): Promise<void> {
@@ -31,7 +33,11 @@ export class Salvar {
     const tokenValido = localStorage.getItem('token');
 
     if (!tokenValido) {
-      alert(' Faça Login em uma conta para salvar permanentemente.');
+      this.snackBar.open(' Faça Login em uma conta para salvar permanentemente.', '⚠️', {
+        duration: 2500,
+        verticalPosition: 'top',
+        horizontalPosition: 'right',
+      });
     } else {
       // Verifica se o token é válido
       this.http
@@ -65,7 +71,15 @@ export class Salvar {
           },
           //Não conectado, deixa no localStorage
           error: () => {
-            alert('Você não está logado. Conecte-se a internet para salvar permanentemente.');
+            this.snackBar.open(
+              ' Você não está logado. Conecte-se a internet para salvar permanentemente.',
+              '⚠️',
+              {
+                duration: 2500,
+                verticalPosition: 'top',
+                horizontalPosition: 'right',
+              },
+            );
           },
         });
     }
@@ -98,7 +112,11 @@ export class Salvar {
     console.log(`Venda com ID ${id} foi apagada.`);
 
     if (!tokenValido) {
-      alert(' Faça Login em uma conta para salvar permanentemente.');
+      this.snackBar.open('Faça Login em uma conta para salvar permanentemente.', '🔓', {
+        duration: 2500,
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+      });
     } else {
       // Verifica se o token é válido
       this.http
@@ -113,7 +131,11 @@ export class Salvar {
             await this.vendaService.apagarVenda(id, tokenValido);
           },
           error: () => {
-            alert('Você não está logado. Conecte-se a internet para Apagar.');
+            this.snackBar.open('Você não está logado. Conecte-se a internet para Apagar.', '🚫', {
+              duration: 2500,
+              verticalPosition: 'top',
+              horizontalPosition: 'center',
+            });
           },
         });
     }
@@ -139,7 +161,7 @@ export class Salvar {
       },
 
       boa: {
-        tipo: api.tipoBoa,
+        tipo: 'Boa',
         pesoCaixa: api.boaPeso ?? 0,
         precoCaixa: api.boaPrecoCaixa ?? 0,
         caixas: api.boaCaixas ?? 0,
@@ -149,7 +171,7 @@ export class Salvar {
       },
 
       fraca: {
-        tipo: api.tipoFraca,
+        tipo: 'Fraca',
         pesoCaixa: api.fracaPeso ?? 0,
         precoCaixa: api.fracaPrecoCaixa ?? 0,
         caixas: api.fracaCaixas ?? 0,
@@ -160,7 +182,7 @@ export class Salvar {
 
       valorTotal: {
         valor: api.valorTotal ?? 0,
-        pesos: api.pesosTotal ?? 0,
+        pesos: api.pesoTotal ?? 0,
         mediaQuilos: api.mediaQuilo ?? 0,
         mediaCaixas: api.mediaCaixa ?? 0,
       },

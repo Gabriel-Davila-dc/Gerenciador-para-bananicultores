@@ -1,7 +1,7 @@
 import { ResumoTotal } from './../../models/resumo-total';
 import { CommonModule } from '@angular/common';
 import { Venda } from '../../models/venda';
-import { Component, EventEmitter, Input, Output, output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, output, SimpleChange } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ResultCard } from '../result-card/result-card';
@@ -9,6 +9,7 @@ import { Formatar } from '../../services/formatar';
 
 @Component({
   selector: 'app-card-salvo',
+  standalone: true,
   imports: [MatButtonModule, MatIconModule, CommonModule, ResultCard],
   templateUrl: './card-salvo.html',
   styleUrl: './card-salvo.css',
@@ -26,8 +27,7 @@ export class CardSalvo {
     mediaQuilos: 0,
   };
 
-  ngOnInit() {
-    console.log('Vendas recebidas no card:', this.infos);
+  ngOnChanges(changes: SimpleChange) {
     this.venda = this.infos;
     this.definir(this.venda);
     const formatar = new Formatar();
@@ -37,7 +37,7 @@ export class CardSalvo {
     this.minimizado = !this.minimizado;
   }
 
-  apagar() {
+  async apagar() {
     this.apagarVenda.emit(this.venda.id);
   }
 

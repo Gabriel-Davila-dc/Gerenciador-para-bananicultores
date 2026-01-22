@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { CardSalvo } from '../../components/card-salvo/card-salvo';
 import { Salvar } from '../../services/salvar';
 import { CommonModule } from '@angular/common';
+import { from, Observable } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -12,21 +13,15 @@ import { CommonModule } from '@angular/common';
   styleUrl: './gerenciador.css',
 })
 export class Gerenciador {
-  vendas: Venda[] = [];
+  vendas$!: Observable<Venda[]>;
 
   constructor(private salvar: Salvar) {}
 
   ngOnInit() {
-    this.pegarVendas();
-  }
-
-  async pegarVendas() {
-    this.vendas = await this.salvar.pegarVendas();
-    console.log('Vendas no Gerenciador:', this.vendas);
+    this.vendas$ = from(this.salvar.pegarVendas());
   }
 
   apagar(id: number) {
-    this.salvar.apagarVenda(id);
-    this.pegarVendas();
+    this.vendas$ = from(this.salvar.apagarVenda(id).then(() => this.salvar.pegarVendas()));
   }
 }

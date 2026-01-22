@@ -24,7 +24,6 @@ export class Results {
       this.estiloEscolhido = 'resultado-boa';
     } else if (this.qualidade === 'fraca') {
       this.estiloEscolhido = 'resultado-fraca';
-      console.log('bug final:' + this.resultados);
     } else {
       this.estiloEscolhido = 'resultado-simples';
     }

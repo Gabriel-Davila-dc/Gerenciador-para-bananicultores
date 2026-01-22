@@ -4,6 +4,7 @@ import { Formatar } from '../../services/formatar';
 
 @Component({
   selector: 'app-result-card',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './result-card.html',
   styleUrl: './result-card.css',
@@ -20,12 +21,11 @@ export class ResultCard {
   formatar = new Formatar();
 
   ngOnInit() {
-    console.log('Tipo recebido no ResultCard:', this.tipo);
     const formatar = new Formatar();
 
-    if (this.tipo === 'boa') {
+    if (this.tipo === 'Boa') {
       this.classe = 'container-boa';
-    } else if (this.tipo === 'fraca') {
+    } else if (this.tipo === 'Fraca') {
       this.classe = 'container-fraca';
     } else {
       this.classe = 'container';

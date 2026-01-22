@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { VendaApi } from '../Types/VendaApi';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,7 @@ export class VendaService {
   constructor(
     private http: HttpClient,
     private router: Router,
+    private snackBar: MatSnackBar,
   ) {}
 
   async salvarVenda(venda: any, tokenValido: string): Promise<boolean> {
@@ -25,12 +27,21 @@ export class VendaService {
         }),
       );
 
-      alert(resposta.message || 'Salvo com sucesso!');
+      this.snackBar.open('✅ Salvo com sucesso!', 'Fechar', {
+        duration: 2500,
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+      });
       return true;
     } catch (error: any) {
       alert(
         `Cliente: ${venda.cliente} ${error?.error?.message || 'Erro ao salvar a venda no servidor'}`,
       );
+      this.snackBar.open(`Cliente: ${venda.cliente} ${error?.error?.message}`, '❌', {
+        duration: 2500,
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+      });
       return false;
     }
   }
@@ -54,6 +65,13 @@ export class VendaService {
         },
       }),
     );
-    this.router.navigate(['/gerenciador']);
+    this.snackBar.open(`Deletado`, '❌', {
+      duration: 2500,
+      verticalPosition: 'top',
+      horizontalPosition: 'center',
+    });
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/gerenciador']);
+    });
   }
 }
