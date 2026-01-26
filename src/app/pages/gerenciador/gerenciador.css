@@ -1,12 +1,48 @@
 .container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
 
+  height: auto;
+  min-height: 100vh;
   width: 100%;
   align-items: center;
+  /*borrar*/
+  background: rgba(37, 37, 36, 0.281);
 }
 
 .card-salvo {
   margin-top: 20px;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  height: 100vh;
+}
+
+.editarCentral {
+  border: solid 1px rgb(29, 29, 29);
+  border-radius: 10px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: auto;
+  height: 85vh;
+  z-index: 1000;
+  overflow-y: scroll;
+  background-color: rgb(37, 37, 36);
+
+  /* Firefox */
+  scrollbar-width: none;
+
+  /* IE / Edge antigo */
+  -ms-overflow-style: none;
+} /* Chrome, Edge, Safari */
+.conteudo::-webkit-scrollbar {
+  display: none;
 }

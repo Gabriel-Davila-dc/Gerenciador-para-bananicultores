@@ -27,8 +27,8 @@ export class VendaService {
         }),
       );
 
-      this.snackBar.open('✅ Salvo com sucesso!', 'Fechar', {
-        duration: 2500,
+      this.snackBar.open(' Salvo com sucesso!', '✅', {
+        duration: 2000,
         verticalPosition: 'top',
         horizontalPosition: 'center',
       });
@@ -73,5 +73,28 @@ export class VendaService {
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this.router.navigate(['/gerenciador']);
     });
+  }
+
+  async atualizarVenda(venda: Venda, tokenValido: string): Promise<boolean> {
+    try {
+      await firstValueFrom(
+        this.http.put(`http://localhost:3333/vendas/${venda.id}`, venda, {
+          headers: { Authorization: `Bearer ${tokenValido}` },
+        }),
+      );
+      this.snackBar.open(' Editado com sucesso!', '✅', {
+        duration: 2000,
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+      });
+      return true;
+    } catch (error) {
+      this.snackBar.open(`Não foi possivel alterar, no momento`, '❌', {
+        duration: 2000,
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+      });
+      return false;
+    }
   }
 }

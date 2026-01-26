@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { VendaService } from './venda-service';
 import { VendaApi } from '../Types/VendaApi';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserService } from './user-service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,7 @@ export class Salvar {
     private http: HttpClient,
     private vendaService: VendaService,
     private snackBar: MatSnackBar,
+    private userService: UserService,
   ) {}
 
   async salvarVenda(venda: Venda): Promise<void> {
@@ -90,14 +92,24 @@ export class Salvar {
     const vendasSalvas = localStorage.getItem('vendas');
     //se tiver venda, joga no array para retorno
     const vendidas: Venda[] = vendasSalvas ? JSON.parse(vendasSalvas) : [];
-    //servidor
-    const vendaApi: VendaApi[] = await this.vendaService.listarVendas(
-      localStorage.getItem('token') || '',
-    );
+    try {
+      //servidor online
+      const vendaApi: VendaApi[] = await this.vendaService.listarVendas(
+        localStorage.getItem('token') || '',
+      );
 
-    const vendasConvertidas: Venda[] = vendaApi.map((api) => this.mapVendaApiParaVenda(api));
+      const vendasConvertidas: Venda[] = vendaApi.map((api) => this.mapVendaApiParaVenda(api));
 
-    vendidas.push(...vendasConvertidas);
+      vendidas.push(...vendasConvertidas);
+    } catch (error) {
+      //OffLine
+      this.snackBar.open('Conecte-se para sincronizar mais vendas.', '🔓', {
+        duration: 3000,
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+      });
+      return vendidas.reverse();
+    }
 
     return vendidas;
   }
@@ -119,25 +131,35 @@ export class Salvar {
       });
     } else {
       // Verifica se o token é válido
-      this.http
-        .get('http://localhost:3333/users/token', {
-          headers: {
-            Authorization: `Bearer ${tokenValido}`,
-          },
-        })
-        .subscribe({
-          //conectado, pode mandar salvar
-          next: async () => {
-            await this.vendaService.apagarVenda(id, tokenValido);
-          },
-          error: () => {
-            this.snackBar.open('Você não está logado. Conecte-se a internet para Apagar.', '🚫', {
-              duration: 2500,
-              verticalPosition: 'top',
-              horizontalPosition: 'center',
-            });
-          },
+      const logado = this.userService.getUser();
+      //conectado, pode mandar salvar
+      if (logado) {
+        await this.vendaService.apagarVenda(id, tokenValido);
+      } else {
+        this.snackBar.open('Você não está logado. Conecte-se a internet para Apagar.', '🚫', {
+          duration: 2500,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
         });
+      }
+    }
+  }
+
+  async atualizarVenda(vendaAtualizada: Venda): Promise<void> {
+    const salvoServer = await this.vendaService.atualizarVenda(
+      vendaAtualizada,
+      localStorage.getItem('token') || '',
+    );
+    if (!salvoServer) {
+      //OFFLINE - atualiza LocalStorage
+      const vendasSalvas = localStorage.getItem('vendas');
+      const vendidas: Venda[] = vendasSalvas ? JSON.parse(vendasSalvas) : [];
+
+      const index = vendidas.findIndex((venda) => venda.id === vendaAtualizada.id);
+      if (index !== -1) {
+        vendidas[index] = vendaAtualizada;
+        localStorage.setItem('vendas', JSON.stringify(vendidas));
+      }
     }
   }
 

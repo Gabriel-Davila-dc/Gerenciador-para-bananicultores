@@ -1,7 +1,21 @@
 <div class="container">
-  <h1>Vendas feitas</h1>
+  <h1>Vendas Salvas</h1>
   @for (venda of vendas$ | async; track venda.id) {
-    <app-card-salvo [infos]="venda" (apagarVenda)="apagar($event)" class="card-salvo">
+    <app-card-salvo
+      [infos]="venda"
+      (apagarVenda)="apagar($event)"
+      (editarVenda)="editarVenda($event)"
+      class="card-salvo"
+    >
     </app-card-salvo>
   }
+  <div *ngIf="Editando !== null" class="overlay" (click)="fechar()">
+    <div class="editarCentral" (click)="$event.stopPropagation()">
+      <app-update-venda
+        [venda]="Editando"
+        (cancela)="fechar()"
+        (salva)="atualizarVenda($event)"
+      ></app-update-venda>
+    </div>
+  </div>
 </div>

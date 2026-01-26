@@ -1,0 +1,38 @@
+.container {
+  min-height: 80vh;
+  height: auto;
+  min-width: 90vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 60px 60px 60px rgba(0, 0, 0, 0.2);
+  overflow-y: auto; /* rolagem vertical quando precisar */
+}
+
+mat-card-title {
+  margin: 3vh;
+  align-self: center;
+}
+#divSimples {
+}
+.divBoa {
+  border: 1px solid #cccccc;
+  border-left: 1em solid var(--verde-bom);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.divFraca {
+  border: 1px solid #cccccc;
+  border-left: 1em solid var(--verde-fraco);
+  border-radius: 8px;
+  padding: 16px;
+}
+#divClassificada {
+  display: none;
+}
+@media (min-width: 1000px) {
+  .container {
+    min-width: 700px;
+  }
+}

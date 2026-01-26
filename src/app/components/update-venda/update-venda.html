@@ -1,0 +1,164 @@
+<form [formGroup]="form" class="container">
+  <mat-card style="width: 100%; max-width: 900px">
+    <mat-card-title>Editar Venda</mat-card-title>
+
+    <mat-card-content>
+      <!-- CLIENTE -->
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Cliente</mat-label>
+        <input matInput formControlName="cliente" />
+      </mat-form-field>
+
+      <mat-divider></mat-divider>
+
+      <!-- SIMPLES -->
+      <div id="divSimples" [style.display]="venda.tipo === 'Simples' ? 'block' : 'none'">
+        <h3>SIMPLES</h3>
+        <div class="grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Peso</mat-label>
+            <input matInput type="number" formControlName="simplesPeso" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Preço / Caixa</mat-label>
+            <input matInput type="number" formControlName="simplesPrecoCaixa" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Caixas</mat-label>
+            <input matInput type="number" formControlName="simplesCaixas" />
+          </mat-form-field>
+        </div>
+        <!-- SIMPLES RESULTADO -->
+        <mat-divider></mat-divider>
+        <h4>Resultado</h4>
+        <div class="grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Valor</mat-label>
+            <input matInput type="number" formControlName="simplesResultValor" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Preço Quilo</mat-label>
+            <input matInput type="number" formControlName="simplesResultQuilo" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Peso Total</mat-label>
+            <input matInput type="number" formControlName="simplesResultPesoTotal" />
+          </mat-form-field>
+        </div>
+      </div>
+      <!------------------------------------------- CLASSIFICADA ---------------------------------------------------------------------------- -->
+      <div id="divClassificada" [style.display]="venda.tipo === 'Classificada' ? 'block' : 'none'">
+        <!-- BOA -->
+        <div class="divBoa">
+          <h3>BOA</h3>
+          <div class="grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Peso</mat-label>
+              <input matInput type="number" formControlName="boaPeso" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Preço / Caixa</mat-label>
+              <input matInput type="number" formControlName="boaPrecoCaixa" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Caixas</mat-label>
+              <input matInput type="number" formControlName="boaCaixas" />
+            </mat-form-field>
+          </div>
+
+          <!-- BOA RESULTADO -->
+
+          <h4>Resultado</h4>
+          <div class="grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Valor</mat-label>
+              <input matInput type="number" formControlName="boaResultValor" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Preço Quilo</mat-label>
+              <input matInput type="number" formControlName="boaResultQuilo" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Peso Total</mat-label>
+              <input matInput type="number" formControlName="boaResultPesoTotal" />
+            </mat-form-field>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <!---------------------- FRACA --------------------------------->
+        <div class="divFraca">
+          <h3>FRACA</h3>
+          <div class="grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Peso</mat-label>
+              <input matInput type="number" formControlName="fracaPeso" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Preço Caixa</mat-label>
+              <input matInput type="number" formControlName="fracaPrecoCaixa" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Caixas</mat-label>
+              <input matInput type="number" formControlName="fracaCaixas" />
+            </mat-form-field>
+          </div>
+          <!-- FRACA RESULTADO -->
+          <h4>Resultado</h4>
+          <div class="grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Valor</mat-label>
+              <input matInput type="number" formControlName="fracaResultValor" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Preço Quilo</mat-label>
+              <input matInput type="number" formControlName="fracaResultQuilo" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Peso Total</mat-label>
+              <input matInput type="number" formControlName="fracaResultPesoTotal" />
+            </mat-form-field>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <!-- RESULTADO GERAL -->
+        <h3>Resultado Total</h3>
+        <div class="grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Valor Total</mat-label>
+            <input matInput type="number" formControlName="geralResultValor" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Preço Quilo</mat-label>
+            <input matInput type="number" formControlName="geralResultMediaQuilos" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Peso Total</mat-label>
+            <input matInput type="number" formControlName="geralResultPesoTotal" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- AÇÕES -->
+      <div style="display: flex; justify-content: flex-end; gap: 12px">
+        <button mat-stroked-button color="warn" (click)="cancelar()">Cancelar</button>
+        <button mat-raised-button color="primary" (click)="salvar()">Salvar</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</form>

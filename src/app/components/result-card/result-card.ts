@@ -23,9 +23,9 @@ export class ResultCard {
   ngOnInit() {
     const formatar = new Formatar();
 
-    if (this.tipo === 'Boa') {
+    if (this.tipo == 'Boa' || this.tipo == 'boa') {
       this.classe = 'container-boa';
-    } else if (this.tipo === 'Fraca') {
+    } else if (this.tipo == 'Fraca' || this.tipo == 'fraca') {
       this.classe = 'container-fraca';
     } else {
       this.classe = 'container';

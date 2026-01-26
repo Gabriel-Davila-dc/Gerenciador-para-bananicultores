@@ -17,6 +17,7 @@ import { Formatar } from '../../services/formatar';
 export class CardSalvo {
   @Input() infos!: Venda;
   @Output() apagarVenda = new EventEmitter<number>();
+  @Output() editarVenda = new EventEmitter<Venda>();
   formatar = new Formatar();
   venda!: Venda;
   minimizado: boolean = true;
@@ -39,6 +40,10 @@ export class CardSalvo {
 
   async apagar() {
     this.apagarVenda.emit(this.venda.id);
+  }
+
+  editar() {
+    this.editarVenda.emit(this.venda);
   }
 
   definir(venda: Venda): ResumoTotal {

@@ -10,10 +10,18 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  getUserById() {
-    const userId = localStorage.getItem('userId');
-
-    return this.http.get(`${this.apiUrl}/users/${userId}`);
+  getUser(): boolean {
+    try {
+      // Verifica se o token é válido
+      this.http.get('http://localhost:3333/users/token', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
   //Login
   getUserLogin(email: string, password: string) {
