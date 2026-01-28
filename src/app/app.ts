@@ -28,7 +28,7 @@ export class App {
     const tokenValido = localStorage.getItem('token');
 
     //ver se usuario está conectado a internet
-    const conectado = this.userService.getUser();
+    const conectado: boolean = await this.userService.getUser();
 
     //usuario não está logado
     if (!tokenValido) {
@@ -43,7 +43,7 @@ export class App {
       if (conectado) {
         this.salvar.rotinaSalvarVendas();
 
-        this.snackBar.open(' Você está Conectado!', '✅', {
+        this.snackBar.open('1 Você está Conectado!', '✅', {
           duration: 2500,
           verticalPosition: 'top',
           horizontalPosition: 'center',

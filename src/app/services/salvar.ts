@@ -143,7 +143,7 @@ export class Salvar {
       // Verifica se o token é válido
       const logado = this.userService.getUser();
       //conectado, pode mandar salvar
-      if (logado) {
+      if (await logado) {
         await this.vendaService.apagarVenda(id, tokenValido);
       } else {
         this.snackBar.open('Você não está logado. Conecte-se a internet para apagar.', '🚫', {

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { map, tap } from 'rxjs';
 
 @Injectable({
@@ -10,16 +11,20 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  getUser(): boolean {
+  async getUser(): Promise<boolean> {
     try {
-      // Verifica se o token é válido
-      this.http.get('http://localhost:3333/users/token', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      await firstValueFrom(
+        this.http.get('http://localhost:3333/users/token', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }),
+      );
+
+      console.log('Token válido (200)');
       return true;
     } catch (error) {
+      console.log('Erro ao verificar o token:', error);
       return false;
     }
   }
