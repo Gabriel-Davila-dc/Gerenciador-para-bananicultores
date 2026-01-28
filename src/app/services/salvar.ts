@@ -10,12 +10,15 @@ import { UserService } from './user-service';
   providedIn: 'root',
 })
 export class Salvar {
+  private tokenValido: string = '';
   constructor(
     private http: HttpClient,
     private vendaService: VendaService,
     private snackBar: MatSnackBar,
     private userService: UserService,
-  ) {}
+  ) {
+    this.tokenValido = localStorage.getItem('token') || '';
+  }
 
   async salvarVenda(venda: Venda): Promise<void> {
     //trás as vendas salvas
@@ -32,7 +35,7 @@ export class Salvar {
 
     //  Salvar no banco de dados do servidor
     // Ver se o usuario permanece logado e conectado, verificando o token
-    const tokenValido = localStorage.getItem('token');
+    const tokenValido = this.tokenValido;
 
     if (!tokenValido) {
       this.snackBar.open(' Faça Login em uma conta para salvar permanentemente.', '⚠️', {
@@ -51,25 +54,7 @@ export class Salvar {
         .subscribe({
           //conectado, pode mandar salvar
           next: async () => {
-            const naoSalvas = [];
-
-            while (0 < vendidas.length) {
-              const vendaParaSalvar = vendidas.shift();
-
-              const resultado = await this.vendaService.salvarVenda(vendaParaSalvar, tokenValido);
-              //se tiver sido salvo no banco de dados, apaga do localStorage
-              if (resultado == true) {
-                const vendasJSON = JSON.stringify(vendidas, null, 2);
-
-                //salva localmente
-                localStorage.setItem('vendas', vendasJSON);
-              } else {
-                //vendas que deram erro ao salvar no servidor, esperam aqui para voltar ao localStorege
-                naoSalvas.push(vendaParaSalvar);
-              }
-            }
-            // salva em  localStorage as que não foram salvas no servidor
-            const vendasJSON = JSON.stringify(naoSalvas, null, 2);
+            this.rotinaSalvarVendas();
           },
           //Não conectado, deixa no localStorage
           error: () => {
@@ -87,6 +72,31 @@ export class Salvar {
     }
   }
 
+  async rotinaSalvarVendas(): Promise<void> {
+    const naoSalvas = [];
+    const vendasSalvas = localStorage.getItem('vendas');
+    //se tiver vendas joga pro array de vendas "vendidas", ou cria um vazio
+    const vendidas: Venda[] = vendasSalvas ? JSON.parse(vendasSalvas) : [];
+    //se tiver vendas offline, salva
+    while (0 < vendidas.length) {
+      const vendaParaSalvar = vendidas.shift();
+
+      const resultado = await this.vendaService.salvarVenda(vendaParaSalvar, this.tokenValido);
+      //se tiver sido salvo no banco de dados, apaga do localStorage
+      if (resultado == true) {
+        const vendasJSON = JSON.stringify(vendidas, null, 2);
+
+        //salva localmente
+        localStorage.setItem('vendas', vendasJSON);
+      } else {
+        //vendas que deram erro ao salvar no servidor, esperam aqui para voltar ao localStorege
+        naoSalvas.push(vendaParaSalvar);
+      }
+    }
+    // salva em  localStorage as que não foram salvas no servidor
+    const vendasJSON = JSON.stringify(naoSalvas, null, 2);
+  }
+
   async pegarVendas(): Promise<Venda[]> {
     //Pega as vendas Salvas
     const vendasSalvas = localStorage.getItem('vendas');
@@ -94,9 +104,7 @@ export class Salvar {
     const vendidas: Venda[] = vendasSalvas ? JSON.parse(vendasSalvas) : [];
     try {
       //servidor online
-      const vendaApi: VendaApi[] = await this.vendaService.listarVendas(
-        localStorage.getItem('token') || '',
-      );
+      const vendaApi: VendaApi[] = await this.vendaService.listarVendas(this.tokenValido);
 
       const vendasConvertidas: Venda[] = vendaApi.map((api) => this.mapVendaApiParaVenda(api));
 
@@ -115,16 +123,18 @@ export class Salvar {
   }
 
   async apagarVenda(id: number): Promise<void> {
-    const tokenValido = localStorage.getItem('token');
-    const vendasSalvas = localStorage.getItem('vendas');
-    const vendidas: Venda[] = vendasSalvas ? JSON.parse(vendasSalvas) : [];
-    const vendasFiltradas = vendidas.filter((venda) => venda.id !== id);
-    const vendasJSON = JSON.stringify(vendasFiltradas, null, 2);
+    const tokenValido = this.tokenValido;
+    const vendasStorage = localStorage.getItem('vendas');
+    const vendidas: Venda[] = vendasStorage ? JSON.parse(vendasStorage) : [];
+    //Remove a venda do localStorage, e mantem as outras salvas
+    const vendasSalvas = vendidas.filter((venda) => venda.id !== id);
+    const vendasJSON = JSON.stringify(vendasSalvas, null, 2);
+    //salva localStorage atualizado
     localStorage.setItem('vendas', vendasJSON);
     console.log(`Venda com ID ${id} foi apagada.`);
 
     if (!tokenValido) {
-      this.snackBar.open('Faça Login em uma conta para salvar permanentemente.', '🔓', {
+      this.snackBar.open('Conecte-se para apagar permanentemente.', '🔓', {
         duration: 2500,
         verticalPosition: 'top',
         horizontalPosition: 'center',
@@ -136,7 +146,7 @@ export class Salvar {
       if (logado) {
         await this.vendaService.apagarVenda(id, tokenValido);
       } else {
-        this.snackBar.open('Você não está logado. Conecte-se a internet para Apagar.', '🚫', {
+        this.snackBar.open('Você não está logado. Conecte-se a internet para apagar.', '🚫', {
           duration: 2500,
           verticalPosition: 'top',
           horizontalPosition: 'center',
@@ -146,14 +156,11 @@ export class Salvar {
   }
 
   async atualizarVenda(vendaAtualizada: Venda): Promise<void> {
-    const salvoServer = await this.vendaService.atualizarVenda(
-      vendaAtualizada,
-      localStorage.getItem('token') || '',
-    );
+    const salvoServer = await this.vendaService.atualizarVenda(vendaAtualizada, this.tokenValido);
+    //se não salvou no server, salva no localStorage
     if (!salvoServer) {
-      //OFFLINE - atualiza LocalStorage
-      const vendasSalvas = localStorage.getItem('vendas');
-      const vendidas: Venda[] = vendasSalvas ? JSON.parse(vendasSalvas) : [];
+      const vendasStorage = localStorage.getItem('vendas');
+      const vendidas: Venda[] = vendasStorage ? JSON.parse(vendasStorage) : [];
 
       const index = vendidas.findIndex((venda) => venda.id === vendaAtualizada.id);
       if (index !== -1) {

@@ -1,5 +1,5 @@
 <div class="container">
-  <h1>Vendas Salvas</h1>
+  <h1>Histórico de vendas</h1>
   @for (venda of vendas$ | async; track venda.id) {
     <app-card-salvo
       [infos]="venda"

@@ -5,7 +5,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 60px 60px 60px rgba(0, 0, 0, 0.2);
+
   overflow-y: auto; /* rolagem vertical quando precisar */
 }
 

@@ -19,7 +19,7 @@ export class VendaService {
   async salvarVenda(venda: any, tokenValido: string): Promise<boolean> {
     //envia a Venda por request e o Token pelo headers
     try {
-      const resposta = await firstValueFrom(
+      await firstValueFrom(
         this.http.post<any>('http://localhost:3333/vendas', venda, {
           headers: {
             Authorization: `Bearer ${tokenValido}`,

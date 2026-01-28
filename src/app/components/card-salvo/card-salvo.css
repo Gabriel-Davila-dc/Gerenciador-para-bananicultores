@@ -42,6 +42,14 @@ p {
   width: 100%;
 }
 
+button:hover {
+  background-color: var(--verde-principal) !important;
+}
+
+mat-icon {
+  color: #010f36; /* amarelo */
+}
+
 @media (min-width: 1000px) {
   .card {
     min-width: 600px;
