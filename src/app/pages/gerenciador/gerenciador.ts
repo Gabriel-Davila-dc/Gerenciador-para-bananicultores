@@ -17,11 +17,14 @@ export class Gerenciador {
   vendas$!: Observable<Venda[]>;
 
   Editando: Venda | null = null;
+  email: string = localStorage.getItem('email') || 'Nenhum';
 
   constructor(private salvar: Salvar) {}
 
   ngOnInit() {
     this.vendas$ = from(this.salvar.pegarVendas());
+    this.email = localStorage.getItem('email') || 'Nenhum';
+    console.log(localStorage.getItem('email'));
   }
 
   apagar(id: number) {

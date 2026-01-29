@@ -18,8 +18,19 @@ export class Formatar {
   }
 
   data(data: string): string {
+    //se já estiver formatada para br
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(data)) {
+      return data;
+    }
+
     const dataFormatada = new Date(data).toLocaleDateString('pt-BR');
+
     // 21/01/2026
     return dataFormatada;
+  }
+
+  dataBRParaISO(dataBr: string): string {
+    const [dia, mes, ano] = dataBr.split('/');
+    return `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
   }
 }

@@ -5,6 +5,7 @@ import { VendaService } from './venda-service';
 import { VendaApi } from '../Types/VendaApi';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from './user-service';
+import { Formatar } from './formatar';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,7 @@ export class Salvar {
     private vendaService: VendaService,
     private snackBar: MatSnackBar,
     private userService: UserService,
+    private formatar: Formatar,
   ) {
     this.tokenValido = localStorage.getItem('token') || '';
   }
@@ -176,7 +178,7 @@ export class Salvar {
       id: api.id,
 
       nome: api.cliente ?? 'Sem nome',
-      data: api.createdAt,
+      data: this.formatar.data(api.createdAt),
       tipo: api.tipo,
 
       simples: {

@@ -1,3 +1,4 @@
+import { Formatar } from './../../services/formatar';
 import { MatCardModule } from '@angular/material/card';
 import { Component, EventEmitter, Input, Output, output } from '@angular/core';
 import { Venda } from '../../models/venda';
@@ -9,6 +10,8 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-update-venda',
@@ -22,7 +25,11 @@ import { CommonModule } from '@angular/common';
     MatInputModule,
     MatButtonModule,
     MatDividerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatInputModule,
   ],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }],
   templateUrl: './update-venda.html',
   styleUrl: './update-venda.css',
 })
@@ -32,7 +39,10 @@ export class UpdateVenda {
   @Output() salva = new EventEmitter<Venda>();
   form!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private fornatar: Formatar,
+  ) {}
 
   ngOnInit() {
     this.setVariaveis();
@@ -48,8 +58,10 @@ export class UpdateVenda {
   }
 
   setVariaveis() {
+    const dataIso = this.fornatar.dataBRParaISO(this.venda.data);
     this.form = this.fb.group({
       cliente: [this.venda.nome],
+      data: [new Date(dataIso)],
       tipo: [this.venda.tipo],
 
       // SIMPLES
@@ -104,6 +116,7 @@ export class UpdateVenda {
   setVenda() {
     //venda
     this.venda.nome = this.form.value.cliente;
+    this.venda.data = this.form.value.data;
     //simples
     this.venda.simples.pesoCaixa = this.form.value.simplesPeso;
     this.venda.simples.precoCaixa = this.form.value.simplesPrecoCaixa;

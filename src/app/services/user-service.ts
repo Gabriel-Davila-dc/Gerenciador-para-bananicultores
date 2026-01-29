@@ -33,6 +33,7 @@ export class UserService {
     let dados = this.http.post<any>('http://localhost:3333/users/login', { email, password }).pipe(
       tap((res) => {
         localStorage.setItem('token', res.token);
+
         console.log('token service:' + res.token);
       }),
     );
