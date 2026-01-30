@@ -11,6 +11,7 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
+  //Ver se está conectado -----------------------------------------------------------------------
   async getUser(): Promise<boolean> {
     try {
       await firstValueFrom(
@@ -28,7 +29,7 @@ export class UserService {
       return false;
     }
   }
-  //Login
+  //Login--------------------------------------------------------------------------------------
   getUserLogin(email: string, password: string) {
     let dados = this.http.post<any>('http://localhost:3333/users/login', { email, password }).pipe(
       tap((res) => {
@@ -40,7 +41,7 @@ export class UserService {
 
     return dados;
   }
-  //Registrar
+  //Registrar------------------------------------------------------------------------------------
   postUserRegister(email: string, password: string) {
     let dados = this.http.post<any>('http://localhost:3333/users', { email, password });
     return dados;
