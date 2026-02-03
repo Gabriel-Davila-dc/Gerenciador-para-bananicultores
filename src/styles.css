@@ -12,7 +12,7 @@ body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 
   min-height: 100vh;
-  background: linear-gradient(180deg, #ffffff 70%, rgba(94, 255, 0, 0.733));
+  background: linear-gradient(180deg, #ffffffbd 70%, rgba(94, 255, 0, 0.733));
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
@@ -46,5 +46,11 @@ button.mat-mdc-raised-button.btn-entrar {
   color: rgb(0, 6, 51) !important;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}

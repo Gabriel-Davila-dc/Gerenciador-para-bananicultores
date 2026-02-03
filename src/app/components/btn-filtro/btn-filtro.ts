@@ -8,18 +8,34 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './btn-filtro.css',
 })
 export class BtnFiltro {
-  @Input() perguntaFiltro!: string;
-  @Input() nameFiltro!: string;
-  @Input() escolhasFiltro!: string[];
+  @Input() modelo!: number;
+
   @Output() filtroEscolhido = new EventEmitter<string>();
   escolha: string = '';
+  escolhasFiltro: string[] = [];
   negocia: string = 'simples';
+  pergunta: string = '';
+  name: string = '';
 
   ngOnInit() {
-    this.escolha = this.escolhasFiltro[0]; //deixa os valores setados quando inicia a página (simples / caixa)
+    this.escolher(this.modelo);
     this.filtroEscolhido.emit(this.escolha);
   }
   atualizaFiltro(escolhido: string) {
     this.filtroEscolhido.emit(escolhido); //joga o valor escolhido pro pai, pegando o valor pelo html
+  }
+
+  escolher(modelo: number) {
+    if (modelo === 1) {
+      this.pergunta = 'Como você negocia?';
+      this.name = 'negocia';
+      this.escolha = 'Simples';
+      this.escolhasFiltro = ['Simples', 'Classificada'];
+    } else if (modelo === 2) {
+      this.pergunta = 'Como você mede o preço?';
+      const name2 = 'pesa';
+      this.escolha = 'Caixa';
+      this.escolhasFiltro = ['Caixa', 'Quilo'];
+    }
   }
 }

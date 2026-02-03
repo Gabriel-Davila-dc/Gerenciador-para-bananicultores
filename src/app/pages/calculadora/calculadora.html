@@ -1,18 +1,8 @@
 <div class="container">
   <!-- Primeiros filtros -->
-  <app-btn-filtro
-    [perguntaFiltro]="pergunta1"
-    [escolhasFiltro]="escolha1"
-    [nameFiltro]="name1"
-    (filtroEscolhido)="setFiltroNegocio($event)"
-  ></app-btn-filtro>
+  <app-btn-filtro [modelo]="1" (filtroEscolhido)="setFiltroNegocio($event)"></app-btn-filtro>
 
-  <app-btn-filtro
-    [perguntaFiltro]="pergunta2"
-    [escolhasFiltro]="escolha2"
-    [nameFiltro]="name2"
-    (filtroEscolhido)="setFiltroPeso($event)"
-  ></app-btn-filtro>
+  <app-btn-filtro [modelo]="2" (filtroEscolhido)="setFiltroPeso($event)"></app-btn-filtro>
 
   <div class="calculos">
     <!-- ✅ se for simples -->

@@ -42,18 +42,6 @@ type Resultados = [valor: number, peso: number, preco: number];
   styleUrl: './calculadora.css',
 })
 export class Calculadora {
-  /* =====================
-     Perguntas / Filtros
-  ===================== */
-
-  pergunta1 = 'Como você negocia?';
-  name1 = 'negocia';
-  escolha1 = ['Simples', 'Classificada'];
-
-  pergunta2 = 'Como você mede o preço?';
-  name2 = 'pesa';
-  escolha2 = ['Caixa', 'Quilo'];
-
   moverCaminhao = false;
 
   /* =====================
