@@ -33,4 +33,12 @@ export class Formatar {
     const [dia, mes, ano] = dataBr.split('/');
     return `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
   }
+
+  dataISOParaBR(data: Date): string {
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const ano = data.getFullYear();
+
+    return `${dia}/${mes}/${ano}`;
+  }
 }

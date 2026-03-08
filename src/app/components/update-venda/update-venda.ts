@@ -68,17 +68,26 @@ export class UpdateVenda {
     this.cancela.emit();
   }
 
-  calcular() {
+  async calcular() {
     this.setVenda();
     //coloca a [venda antiga e venda nova] para serem usadas na função comparar
     this.vendaComparadas = [this.vendaAntiga, this.venda];
-    this.venda = this.contas.recalcular(this.vendaComparadas);
+    this.venda = await this.contas.recalcular(this.vendaComparadas);
+    this.vendaAntiga = structuredClone(this.venda);
     console.log('venda recalculada: ', this.venda);
     this.setVariaveis();
   }
 
   setVariaveis() {
+    console.log('ANTES da função:');
+    console.log(this.venda.data);
+    console.log(typeof this.venda.data);
+
     const dataIso = this.fornatar.dataBRParaISO(this.venda.data);
+
+    console.log('DEPOIS da função:');
+    console.log(dataIso);
+    console.log(typeof dataIso);
     this.form = this.fb.group({
       cliente: [this.venda.nome],
       data: [new Date(dataIso)],
@@ -136,7 +145,7 @@ export class UpdateVenda {
   setVenda() {
     //venda
     this.venda.nome = this.form.value.cliente;
-    this.venda.data = this.form.value.data;
+    this.venda.data = this.fornatar.dataISOParaBR(this.form.value.data);
     //simples
     this.venda.simples.pesoCaixa = this.form.value.simplesPeso;
     this.venda.simples.precoCaixa = this.form.value.simplesPrecoCaixa;
