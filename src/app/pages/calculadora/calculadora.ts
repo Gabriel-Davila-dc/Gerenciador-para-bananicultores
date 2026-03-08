@@ -66,7 +66,9 @@ export class Calculadora {
      Estados / Valores
   ===================== */
 
+  //para sabermos se estamos fazendo contas com simples ou classificadas
   filtroNegocio = '';
+  //para sabermos se estamos fazendo contas com peso da caixa ou de quilo
   filtroPeso = '';
 
   valores: Valores = [0, 0, 0];
@@ -94,12 +96,15 @@ export class Calculadora {
   ===================== */
 
   setFiltroNegocio(valor: string): void {
+    //Simples ou Classificada, vem lá do btn-filtro 1
+    this.venda.tipo = valor;
     this.filtroNegocio = valor;
     this.calcular(this.valores, 'simples');
     this.atualizarPagina();
   }
 
   setFiltroPeso(valor: string): void {
+    //Caixa ou Quilo, vem lá do btn-filtro 2
     this.filtroPeso = valor;
     this.calcular(this.valores, 'simples');
     this.atualizarPagina();
@@ -109,10 +114,12 @@ export class Calculadora {
      Recebe valores dos inputs
   ===================== */
 
+  //a cada digitação, ativa a função:
   setValores(valor: number[], tipo: 'boa' | 'fraca' | 'simples'): void {
     const dados: Valores = [valor[0], valor[1], valor[2]];
 
     switch (tipo) {
+      //digitando boa
       case 'boa':
         this.valoresBoa = dados;
         this.calcular(this.valoresBoa, 'boa');
@@ -127,12 +134,12 @@ export class Calculadora {
         }
 
         break;
-
+      //digitando fraca
       case 'fraca':
         this.valoresFraca = dados;
         this.calcular(this.valoresFraca, 'fraca');
         break;
-
+      //digitando simples
       default:
         this.valores = dados;
         this.calcular(this.valores, 'simples');

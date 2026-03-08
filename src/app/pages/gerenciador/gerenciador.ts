@@ -5,6 +5,7 @@ import { Salvar } from '../../services/salvar';
 import { CommonModule } from '@angular/common';
 import { from, Observable } from 'rxjs';
 import { UpdateVenda } from '../../components/update-venda/update-venda';
+import { Contas } from '../../services/contas';
 
 @Component({
   standalone: true,
@@ -19,7 +20,10 @@ export class Gerenciador {
   Editando: Venda | null = null;
   email: string = localStorage.getItem('email') || 'Nenhum';
 
-  constructor(private salvar: Salvar) {}
+  constructor(
+    private salvar: Salvar,
+    private contas: Contas,
+  ) {}
 
   ngOnInit() {
     this.vendas$ = from(this.salvar.pegarVendas());

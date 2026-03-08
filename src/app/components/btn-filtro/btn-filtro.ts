@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 export class BtnFiltro {
   @Input() modelo!: number;
 
+  //retorna a escolha
   @Output() filtroEscolhido = new EventEmitter<string>();
   escolha: string = '';
   escolhasFiltro: string[] = [];

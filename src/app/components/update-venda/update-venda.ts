@@ -5,13 +5,12 @@ import { Venda } from '../../models/venda';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatIconModule } from '@angular/material/icon';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { Contas } from '../../services/contas';
 
 @Component({
   selector: 'app-update-venda',
@@ -35,17 +34,28 @@ import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 })
 export class UpdateVenda {
   @Input() venda!: Venda;
+
   @Output() cancela = new EventEmitter<void>();
   @Output() salva = new EventEmitter<Venda>();
+
   form!: FormGroup;
+
+  vendaComparadas!: Venda[];
+  vendaAntiga!: Venda;
 
   constructor(
     private fb: FormBuilder,
     private fornatar: Formatar,
+    private contas: Contas,
   ) {}
 
   ngOnInit() {
+    //não apontará na memoria, mas fará um clone do objeto, segurando uma versão segura
+    this.vendaAntiga = structuredClone(this.venda);
     this.setVariaveis();
+    this.form.valueChanges.subscribe(() => {
+      this.calcular;
+    });
   }
 
   salvar() {
@@ -53,8 +63,18 @@ export class UpdateVenda {
     this.salva.emit(this.venda);
     this.cancela.emit();
   }
+
   cancelar() {
     this.cancela.emit();
+  }
+
+  calcular() {
+    this.setVenda();
+    //coloca a [venda antiga e venda nova] para serem usadas na função comparar
+    this.vendaComparadas = [this.vendaAntiga, this.venda];
+    this.venda = this.contas.recalcular(this.vendaComparadas);
+    console.log('venda recalculada: ', this.venda);
+    this.setVariaveis();
   }
 
   setVariaveis() {

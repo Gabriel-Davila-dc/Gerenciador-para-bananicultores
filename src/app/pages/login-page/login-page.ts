@@ -49,11 +49,13 @@ export class LoginPage {
       next: (usuario) => {
         console.log('Usuário logado:', usuario);
         this.error = '';
-        alert('Você está logado ✅');
-        this.router.navigate(['/']); // volta para calculadora
+        this.router.navigate(['/']).then(() => {
+          window.location.reload();
+        });
       },
       error: (err) => {
         localStorage.removeItem('token'); // limpa token antigo
+        localStorage.removeItem('email'); // limpa e-mail antigo
         this.error = err.error?.message || 'Erro ao fazer Login';
         this.cdr.detectChanges();
       },
