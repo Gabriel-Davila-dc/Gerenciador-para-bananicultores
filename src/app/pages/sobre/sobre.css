@@ -5,6 +5,13 @@
   box-shadow: var(--sombra);
 }
 
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+  border-radius: 9px;
+}
+
 mat-card-title {
   color: var(--azul-escuro);
   align-self: center;
