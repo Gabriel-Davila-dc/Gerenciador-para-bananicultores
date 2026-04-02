@@ -1,3 +1,11 @@
+section {
+  margin: 0px;
+  background-image: url('/img/bananal.png');
+  background-size: cover; /* cobre toda a div */
+  background-position: center; /* centraliza a imagem */
+  background-repeat: no-repeat; /* não repete */
+  background-attachment: fixed; /* deixa a imagem estática */
+}
 .sobre-container {
   max-width: 900px;
   margin: 2em auto;
@@ -38,36 +46,39 @@ p {
   height: 45vh;
   overflow: hidden;
   margin-left: calc(-50vw + 50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
 .header-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-img {
-  width: 100%;
-}
-
 .header-overlay {
-  position: absolute;
   inset: 0;
-  background: rgba(0, 0, 52, 0.55); /* azul escuro do tema */
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  color: var(--bg-branco);
+  color: black;
+
+  height: 50%;
+  width: 60%;
+  border-radius: 40px;
 }
 
 .header-overlay h1 {
   font-size: 3.2rem;
   margin-bottom: 0.3em;
+  text-shadow: 1px 3px 5px white;
 }
 
 .header-overlay p {
   font-size: 1.4rem;
-  max-width: 600px;
+  width: 100%;
+  background: radial-gradient(circle, white 0%, transparent 100%);
 }
