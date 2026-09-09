@@ -54,3 +54,15 @@ body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
+
+/* remove o fundo preto REAL */
+.custom-snackbar .mdc-snackbar__surface {
+  background-color: transparent !important;
+  box-shadow: none !important;
+
+  text-align: center;
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+}

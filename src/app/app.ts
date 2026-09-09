@@ -1,3 +1,4 @@
+import { AlertService } from './services/alert-service';
 import { UserService } from './services/user-service';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
@@ -21,6 +22,7 @@ export class App {
     private snackBar: MatSnackBar,
     private userService: UserService,
     private salvar: Salvar,
+    private alert: AlertService,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -32,30 +34,16 @@ export class App {
 
     //usuario não está logado
     if (!tokenValido) {
-      this.snackBar.open(' Você não está logado!', '⚠️', {
-        duration: 2500,
-        verticalPosition: 'top',
-        horizontalPosition: 'right',
-      });
+      this.alert.message('Não está conectado', 'alert');
     } else {
       console.log('TokenValido:', tokenValido);
       //usuario conectado
       if (conectado) {
-        this.salvar.rotinaSalvarVendas();
-
-        this.snackBar.open('1 Você está Conectado!', '✅', {
-          duration: 2500,
-          verticalPosition: 'top',
-          horizontalPosition: 'center',
-        });
+        this.alert.message('Conectado', 'sucess');
       }
       // logado, sem internet
       else {
-        this.snackBar.open('Você não está Conectado!', '⚠️', {
-          duration: 2500,
-          verticalPosition: 'top',
-          horizontalPosition: 'right',
-        });
+        this.alert.message('Sem internet', 'alert');
       }
     }
   }
