@@ -2,15 +2,45 @@
   <a class="voltar" routerLink="/gerenciador">‹ Gerenciador</a>
   <h1>Histórico de vendas</h1>
   <p>{{ email }}</p>
-  @for (venda of vendas$ | async; track venda.id) {
+
+  <div class="barra-filtro">
+    <label>
+      Comprador
+      <select [(ngModel)]="compradorFiltro">
+        <option [ngValue]="''">Todos</option>
+        @for (comprador of compradores; track comprador.id) {
+          <option [ngValue]="comprador.id">{{ comprador.nome }}</option>
+        }
+      </select>
+    </label>
+
+    <span class="resumo-filtro">
+      {{ vendasFiltradas.length }} venda(s)
+      @if (totalEmAberto > 0) {
+        <strong class="aberto">· R$ {{ totalEmAberto.toFixed(2) }} em aberto</strong>
+      }
+    </span>
+  </div>
+
+  @if (carregando) {
+    <p class="aviso">Carregando vendas...</p>
+  }
+
+  @for (venda of vendasFiltradas; track venda.id) {
     <app-card-salvo
       [infos]="venda"
       (apagarVenda)="apagar($event)"
       (editarVenda)="editarVenda($event)"
+      (alternarPago)="alternarPago($event)"
       class="card-salvo"
     >
     </app-card-salvo>
   }
+
+  @if (!carregando && vendasFiltradas.length === 0) {
+    <p class="aviso">Nenhuma venda para esse filtro.</p>
+  }
+
   <div *ngIf="Editando !== null" class="overlay" (click)="fechar()">
     <div class="editarCentral" (click)="$event.stopPropagation()">
       <app-update-venda

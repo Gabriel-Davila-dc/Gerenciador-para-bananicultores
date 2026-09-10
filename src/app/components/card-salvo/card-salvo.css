@@ -20,6 +20,34 @@
   justify-content: space-between;
 }
 
+.selo-pago {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  margin-bottom: 0.5em;
+  padding: 0.3em 1em;
+  border: none;
+  border-radius: 100px;
+  background: var(--folha-suave);
+  color: var(--folha);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.selo-pago.selo-devendo {
+  background: var(--banana-clara);
+  color: var(--terra);
+}
+
+.selo-pago mat-icon {
+  font-size: 1.05rem;
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
 .selo-pendente {
   align-self: center;
   margin-bottom: 0.5em;

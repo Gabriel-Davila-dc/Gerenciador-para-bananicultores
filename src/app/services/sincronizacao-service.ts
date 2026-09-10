@@ -37,10 +37,27 @@ const CHAVE_DESCARTADAS = 'sincronizacao-descartadas';
 export class SincronizacaoService {
   private handlers = new Map<string, HandlerSincronizacao>();
   private sincronizando = false;
+  private retentativa: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
     // quando a conexão volta, tenta enviar o que ficou parado
     window.addEventListener('online', () => this.sincronizar());
+  }
+
+  /**
+   * Sobrou coisa na fila (sem internet, ou o servidor pediu calma com um 429):
+   * marca nova tentativa. Sem isso a fila ficaria parada até o usuário navegar
+   * ou fazer outra ação, o que pode não acontecer tão cedo.
+   */
+  private agendarRetentativa(): void {
+    if (this.retentativa) {
+      return;
+    }
+
+    this.retentativa = setTimeout(() => {
+      this.retentativa = null;
+      this.sincronizar();
+    }, 30_000);
   }
 
   registrar(recurso: string, handler: HandlerSincronizacao): void {
@@ -85,6 +102,31 @@ export class SincronizacaoService {
     }
   }
 
+  /**
+   * Troca o valor de um campo dentro dos payloads que ainda estão na fila.
+   *
+   * Serve para quando um registro referenciado ganha o id definitivo: uma venda
+   * criada offline aponta para o comprador pelo id temporário negativo, e
+   * enviá-la assim seria recusada pelo servidor.
+   */
+  substituirValorNaFila(recurso: string, campo: string, antigo: unknown, novo: unknown): void {
+    const fila = this.fila();
+    let mudou = false;
+
+    fila.forEach((op) => {
+      const dados = op.dados as Record<string, unknown> | undefined;
+
+      if (op.recurso === recurso && dados && dados[campo] === antigo) {
+        dados[campo] = novo;
+        mudou = true;
+      }
+    });
+
+    if (mudou) {
+      this.guardar(fila);
+    }
+  }
+
   // tudo que está na fila para aquele registro (usado ao apagar algo não enviado)
   removerDoRegistro(recurso: string, idLocal: number): void {
     this.guardar(this.fila().filter((op) => !(op.recurso === recurso && op.idLocal === idLocal)));
@@ -98,6 +140,31 @@ export class SincronizacaoService {
 
   temPendencia(recurso: string, idLocal: number): boolean {
     return this.fila().some((op) => op.recurso === recurso && op.idLocal === idLocal);
+  }
+
+  /**
+   * Junta o que veio do servidor com o que ainda está na fila.
+   *
+   * Regras: o que foi criado offline sobrevive (só existe aqui); o que foi
+   * apagado offline não pode reaparecer; e, em conflito, o aparelho vence -
+   * havendo edição pendente, ela prevalece sobre a versão do servidor.
+   */
+  mesclar<T extends { id?: number }>(recurso: string, cache: T[], doServidor: T[]): T[] {
+    const naoEnviados = cache.filter((item) => this.criacaoPendente(recurso, item.id!));
+    const apagados = this.idsComOperacao(recurso, 'apagar');
+    const editados = this.idsComOperacao(recurso, 'editar');
+
+    const doServidorValidos = doServidor
+      .filter((item) => !apagados.includes(item.id!))
+      .map((item) => {
+        if (!editados.includes(item.id!)) {
+          return item;
+        }
+
+        return cache.find((local) => local.id === item.id) ?? item;
+      });
+
+    return [...naoEnviados, ...doServidorValidos];
   }
 
   async sincronizar(): Promise<{ enviadas: number; pendentes: number }> {
@@ -148,7 +215,13 @@ export class SincronizacaoService {
       this.sincronizando = false;
     }
 
-    return { enviadas, pendentes: this.fila().length };
+    const pendentes = this.fila().length;
+
+    if (pendentes > 0 && navigator.onLine) {
+      this.agendarRetentativa();
+    }
+
+    return { enviadas, pendentes };
   }
 
   // erro do lado do cliente (dado inválido, registro que não existe mais).

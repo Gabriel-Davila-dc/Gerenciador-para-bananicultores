@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -15,6 +15,8 @@ import { Categoria } from '../../models/categoria';
 import { ResumoTotal } from '../../models/resumo-total';
 import { Salvar } from '../../services/salvar';
 import { CadastrosService } from '../../services/cadastros-service';
+import { CompradoresService } from '../../services/compradores-service';
+import { Comprador } from '../../models/comprador';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
@@ -86,6 +88,8 @@ export class Calculadora {
   nome: string = '';
   bananal: string = '';
   bananais: string[] = [];
+  compradorId: number | null = null;
+  compradores: Comprador[] = [];
   data: string = new Date().toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: '2-digit',
@@ -100,8 +104,33 @@ export class Calculadora {
   constructor(
     private salvar: Salvar,
     private cadastros: CadastrosService,
+    private compradoresService: CompradoresService,
+    private cd: ChangeDetectorRef,
   ) {
-    this.bananais = this.cadastros.listar('bananais');
+    this.bananais = this.cadastros.listarNomes('bananais');
+    this.compradores = this.compradoresService.listar();
+    this.sincronizarListas();
+  }
+
+  private async sincronizarListas(): Promise<void> {
+    await this.cadastros.carregarDoServidor();
+    await this.compradoresService.carregarDoServidor();
+
+    this.bananais = this.cadastros.listarNomes('bananais');
+    this.compradores = this.compradoresService.listar();
+
+    // zoneless: o que muda depois do await não é percebido sozinho
+    this.cd.markForCheck();
+  }
+
+  // o nome do comprador escolhido também vai gravado, para o histórico
+  // continuar legível mesmo se o cadastro for apagado depois
+  aoEscolherComprador(): void {
+    const comprador = this.compradoresService.porId(this.compradorId);
+
+    if (comprador) {
+      this.nome = comprador.nome;
+    }
   }
 
   irParaCalculadora(): void {
@@ -273,6 +302,8 @@ export class Calculadora {
     const vendida: Venda = {
       nome: this.nome,
       bananal: this.bananal,
+      compradorId: this.compradorId,
+      pago: false,
       data: this.data,
       tipo: this.filtroNegocio,
       simples: CaixaSimples,

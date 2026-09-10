@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 
-import { CadastrosService, TipoCadastro } from '../../services/cadastros-service';
+import { ItemCadastro, TipoCadastro } from '../../models/item-cadastro';
+import { CadastrosService } from '../../services/cadastros-service';
 import { CrmService } from '../../services/crm-service';
 
 interface Grupo {
@@ -13,7 +14,7 @@ interface Grupo {
   descricao: string;
   icone: string;
   placeholder: string;
-  itens: string[];
+  itens: ItemCadastro[];
   novo: string;
 }
 
@@ -56,12 +57,26 @@ export class Cadastros {
   ];
 
   // item que está sendo renomeado no momento
-  editando: { tipo: TipoCadastro; original: string; valor: string } | null = null;
+  editando: { id: number; valor: string } | null = null;
 
   constructor(
     private cadastros: CadastrosService,
     private crmService: CrmService,
+    private cd: ChangeDetectorRef,
   ) {
+    this.recarregar();
+    this.sincronizar();
+  }
+
+  private async sincronizar(): Promise<void> {
+    await this.cadastros.carregarDoServidor();
+    this.recarregar();
+
+    // zoneless: o que muda depois do await não é percebido sozinho
+    this.cd.markForCheck();
+  }
+
+  private recarregar(): void {
     this.grupos.forEach((grupo) => (grupo.itens = this.cadastros.listar(grupo.tipo)));
   }
 
@@ -70,16 +85,16 @@ export class Cadastros {
     grupo.novo = '';
   }
 
-  remover(grupo: Grupo, item: string): void {
-    grupo.itens = this.cadastros.remover(grupo.tipo, item);
+  remover(grupo: Grupo, item: ItemCadastro): void {
+    grupo.itens = this.cadastros.remover(grupo.tipo, item.id);
   }
 
-  editar(grupo: Grupo, item: string): void {
-    this.editando = { tipo: grupo.tipo, original: item, valor: item };
+  editar(item: ItemCadastro): void {
+    this.editando = { id: item.id, valor: item.nome };
   }
 
-  estaEditando(grupo: Grupo, item: string): boolean {
-    return this.editando?.tipo === grupo.tipo && this.editando?.original === item;
+  estaEditando(item: ItemCadastro): boolean {
+    return this.editando?.id === item.id;
   }
 
   confirmarEdicao(grupo: Grupo): void {
@@ -87,13 +102,14 @@ export class Cadastros {
       return;
     }
 
-    const { original, valor } = this.editando;
+    const { id, valor } = this.editando;
+    const antigo = grupo.itens.find((item) => item.id === id)?.nome ?? '';
     const novo = valor.trim();
 
-    if (novo && novo !== original) {
-      grupo.itens = this.cadastros.renomear(grupo.tipo, original, novo);
-      // leva o novo nome pros serviços que já usavam o antigo
-      this.crmService.atualizarReferencia(grupo.tipo, original, novo);
+    if (novo && novo !== antigo) {
+      grupo.itens = this.cadastros.renomear(grupo.tipo, id, novo);
+      // leva o nome novo para os serviços que já usavam o antigo
+      this.crmService.atualizarReferencia(grupo.tipo, antigo, novo);
     }
 
     this.editando = null;

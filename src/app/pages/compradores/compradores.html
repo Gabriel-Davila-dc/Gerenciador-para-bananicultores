@@ -1,0 +1,120 @@
+<section class="painel">
+  <header class="topo">
+    <a class="voltar" routerLink="/gerenciador">‹ Gerenciador</a>
+    <div class="topo-texto">
+      <h1>Compradores</h1>
+      <p>Quem compra sua banana, quanto já levou e o que ainda está em aberto.</p>
+    </div>
+    <button class="btn-novo" (click)="novo()">
+      <mat-icon>add</mat-icon>
+      Novo comprador
+    </button>
+  </header>
+
+  <div class="lista">
+    @for (comprador of compradores; track comprador.id) {
+      <article class="cartao" [class.cartao-devendo]="emAberto(comprador) > 0">
+        <div class="identidade">
+          @if (comprador.foto) {
+            <img class="foto" [src]="comprador.foto" [alt]="comprador.nome" />
+          } @else {
+            <span class="foto foto-vazia">{{ iniciais(comprador) }}</span>
+          }
+
+          <div class="dados">
+            <h2>{{ comprador.nome }}</h2>
+            @if (comprador.telefone) {
+              <a class="telefone" [href]="'tel:' + comprador.telefone">
+                <mat-icon>call</mat-icon>{{ comprador.telefone }}
+              </a>
+            } @else {
+              <span class="sem-telefone">Sem telefone</span>
+            }
+          </div>
+
+          <button type="button" class="btn-editar" title="Editar" (click)="editar(comprador)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+
+        <div class="numeros">
+          <div class="numero">
+            <span class="rotulo">Vendas</span>
+            <strong>{{ quantasVendas(comprador) }}</strong>
+          </div>
+          <div class="numero">
+            <span class="rotulo">Total comprado</span>
+            <strong>R$ {{ formatar.dinheiro(totalComprado(comprador)) }}</strong>
+          </div>
+          <div class="numero">
+            <span class="rotulo">Em aberto</span>
+            @if (emAberto(comprador) > 0) {
+              <strong class="devendo">R$ {{ formatar.dinheiro(emAberto(comprador)) }}</strong>
+            } @else {
+              <strong class="quitado">
+                <mat-icon>check_circle</mat-icon>
+                Em dia
+              </strong>
+            }
+          </div>
+        </div>
+
+        <a class="ver-vendas" [routerLink]="['/gerenciador/historico']"
+           [queryParams]="{ comprador: comprador.id }">
+          Ver as vendas dele
+        </a>
+      </article>
+    }
+
+    @if (compradores.length === 0) {
+      <p class="vazio">Nenhum comprador cadastrado ainda.</p>
+    }
+  </div>
+</section>
+
+<!-- FORMULÁRIO -->
+<div class="overlay" *ngIf="editando" (click)="fechar()">
+  <div class="formulario" (click)="$event.stopPropagation()">
+    <h2>{{ editando!.id ? 'Editar comprador' : 'Novo comprador' }}</h2>
+
+    <div class="campo-foto">
+      @if (editando!.foto) {
+        <img class="previa" [src]="editando!.foto" alt="Prévia da foto" />
+      } @else {
+        <span class="previa previa-vazia"><mat-icon>person</mat-icon></span>
+      }
+
+      <div class="acoes-foto">
+        <label class="btn-foto">
+          {{ preparandoFoto ? 'Preparando...' : 'Escolher foto' }}
+          <input type="file" accept="image/*" (change)="escolherFoto($event)" hidden />
+        </label>
+        @if (editando!.foto) {
+          <button type="button" class="btn-remover-foto" (click)="removerFoto()">Remover</button>
+        }
+      </div>
+    </div>
+
+    @if (erroFoto) {
+      <p class="erro">{{ erroFoto }}</p>
+    }
+
+    <label>
+      Nome
+      <input type="text" [(ngModel)]="editando!.nome" placeholder="Ex.: Mercado do Zé" />
+    </label>
+
+    <label>
+      Telefone
+      <input type="tel" [(ngModel)]="editando!.telefone" placeholder="Ex.: (33) 99999-0000" />
+    </label>
+
+    <div class="form-botoes">
+      <button class="btn-apagar" *ngIf="editando!.id" (click)="apagar(editando!)">Apagar</button>
+      <button class="btn-cancelar" (click)="fechar()">Cancelar</button>
+      <button class="btn-salvar" [disabled]="!editando!.nome.trim()" (click)="salvarComprador()">
+        Salvar
+      </button>
+    </div>
+  </div>
+</div>

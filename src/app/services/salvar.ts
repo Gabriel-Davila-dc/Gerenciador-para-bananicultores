@@ -48,7 +48,7 @@ export class Salvar {
 
     this.sincronizacao.enfileirar(RECURSO, 'criar', venda.id, venda);
 
-    await this.enviarPendentes('Venda salva no aparelho. Vai para o servidor quando conectar.');
+    await this.enviarPendentes(venda.id, 'Venda salva no aparelho. Vai para o servidor quando conectar.');
   }
 
   async atualizarVenda(venda: Venda): Promise<void> {
@@ -73,7 +73,7 @@ export class Salvar {
       this.sincronizacao.enfileirar(RECURSO, 'editar', venda.id!, venda);
     }
 
-    await this.enviarPendentes('Alteração guardada. Vai para o servidor quando conectar.');
+    await this.enviarPendentes(venda.id!, 'Alteração guardada. Vai para o servidor quando conectar.');
   }
 
   async apagarVenda(id: number): Promise<void> {
@@ -89,7 +89,7 @@ export class Salvar {
     this.sincronizacao.removerDoRegistro(RECURSO, id);
     this.sincronizacao.enfileirar(RECURSO, 'apagar', id);
 
-    await this.enviarPendentes('Exclusão guardada. Vai para o servidor quando conectar.');
+    await this.enviarPendentes(id, 'Exclusão guardada. Vai para o servidor quando conectar.');
   }
 
   async pegarVendas(): Promise<Venda[]> {
@@ -135,10 +135,17 @@ export class Salvar {
     }
   }
 
-  private async enviarPendentes(avisoSeFicouPendente: string): Promise<void> {
-    const { pendentes } = await this.sincronizacao.sincronizar();
+  /**
+   * Avisa só se ESTA alteração ficou para depois.
+   *
+   * Antes olhava o tamanho total da fila, então uma exclusão que já tinha
+   * subido avisava "vai quando conectar" por causa de pendências de outros
+   * recursos que estavam na fila.
+   */
+  private async enviarPendentes(id: number, avisoSeFicouPendente: string): Promise<void> {
+    await this.sincronizacao.sincronizar();
 
-    if (pendentes > 0) {
+    if (this.sincronizacao.temPendencia(RECURSO, id)) {
       this.snackBar.open(avisoSeFicouPendente, '📴', {
         duration: 3000,
         verticalPosition: 'top',
@@ -153,6 +160,29 @@ export class Salvar {
       ...venda,
       pendente: this.sincronizacao.temPendencia(RECURSO, venda.id!),
     }));
+  }
+
+  /**
+   * O comprador criado offline ganhou o id do servidor: as vendas que
+   * apontavam para o id temporário precisam acompanhar, tanto no cache
+   * quanto no que ainda está esperando na fila.
+   */
+  trocarCompradorId(idAntigo: number, idNovo: number): void {
+    const cache = this.lerCache();
+    let mudou = false;
+
+    cache.forEach((venda) => {
+      if (venda.compradorId === idAntigo) {
+        venda.compradorId = idNovo;
+        mudou = true;
+      }
+    });
+
+    if (mudou) {
+      this.guardarCache(cache);
+    }
+
+    this.sincronizacao.substituirValorNaFila(RECURSO, 'compradorId', idAntigo, idNovo);
   }
 
   private trocarIdNoCache(idLocal: number, idServidor: number): void {
@@ -196,6 +226,13 @@ export class Salvar {
     localStorage.removeItem(CHAVE_ANTIGA);
   }
 
+  // colunas decimais chegam do MySQL como texto ("400.00"). sem converter,
+  // somar viraria concatenação: 0 + "400.00" dá "0400.00", e os totais da
+  // tela de métricas sairiam errados sem estourar erro nenhum.
+  private numero(valor: unknown): number {
+    return Number(valor ?? 0) || 0;
+  }
+
   //pega os dados do VendaApi(JSON) e converte para Venda
   private mapVendaApiParaVenda(api: VendaApi): Venda {
     return {
@@ -203,44 +240,47 @@ export class Salvar {
 
       nome: api.cliente ?? 'Sem nome',
       bananal: api.bananal ?? '',
+      compradorId: api.compradorId ?? null,
+      // MySQL devolve boolean como 0/1
+      pago: !!api.pago,
       data: this.formatar.data(api.createdAt),
       tipo: api.tipo,
 
       simples: {
         tipo: api.tipoSimples,
-        pesoCaixa: api.simplesPeso ?? 0,
-        precoCaixa: api.simplesPrecoCaixa ?? 0,
-        caixas: api.simplesCaixas ?? 0,
-        valorTotal: api.simplesValorTotal ?? 0,
-        pesoTotal: api.simplesPesoTotal ?? 0,
-        precoQuilo: api.simplesPrecoQuilo ?? 0,
+        pesoCaixa: this.numero(api.simplesPeso),
+        precoCaixa: this.numero(api.simplesPrecoCaixa),
+        caixas: this.numero(api.simplesCaixas),
+        valorTotal: this.numero(api.simplesValorTotal),
+        pesoTotal: this.numero(api.simplesPesoTotal),
+        precoQuilo: this.numero(api.simplesPrecoQuilo),
       },
 
       boa: {
         tipo: 'Boa',
-        pesoCaixa: api.boaPeso ?? 0,
-        precoCaixa: api.boaPrecoCaixa ?? 0,
-        caixas: api.boaCaixas ?? 0,
-        valorTotal: api.boaValorTotal ?? 0,
-        pesoTotal: api.boaPesoTotal ?? 0,
-        precoQuilo: api.boaPrecoQuilo ?? 0,
+        pesoCaixa: this.numero(api.boaPeso),
+        precoCaixa: this.numero(api.boaPrecoCaixa),
+        caixas: this.numero(api.boaCaixas),
+        valorTotal: this.numero(api.boaValorTotal),
+        pesoTotal: this.numero(api.boaPesoTotal),
+        precoQuilo: this.numero(api.boaPrecoQuilo),
       },
 
       fraca: {
         tipo: 'Fraca',
-        pesoCaixa: api.fracaPeso ?? 0,
-        precoCaixa: api.fracaPrecoCaixa ?? 0,
-        caixas: api.fracaCaixas ?? 0,
-        valorTotal: api.fracaValorTotal ?? 0,
-        pesoTotal: api.fracaPesoTotal ?? 0,
-        precoQuilo: api.fracaPrecoQuilo ?? 0,
+        pesoCaixa: this.numero(api.fracaPeso),
+        precoCaixa: this.numero(api.fracaPrecoCaixa),
+        caixas: this.numero(api.fracaCaixas),
+        valorTotal: this.numero(api.fracaValorTotal),
+        pesoTotal: this.numero(api.fracaPesoTotal),
+        precoQuilo: this.numero(api.fracaPrecoQuilo),
       },
 
       valorTotal: {
-        valor: api.valorTotal ?? 0,
-        pesos: api.pesoTotal ?? 0,
-        mediaQuilos: api.mediaQuilo ?? 0,
-        mediaCaixas: api.mediaCaixa ?? 0,
+        valor: this.numero(api.valorTotal),
+        pesos: this.numero(api.pesoTotal),
+        mediaQuilos: this.numero(api.mediaQuilo),
+        mediaCaixas: this.numero(api.mediaCaixa),
       },
     };
   }

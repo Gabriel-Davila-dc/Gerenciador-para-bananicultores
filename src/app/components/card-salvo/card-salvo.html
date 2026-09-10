@@ -4,6 +4,17 @@ Informações de venda
 <div class="card">
   <label class="labelCentral" for="">{{ venda.tipo }}</label>
   <span class="selo-pendente" *ngIf="venda.pendente">Aguardando envio</span>
+
+  <button
+    type="button"
+    class="selo-pago"
+    [class.selo-devendo]="!venda.pago"
+    (click)="marcarPago()"
+    [title]="venda.pago ? 'Marcar como em aberto' : 'Marcar como pago'"
+  >
+    <mat-icon>{{ venda.pago ? 'check_circle' : 'schedule' }}</mat-icon>
+    {{ venda.pago ? 'Pago' : 'Em aberto' }}
+  </button>
   <div class="resumo">
     <label for="">Cliente:</label>
     <label for="">{{ venda.nome }}</label>

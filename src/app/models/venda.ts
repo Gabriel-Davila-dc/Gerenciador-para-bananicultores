@@ -8,6 +8,9 @@ export interface Venda {
 
   nome: string;
   bananal: string;
+  // null quando a venda não foi ligada a um comprador cadastrado
+  compradorId: number | null;
+  pago: boolean;
   data: string;
   tipo: string;
 

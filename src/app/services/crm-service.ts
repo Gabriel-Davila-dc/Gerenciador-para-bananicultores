@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ServicoCrm } from '../models/servico-crm';
 import type { TipoCadastro } from './cadastros-service';
 import { SincronizacaoService } from './sincronizacao-service';
+import { ServicosApi } from './servicos-api';
 
 export const RECURSO_CRM = 'crm';
 
@@ -55,19 +56,39 @@ const EXEMPLOS: ServicoCrm[] = [
   providedIn: 'root',
 })
 export class CrmService {
-  /**
-   * O CRM ainda não tem backend, mas as alterações já entram na mesma fila
-   * de sincronização das vendas. Quando a API existir, basta registrar o
-   * handler abaixo que a fila acumulada é enviada sozinha:
-   *
-   * this.sincronizacao.registrar(RECURSO_CRM, {
-   *   criar: (dados) => this.api.criar(dados as ServicoCrm),
-   *   editar: (dados) => this.api.editar(dados as ServicoCrm),
-   *   apagar: (id) => this.api.apagar(id),
-   *   aoTrocarId: (idLocal, idServidor) => this.trocarId(idLocal, idServidor),
-   * });
-   */
-  constructor(private sincronizacao: SincronizacaoService) {}
+  constructor(
+    private sincronizacao: SincronizacaoService,
+    private api: ServicosApi,
+  ) {
+    this.sincronizacao.registrar(RECURSO_CRM, {
+      criar: (dados) => this.api.criar(dados as ServicoCrm),
+      editar: (dados) => this.api.editar(dados as ServicoCrm),
+      apagar: (id) => this.api.apagar(id),
+      aoTrocarId: (idLocal, idServidor) => this.trocarId(idLocal, idServidor),
+    });
+  }
+
+  // busca no servidor e junta com o que ainda está na fila
+  async carregarDoServidor(): Promise<void> {
+    await this.sincronizacao.sincronizar();
+
+    try {
+      const doServidor = await this.api.listar();
+      this.guardar(this.sincronizacao.mesclar(RECURSO_CRM, this.listar(), doServidor));
+    } catch {
+      // sem servidor: segue com o cache do aparelho
+    }
+  }
+
+  private trocarId(idLocal: number, idServidor: number): void {
+    const servicos = this.listar();
+    const servico = servicos.find((item) => item.id === idLocal);
+
+    if (servico) {
+      servico.id = idServidor;
+      this.guardar(servicos);
+    }
+  }
 
   listar(): ServicoCrm[] {
     const salvos = localStorage.getItem(CHAVE);

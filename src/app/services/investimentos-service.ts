@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Investimento } from '../models/investimento';
 import { SincronizacaoService } from './sincronizacao-service';
+import { InvestimentosApi } from './investimentos-api';
 
 export const RECURSO_INVESTIMENTOS = 'investimentos';
 
@@ -58,13 +59,40 @@ const EXEMPLOS: Investimento[] = [
   providedIn: 'root',
 })
 export class InvestimentosService {
-  /**
-   * Mesma estratégia do CRM: guarda local e enfileira para sincronizar.
-   * Quando existir a API, basta registrar o handler:
-   *
-   * this.sincronizacao.registrar(RECURSO_INVESTIMENTOS, { criar, editar, apagar, aoTrocarId });
-   */
-  constructor(private sincronizacao: SincronizacaoService) {}
+  constructor(
+    private sincronizacao: SincronizacaoService,
+    private api: InvestimentosApi,
+  ) {
+    this.sincronizacao.registrar(RECURSO_INVESTIMENTOS, {
+      criar: (dados) => this.api.criar(dados as Investimento),
+      editar: (dados) => this.api.editar(dados as Investimento),
+      apagar: (id) => this.api.apagar(id),
+      aoTrocarId: (idLocal, idServidor) => this.trocarId(idLocal, idServidor),
+    });
+  }
+
+  async carregarDoServidor(): Promise<void> {
+    await this.sincronizacao.sincronizar();
+
+    try {
+      const doServidor = await this.api.listar();
+      this.guardar(
+        this.sincronizacao.mesclar(RECURSO_INVESTIMENTOS, this.listar(), doServidor),
+      );
+    } catch {
+      // sem servidor: segue com o cache do aparelho
+    }
+  }
+
+  private trocarId(idLocal: number, idServidor: number): void {
+    const investimentos = this.listar();
+    const item = investimentos.find((registro) => registro.id === idLocal);
+
+    if (item) {
+      item.id = idServidor;
+      this.guardar(investimentos);
+    }
+  }
 
   listar(): Investimento[] {
     const salvos = localStorage.getItem(CHAVE);

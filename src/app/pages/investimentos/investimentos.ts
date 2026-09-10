@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -37,8 +37,19 @@ export class Investimentos {
   constructor(
     private investimentosService: InvestimentosService,
     protected formatar: Formatar,
+    private cd: ChangeDetectorRef,
   ) {
+    // mostra o cache na hora e busca o servidor em seguida
     this.carregar();
+    this.sincronizar();
+  }
+
+  private async sincronizar(): Promise<void> {
+    await this.investimentosService.carregarDoServidor();
+    this.carregar();
+
+    // zoneless: o que muda depois do await não é percebido sozinho
+    this.cd.markForCheck();
   }
 
   carregar(): void {

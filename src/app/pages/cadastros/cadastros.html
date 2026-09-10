@@ -19,9 +19,9 @@
         </div>
 
         <ul class="itens">
-          @for (item of grupo.itens; track item) {
+          @for (item of grupo.itens; track item.id) {
             <li>
-              @if (estaEditando(grupo, item)) {
+              @if (estaEditando(item)) {
                 <input
                   type="text"
                   class="input-edicao"
@@ -38,9 +38,9 @@
                   </button>
                 </span>
               } @else {
-                <span>{{ item }}</span>
+                <span>{{ item.nome }}</span>
                 <span class="acoes">
-                  <button type="button" class="btn-editar" title="Editar" (click)="editar(grupo, item)">
+                  <button type="button" class="btn-editar" title="Editar" (click)="editar(item)">
                     <mat-icon>edit</mat-icon>
                   </button>
                   <button type="button" title="Remover" (click)="remover(grupo, item)">

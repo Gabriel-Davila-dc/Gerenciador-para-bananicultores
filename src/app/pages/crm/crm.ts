@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -40,15 +40,29 @@ export class Crm {
     private crmService: CrmService,
     private cadastros: CadastrosService,
     protected formatar: Formatar,
+    private cd: ChangeDetectorRef,
   ) {
+    // mostra o cache na hora e busca o servidor em seguida
     this.carregar();
     this.carregarCadastros();
+    this.sincronizar();
+  }
+
+  private async sincronizar(): Promise<void> {
+    await this.cadastros.carregarDoServidor();
+    await this.crmService.carregarDoServidor();
+
+    this.carregarCadastros();
+    this.carregar();
+
+    // zoneless: o que muda depois do await não é percebido sozinho
+    this.cd.markForCheck();
   }
 
   carregarCadastros(): void {
-    this.bananais = this.cadastros.listar('bananais');
-    this.servicos = this.cadastros.listar('servicos');
-    this.trabalhadores = this.cadastros.listar('trabalhadores');
+    this.bananais = this.cadastros.listarNomes('bananais');
+    this.servicos = this.cadastros.listarNomes('servicos');
+    this.trabalhadores = this.cadastros.listarNomes('trabalhadores');
   }
 
   // se o card foi salvo com um valor que depois saiu do cadastro,

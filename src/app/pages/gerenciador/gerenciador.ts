@@ -29,6 +29,12 @@ export class Gerenciador {
       rota: '/gerenciador/historico',
     },
     {
+      titulo: 'Compradores',
+      descricao: 'Quem compra sua banana, quanto já levou e o que está em aberto.',
+      icone: 'contacts',
+      rota: '/gerenciador/compradores',
+    },
+    {
       titulo: 'CRM de serviços',
       descricao: 'Serviços do bananal por etapa: planejado, esperando, fazendo e finalizado.',
       icone: 'view_kanban',
@@ -42,8 +48,9 @@ export class Gerenciador {
     },
     {
       titulo: 'Métricas',
-      descricao: 'Preço médio do quilo, volume por safra e comparação entre períodos.',
+      descricao: 'Visão geral, vendas no tempo, fluxo de serviços e para onde foi o dinheiro.',
       icone: 'insights',
+      rota: '/gerenciador/metricas',
     },
     {
       titulo: 'Investimentos',

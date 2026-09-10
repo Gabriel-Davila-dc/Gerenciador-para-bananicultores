@@ -54,7 +54,7 @@ export class UpdateVenda {
     private contas: Contas,
     private cadastros: CadastrosService,
   ) {
-    this.bananais = this.cadastros.listar('bananais');
+    this.bananais = this.cadastros.listarNomes('bananais');
   }
 
   ngOnInit() {

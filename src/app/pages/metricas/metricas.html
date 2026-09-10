@@ -1,0 +1,284 @@
+<section class="painel">
+  <header class="topo">
+    <a class="voltar" routerLink="/gerenciador">‹ Gerenciador</a>
+    <div class="topo-texto">
+      <h1>Métricas</h1>
+      <p>Como está a safra e para onde as coisas estão indo.</p>
+    </div>
+  </header>
+
+  <!-- FILTRO: uma linha só, valendo para as seções abaixo -->
+  <div class="filtros">
+    <label>
+      Bananal
+      <select [(ngModel)]="bananalFiltro">
+        <option value="">Todos</option>
+        @for (item of bananais; track item) {
+          <option [value]="item">{{ item }}</option>
+        }
+      </select>
+    </label>
+    <label>
+      De
+      <input type="date" [(ngModel)]="dataDe" />
+    </label>
+    <label>
+      Até
+      <input type="date" [(ngModel)]="dataAte" />
+    </label>
+    <button type="button" class="btn-limpar" (click)="limparFiltros()">Limpar</button>
+  </div>
+
+  <!-- VISÃO GERAL -->
+  <h2 class="secao">Visão geral</h2>
+  <div class="tiles">
+    <div class="tile">
+      <span class="tile-rotulo">Vendido</span>
+      <strong>R$ {{ formatar.dinheiro(totalVendido) }}</strong>
+      <span class="tile-nota">{{ vendasFiltradas.length }} venda(s)</span>
+    </div>
+    <div class="tile">
+      <span class="tile-rotulo">Peso vendido</span>
+      <strong>{{ formatar.dinheiro(pesoVendido) }} kg</strong>
+      <span class="tile-nota">média R$ {{ formatar.dinheiro(precoMedioQuilo) }}/kg</span>
+    </div>
+    <div class="tile">
+      <span class="tile-rotulo">Investido</span>
+      <strong>R$ {{ formatar.dinheiro(totalInvestido) }}</strong>
+      <span class="tile-nota">só o que já foi comprado</span>
+    </div>
+    <div class="tile">
+      <span class="tile-rotulo">Serviços em aberto</span>
+      <strong>{{ servicosEmAberto }}</strong>
+      <span class="tile-nota">de {{ servicosFiltrados.length }} no período</span>
+    </div>
+  </div>
+
+  <!-- VENDAS -->
+  <div class="cabecalho-secao">
+    <h2 class="secao">Vendas ao longo do tempo</h2>
+    <button type="button" class="btn-tabela" (click)="tabelaVendas = !tabelaVendas">
+      {{ tabelaVendas ? 'Ver gráfico' : 'Ver tabela' }}
+    </button>
+  </div>
+
+  @if (carregando) {
+    <p class="aviso">Carregando vendas...</p>
+  } @else if (!serieVendas) {
+    <p class="aviso">Nenhuma venda no filtro escolhido.</p>
+  } @else if (tabelaVendas) {
+    <div class="tabela-wrap">
+      <table>
+        <thead>
+          <tr><th>Mês</th><th class="num">Valor vendido</th></tr>
+        </thead>
+        <tbody>
+          @for (ponto of serieVendas!.pontos; track ponto.rotulo) {
+            <tr>
+              <td>{{ ponto.rotulo }}</td>
+              <td class="num">R$ {{ formatar.dinheiro(ponto.valor) }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <figure class="grafico">
+      <svg [attr.viewBox]="'0 0 ' + larguraGrafico + ' ' + alturaGrafico" role="img"
+           aria-label="Valor vendido por mês">
+        <!-- grade -->
+        @for (marca of marcasY(maximoVendas); track marca.valor) {
+          <line class="grade" [attr.x1]="margem.esquerda" [attr.x2]="larguraGrafico - margem.direita"
+                [attr.y1]="marca.y" [attr.y2]="marca.y" />
+          <text class="tick" [attr.x]="margem.esquerda - 8" [attr.y]="marca.y + 4"
+                text-anchor="end">{{ formatar.dinheiro(marca.valor) }}</text>
+        }
+
+        <!-- linha -->
+        <path class="linha" [attr.d]="serieVendas!.caminho" [attr.stroke]="serieVendas!.cor" />
+
+        @for (ponto of serieVendas!.pontos; track ponto.rotulo; let i = $index) {
+          <circle class="ponto" [attr.cx]="ponto.x" [attr.cy]="ponto.y"
+                  [attr.r]="destaqueVendas === i ? 6 : 4" [attr.fill]="serieVendas!.cor" />
+          <text class="rotulo-x" [attr.x]="ponto.x" [attr.y]="alturaGrafico - 12"
+                text-anchor="middle">{{ ponto.rotulo }}</text>
+
+          <!-- faixa de hover: alvo bem maior que o ponto -->
+          <rect class="faixa" [attr.x]="faixaX(i, serieVendas!.pontos.length)"
+                [attr.y]="margem.topo"
+                [attr.width]="larguraFaixa(serieVendas!.pontos.length)"
+                [attr.height]="alturaGrafico - margem.topo - margem.baixo"
+                (mouseenter)="destaqueVendas = i" (mouseleave)="destaqueVendas = null" />
+        }
+
+        @if (destaqueVendas !== null) {
+          <line class="mira" [attr.x1]="serieVendas!.pontos[destaqueVendas].x"
+                [attr.x2]="serieVendas!.pontos[destaqueVendas].x"
+                [attr.y1]="margem.topo" [attr.y2]="alturaGrafico - margem.baixo" />
+        }
+      </svg>
+
+      @if (destaqueVendas !== null) {
+        <figcaption class="dica">
+          <strong>{{ serieVendas!.pontos[destaqueVendas].rotulo }}</strong>
+          R$ {{ formatar.dinheiro(serieVendas!.pontos[destaqueVendas].valor) }}
+        </figcaption>
+      }
+    </figure>
+  }
+
+  <!-- FLUXO DE SERVIÇOS -->
+  <div class="cabecalho-secao">
+    <h2 class="secao">Fluxo de serviços</h2>
+    <div class="controles">
+      <div class="segmentado">
+        @for (opcao of agrupamentos; track opcao.chave) {
+          <button type="button" [class.ativo]="agrupamento === opcao.chave"
+                  (click)="agrupamento = opcao.chave">{{ opcao.rotulo }}</button>
+        }
+      </div>
+      <button type="button" class="btn-tabela" (click)="tabelaServicos = !tabelaServicos">
+        {{ tabelaServicos ? 'Ver gráfico' : 'Ver tabela' }}
+      </button>
+    </div>
+  </div>
+
+  @if (seriesServicos.length === 0) {
+    <p class="aviso">Nenhum serviço no filtro escolhido.</p>
+  } @else if (tabelaServicos) {
+    <div class="tabela-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Mês</th>
+            @for (serie of seriesServicos; track serie.nome) {
+              <th class="num">{{ serie.nome }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (mes of mesesServicos; track mes; let i = $index) {
+            <tr>
+              <td>{{ rotuloMes(mes) }}</td>
+              @for (serie of seriesServicos; track serie.nome) {
+                <td class="num">{{ serie.pontos[i].valor }}</td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <figure class="grafico">
+      <svg [attr.viewBox]="'0 0 ' + larguraGrafico + ' ' + alturaGrafico" role="img"
+           aria-label="Serviços iniciados por mês">
+        @for (marca of marcasY(maximoServicos); track marca.valor) {
+          <line class="grade" [attr.x1]="margem.esquerda" [attr.x2]="larguraGrafico - margem.direita"
+                [attr.y1]="marca.y" [attr.y2]="marca.y" />
+          <text class="tick" [attr.x]="margem.esquerda - 8" [attr.y]="marca.y + 4"
+                text-anchor="end">{{ marca.valor.toFixed(0) }}</text>
+        }
+
+        @for (serie of seriesServicos; track serie.nome) {
+          <path class="linha" [attr.d]="serie.caminho" [attr.stroke]="serie.cor" />
+          @for (ponto of serie.pontos; track ponto.rotulo; let i = $index) {
+            <circle class="ponto" [attr.cx]="ponto.x" [attr.cy]="ponto.y"
+                    [attr.r]="destaqueServicos === i ? 6 : 4" [attr.fill]="serie.cor" />
+          }
+        }
+
+        @for (mes of mesesServicos; track mes; let i = $index) {
+          <text class="rotulo-x" [attr.x]="seriesServicos[0].pontos[i].x"
+                [attr.y]="alturaGrafico - 12" text-anchor="middle">{{ rotuloMes(mes) }}</text>
+          <rect class="faixa" [attr.x]="faixaX(i, mesesServicos.length)" [attr.y]="margem.topo"
+                [attr.width]="larguraFaixa(mesesServicos.length)"
+                [attr.height]="alturaGrafico - margem.topo - margem.baixo"
+                (mouseenter)="destaqueServicos = i" (mouseleave)="destaqueServicos = null" />
+        }
+
+        @if (destaqueServicos !== null) {
+          <line class="mira" [attr.x1]="seriesServicos[0].pontos[destaqueServicos].x"
+                [attr.x2]="seriesServicos[0].pontos[destaqueServicos].x"
+                [attr.y1]="margem.topo" [attr.y2]="alturaGrafico - margem.baixo" />
+        }
+      </svg>
+
+      @if (destaqueServicos !== null) {
+        <figcaption class="dica">
+          <strong>{{ seriesServicos[0].pontos[destaqueServicos].rotulo }}</strong>
+          @for (serie of seriesServicos; track serie.nome) {
+            <span class="dica-item">
+              <i class="marca" [style.background]="serie.cor"></i>
+              {{ serie.nome }}: {{ serie.pontos[destaqueServicos].valor }}
+            </span>
+          }
+        </figcaption>
+      }
+
+      <div class="legenda">
+        @for (serie of seriesServicos; track serie.nome) {
+          <span><i class="marca" [style.background]="serie.cor"></i>{{ serie.nome }}</span>
+        }
+      </div>
+    </figure>
+  }
+
+  <!-- INVESTIMENTOS -->
+  <div class="cabecalho-secao">
+    <h2 class="secao">Investimentos por produto</h2>
+    <button type="button" class="btn-tabela" (click)="tabelaInvestimentos = !tabelaInvestimentos">
+      {{ tabelaInvestimentos ? 'Ver gráfico' : 'Ver tabela' }}
+    </button>
+  </div>
+  <p class="nota">O filtro de bananal não vale aqui: investimento não é registrado por área.</p>
+
+  @if (fatiasInvestimento.length === 0) {
+    <p class="aviso">Nenhum investimento no período escolhido.</p>
+  } @else if (tabelaInvestimentos) {
+    <div class="tabela-wrap">
+      <table>
+        <thead>
+          <tr><th>Produto</th><th class="num">Valor</th><th class="num">Fatia</th></tr>
+        </thead>
+        <tbody>
+          @for (fatia of fatiasInvestimento; track fatia.nome) {
+            <tr>
+              <td>{{ fatia.nome }}</td>
+              <td class="num">R$ {{ formatar.dinheiro(fatia.valor) }}</td>
+              <td class="num">{{ fatia.percentual.toFixed(1) }}%</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <figure class="grafico grafico-pizza">
+      <svg viewBox="0 0 240 240" role="img" aria-label="Investimento por produto">
+        @for (fatia of fatiasInvestimento; track fatia.nome) {
+          <path [attr.d]="fatia.caminho" [attr.fill]="fatia.cor" class="fatia"
+                [class.fatia-apagada]="destaqueFatia && destaqueFatia !== fatia.nome"
+                (mouseenter)="destaqueFatia = fatia.nome" (mouseleave)="destaqueFatia = null" />
+          <!-- rótulo direto: só quando a fatia comporta, senão fica cortado -->
+          @if (fatia.percentual >= 8) {
+            <text class="rotulo-fatia" [attr.x]="fatia.rotuloX" [attr.y]="fatia.rotuloY"
+                  text-anchor="middle">{{ fatia.percentual.toFixed(0) }}%</text>
+          }
+        }
+      </svg>
+
+      <div class="legenda-pizza">
+        @for (fatia of fatiasInvestimento; track fatia.nome) {
+          <span class="linha-legenda">
+            <i class="marca" [style.background]="fatia.cor"></i>
+            <span class="nome">{{ fatia.nome }}</span>
+            <span class="valor">R$ {{ formatar.dinheiro(fatia.valor) }}</span>
+          </span>
+        }
+        <span class="linha-legenda total">
+          <span class="nome">Total</span>
+          <span class="valor">R$ {{ formatar.dinheiro(totalInvestimentoFatias) }}</span>
+        </span>
+      </div>
+    </figure>
+  }
+</section>

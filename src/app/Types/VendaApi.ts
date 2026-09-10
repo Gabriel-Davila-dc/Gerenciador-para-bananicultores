@@ -3,6 +3,8 @@ export interface VendaApi {
   userId: number;
   cliente: string | null;
   bananal: string | null;
+  compradorId: number | null;
+  pago: boolean;
   tipo: string;
 
   tipoSimples: string;

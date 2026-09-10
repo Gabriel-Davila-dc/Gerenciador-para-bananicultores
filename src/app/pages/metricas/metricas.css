@@ -1,0 +1,428 @@
+:host {
+  display: block;
+
+  /* tinta e cromo do gráfico: recessivos, nunca competindo com os dados */
+  --tick: #898781;
+  --grade: #e1e0d9;
+  --eixo: #c3c2b7;
+}
+
+.painel {
+  background: #ffffff;
+  width: min(100% - 2em, 82em);
+  margin: 2.5em auto;
+  padding: 2em 1.5em 2.5em;
+  border-radius: 2em;
+  box-shadow: 0 12px 40px rgba(46, 32, 19, 0.22);
+}
+
+/* ---------- topo ---------- */
+
+.topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1em;
+  margin-bottom: 1.4em;
+}
+
+.topo h1 {
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+  color: var(--casca-escura);
+  margin: 0;
+}
+
+.topo p {
+  margin: 0.2em 0 0;
+  color: var(--terra);
+  opacity: 0.8;
+  font-size: 0.95rem;
+}
+
+.voltar {
+  padding: 0.4em 1em;
+  border-radius: 100px;
+  background: var(--folha-suave);
+  color: var(--folha);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.voltar:hover {
+  background: var(--banana-clara);
+}
+
+/* ---------- filtros ---------- */
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.8em;
+  padding: 1em 1.2em;
+  background: var(--bg-claro);
+  border-radius: 1em;
+  margin-bottom: 2em;
+}
+
+.filtros label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--terra);
+}
+
+.filtros select,
+.filtros input {
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 0.5em 0.6em;
+  border: 1px solid var(--borda-cinza);
+  border-radius: 0.5em;
+  background: #ffffff;
+  color: var(--casca-escura);
+}
+
+.filtros select:focus,
+.filtros input:focus {
+  outline: 2px solid var(--folha-clara);
+  outline-offset: 1px;
+}
+
+.btn-limpar {
+  padding: 0.55em 1.2em;
+  border: 1px solid var(--borda-cinza);
+  border-radius: 100px;
+  background: #ffffff;
+  color: var(--terra);
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-limpar:hover {
+  background: var(--folha-suave);
+}
+
+/* ---------- seções ---------- */
+
+.secao {
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: 1.2rem;
+  color: var(--casca-escura);
+  margin: 0;
+}
+
+.cabecalho-secao {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8em;
+  margin: 2.4em 0 0.4em;
+}
+
+.controles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+
+.nota {
+  margin: 0 0 0.8em;
+  font-size: 0.82rem;
+  color: var(--terra);
+  opacity: 0.7;
+}
+
+.aviso {
+  padding: 2em;
+  text-align: center;
+  color: var(--terra);
+  opacity: 0.65;
+}
+
+.segmentado {
+  display: inline-flex;
+  border: 1px solid var(--borda-cinza);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.segmentado button {
+  padding: 0.45em 1em;
+  border: none;
+  background: #ffffff;
+  color: var(--terra);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.segmentado button.ativo {
+  background: var(--folha);
+  color: #ffffff;
+}
+
+.btn-tabela {
+  padding: 0.45em 1em;
+  border: 1px solid var(--borda-cinza);
+  border-radius: 100px;
+  background: #ffffff;
+  color: var(--folha);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-tabela:hover {
+  background: var(--folha-suave);
+}
+
+/* ---------- visão geral ---------- */
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1em;
+  margin-top: 0.8em;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15em;
+  padding: 1.1em 1.3em;
+  border-radius: 1.1em;
+  background: var(--bg-claro);
+  border-left: 5px solid var(--folha);
+}
+
+.tile-rotulo {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--terra);
+}
+
+/* números grandes com figuras proporcionais: tabular deixa solto nesse tamanho */
+.tile strong {
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: 1.55rem;
+  color: var(--casca-escura);
+  line-height: 1.15;
+}
+
+.tile-nota {
+  font-size: 0.78rem;
+  color: var(--terra);
+  opacity: 0.75;
+}
+
+/* ---------- gráficos ---------- */
+
+.grafico {
+  position: relative;
+  margin: 0.6em 0 0;
+  padding: 1em;
+  border: 1px solid var(--borda-cinza);
+  border-radius: 1.1em;
+  background: #ffffff;
+}
+
+.grafico svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.grade {
+  stroke: var(--grade);
+  stroke-width: 1;
+}
+
+.linha {
+  fill: none;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/* anel da cor da superfície onde as marcas se sobrepõem */
+.ponto {
+  stroke: #ffffff;
+  stroke-width: 2;
+}
+
+.mira {
+  stroke: var(--eixo);
+  stroke-width: 1;
+}
+
+.faixa {
+  fill: transparent;
+  cursor: crosshair;
+}
+
+.tick,
+.rotulo-x {
+  fill: var(--tick);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.dica {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3em 1em;
+  margin: 0.6em 0 0;
+  padding: 0.6em 0.9em;
+  background: var(--bg-claro);
+  border-radius: 0.7em;
+  font-size: 0.88rem;
+  color: var(--casca-escura);
+}
+
+.dica-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+}
+
+.legenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em 1.2em;
+  margin-top: 0.9em;
+  padding-top: 0.8em;
+  border-top: 1px solid var(--grade);
+  font-size: 0.85rem;
+  color: var(--terra);
+}
+
+.legenda span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.marca {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ---------- pizza ---------- */
+
+.grafico-pizza {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2em;
+}
+
+.grafico-pizza svg {
+  width: 240px;
+  flex-shrink: 0;
+}
+
+/* separação entre fatias feita com o vão da superfície, não com contorno */
+.fatia {
+  stroke: #ffffff;
+  stroke-width: 2;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.fatia-apagada {
+  opacity: 0.35;
+}
+
+.rotulo-fatia {
+  fill: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.legenda-pizza {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  flex: 1;
+  min-width: 14em;
+}
+
+.linha-legenda {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  font-size: 0.9rem;
+  color: var(--casca-escura);
+}
+
+.linha-legenda .nome {
+  flex: 1;
+}
+
+.linha-legenda .valor {
+  font-variant-numeric: tabular-nums;
+  color: var(--terra);
+}
+
+.linha-legenda.total {
+  padding-top: 0.5em;
+  border-top: 1px solid var(--grade);
+  font-weight: 700;
+}
+
+/* ---------- tabelas ---------- */
+
+.tabela-wrap {
+  overflow-x: auto;
+  margin-top: 0.6em;
+  border: 1px solid var(--borda-cinza);
+  border-radius: 1.1em;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  background: #ffffff;
+}
+
+thead th {
+  text-align: left;
+  padding: 0.8em 1em;
+  background: var(--bg-claro);
+  color: var(--terra);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 0.7em 1em;
+  border-top: 1px solid var(--grade);
+  color: var(--casca-escura);
+}
+
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 700px) {
+  .grafico-pizza {
+    justify-content: center;
+  }
+}

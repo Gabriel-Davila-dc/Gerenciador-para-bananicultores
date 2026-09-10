@@ -18,6 +18,7 @@ export class CardSalvo {
   @Input() infos!: Venda;
   @Output() apagarVenda = new EventEmitter<number>();
   @Output() editarVenda = new EventEmitter<Venda>();
+  @Output() alternarPago = new EventEmitter<Venda>();
   formatar = new Formatar();
   venda!: Venda;
   minimizado: boolean = true;
@@ -44,6 +45,10 @@ export class CardSalvo {
 
   editar() {
     this.editarVenda.emit(this.venda);
+  }
+
+  marcarPago() {
+    this.alternarPago.emit(this.venda);
   }
 
   definir(venda: Venda): ResumoTotal {

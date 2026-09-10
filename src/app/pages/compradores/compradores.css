@@ -1,0 +1,411 @@
+:host {
+  display: block;
+}
+
+.painel {
+  background: #ffffff;
+  width: min(100% - 2em, 78em);
+  margin: 2.5em auto;
+  padding: 2em 1.5em 2.5em;
+  border-radius: 2em;
+  box-shadow: 0 12px 40px rgba(46, 32, 19, 0.22);
+}
+
+/* ---------- topo ---------- */
+
+.topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1em;
+  margin-bottom: 1.6em;
+}
+
+.topo-texto {
+  flex: 1;
+  min-width: 12em;
+}
+
+.topo h1 {
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+  color: var(--casca-escura);
+  margin: 0;
+}
+
+.topo p {
+  margin: 0.2em 0 0;
+  color: var(--terra);
+  opacity: 0.8;
+  font-size: 0.95rem;
+}
+
+.voltar {
+  padding: 0.4em 1em;
+  border-radius: 100px;
+  background: var(--folha-suave);
+  color: var(--folha);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.voltar:hover {
+  background: var(--banana-clara);
+}
+
+.btn-novo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.7em 1.3em;
+  border: none;
+  border-radius: 100px;
+  background: var(--folha);
+  color: #ffffff;
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(63, 107, 51, 0.32);
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+
+.btn-novo:hover {
+  background: var(--folha-clara);
+  transform: translateY(-2px);
+}
+
+/* ---------- lista ---------- */
+
+.lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.2em;
+}
+
+.cartao {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 1.2em;
+  background: #ffffff;
+  border: 1px solid var(--borda-cinza);
+  border-top: 5px solid var(--folha);
+  border-radius: 1.1em;
+  box-shadow: 0 8px 22px rgba(46, 32, 19, 0.1);
+}
+
+/* quem está devendo se anuncia pela borda, não só pelo número */
+.cartao-devendo {
+  border-top-color: var(--banana);
+}
+
+.identidade {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+}
+
+.foto {
+  width: 3.4em;
+  height: 3.4em;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid var(--folha-suave);
+}
+
+.foto-vazia {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--folha-suave);
+  color: var(--folha);
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.dados {
+  flex: 1;
+  min-width: 0;
+}
+
+.dados h2 {
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: 1.1rem;
+  margin: 0 0 0.15em;
+  color: var(--casca-escura);
+  overflow-wrap: anywhere;
+}
+
+.telefone {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  font-size: 0.85rem;
+  color: var(--folha);
+  text-decoration: none;
+}
+
+.telefone:hover {
+  text-decoration: underline;
+}
+
+.sem-telefone {
+  font-size: 0.85rem;
+  color: var(--terra);
+  opacity: 0.6;
+}
+
+.telefone mat-icon,
+.quitado mat-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+}
+
+.btn-editar {
+  display: inline-flex;
+  border: none;
+  background: transparent;
+  color: var(--folha);
+  border-radius: 50%;
+  padding: 0.25em;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.btn-editar:hover {
+  background: var(--folha-suave);
+}
+
+/* ---------- números ---------- */
+
+.numeros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8em 1.4em;
+  padding-top: 0.9em;
+  border-top: 1px solid var(--borda-cinza);
+}
+
+.numero {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+}
+
+.rotulo {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--terra);
+  opacity: 0.8;
+}
+
+.numero strong {
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: 1.05rem;
+  color: var(--casca-escura);
+}
+
+.devendo {
+  color: var(--erro);
+}
+
+.quitado {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  color: var(--folha);
+  font-size: 0.95rem;
+}
+
+.ver-vendas {
+  align-self: flex-start;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--folha);
+  text-decoration: none;
+}
+
+.ver-vendas:hover {
+  text-decoration: underline;
+}
+
+.vazio {
+  grid-column: 1 / -1;
+  padding: 2em;
+  text-align: center;
+  color: var(--terra);
+  opacity: 0.6;
+}
+
+/* ---------- formulário ---------- */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1em;
+}
+
+.formulario {
+  background: #ffffff;
+  border-radius: 1.4em;
+  padding: 1.8em;
+  width: min(100%, 28em);
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9em;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.formulario h2 {
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  margin: 0;
+  color: var(--casca-escura);
+}
+
+.campo-foto {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.previa {
+  width: 5em;
+  height: 5em;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--folha-suave);
+  flex-shrink: 0;
+}
+
+.previa-vazia {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-claro);
+  color: var(--terra);
+}
+
+.previa-vazia mat-icon {
+  font-size: 2em;
+  width: 1em;
+  height: 1em;
+}
+
+.acoes-foto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+}
+
+.btn-foto {
+  padding: 0.5em 1.1em;
+  border-radius: 100px;
+  background: var(--folha-suave);
+  color: var(--folha);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn-foto:hover {
+  background: var(--banana-clara);
+}
+
+.btn-remover-foto {
+  border: none;
+  background: transparent;
+  color: var(--erro);
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.erro {
+  margin: 0;
+  color: var(--erro);
+  font-size: 0.85rem;
+}
+
+.formulario label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--terra);
+}
+
+.formulario input[type='text'],
+.formulario input[type='tel'] {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.6em 0.7em;
+  border: 1px solid var(--borda-cinza);
+  border-radius: 0.6em;
+  background: #ffffff;
+  color: var(--casca-escura);
+}
+
+.formulario input:focus {
+  outline: 2px solid var(--folha-clara);
+  outline-offset: 1px;
+}
+
+.form-botoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6em;
+  margin-top: 0.4em;
+}
+
+.form-botoes button {
+  padding: 0.6em 1.2em;
+  border-radius: 100px;
+  border: none;
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-salvar {
+  background: var(--folha);
+  color: #ffffff;
+}
+.btn-salvar:hover:not(:disabled) {
+  background: var(--folha-clara);
+}
+.btn-salvar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-cancelar {
+  background: var(--bg-claro);
+  color: var(--terra);
+}
+.btn-cancelar:hover {
+  background: var(--borda-cinza);
+}
+
+.btn-apagar {
+  margin-right: auto;
+  background: transparent;
+  color: var(--erro);
+}
+.btn-apagar:hover {
+  background: rgba(172, 38, 38, 0.12);
+}

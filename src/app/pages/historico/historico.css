@@ -48,6 +48,53 @@ h1 {
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
 }
 
+.barra-filtro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1em;
+  margin-bottom: 1.2em;
+  padding: 0.9em 1.2em;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 1em;
+}
+
+.barra-filtro label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--terra);
+}
+
+.barra-filtro select {
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 0.5em 0.6em;
+  border: 1px solid var(--borda-cinza);
+  border-radius: 0.5em;
+  background: #ffffff;
+  color: var(--casca-escura);
+}
+
+.resumo-filtro {
+  font-size: 0.9rem;
+  color: var(--terra);
+  padding-bottom: 0.6em;
+}
+
+.resumo-filtro .aberto {
+  color: var(--erro);
+}
+
+.aviso {
+  padding: 1.5em;
+  text-align: center;
+  color: #ffffff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
 .voltar {
   align-self: flex-start;
   margin: 1em 0 0 1em;

@@ -136,6 +136,17 @@
       <input matInput [(ngModel)]="nome" />
     </mat-form-field>
 
+    <!-- Comprador cadastrado: preenche o nome e liga a venda a ele -->
+    <label class="campo-bananal">
+      Comprador
+      <select [(ngModel)]="compradorId" (ngModelChange)="aoEscolherComprador()">
+        <option [ngValue]="null">Não informar</option>
+        @for (comprador of compradores; track comprador.id) {
+          <option [ngValue]="comprador.id">{{ comprador.nome }}</option>
+        }
+      </select>
+    </label>
+
     <!-- De qual bananal saiu essa venda -->
     <label class="campo-bananal">
       Bananal
