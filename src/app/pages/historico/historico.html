@@ -1,25 +1,33 @@
 <div class="container">
   <a class="voltar" routerLink="/gerenciador">‹ Gerenciador</a>
   <h1>Histórico de vendas</h1>
-  <p>{{ email }}</p>
 
   <div class="barra-filtro">
-    <label>
-      Comprador
-      <select [(ngModel)]="compradorFiltro">
-        <option [ngValue]="''">Todos</option>
-        @for (comprador of compradores; track comprador.id) {
-          <option [ngValue]="comprador.id">{{ comprador.nome }}</option>
-        }
-      </select>
-    </label>
+    <div class="campo-comprador">
+      <label for="filtro-comprador">Comprador</label>
+      <div class="caixa-select">
+        <select id="filtro-comprador" [(ngModel)]="compradorFiltro">
+          <option [ngValue]="''">Todos os compradores</option>
+          @for (comprador of compradores; track comprador.id) {
+            <option [ngValue]="comprador.id">{{ comprador.nome }}</option>
+          }
+        </select>
+      </div>
+    </div>
 
-    <span class="resumo-filtro">
-      {{ vendasFiltradas.length }} venda(s)
-      @if (totalEmAberto > 0) {
-        <strong class="aberto">· R$ {{ totalEmAberto.toFixed(2) }} em aberto</strong>
-      }
-    </span>
+    <!-- os dois indicadores existem sempre, mesmo zerados: some-los quando não
+         há valor fazia a barra pular de altura a cada filtro aplicado -->
+    <div class="indicadores">
+      <div class="indicador">
+        <span class="rotulo">Vendas</span>
+        <strong class="valor">{{ vendasFiltradas.length }}</strong>
+      </div>
+
+      <div class="indicador" [class.tem-aberto]="totalEmAberto > 0">
+        <span class="rotulo">A receber</span>
+        <strong class="valor">R$ {{ aReceber }}</strong>
+      </div>
+    </div>
   </div>
 
   @if (carregando) {

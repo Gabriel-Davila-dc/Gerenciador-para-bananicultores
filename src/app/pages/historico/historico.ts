@@ -9,6 +9,7 @@ import { UpdateVenda } from '../../components/update-venda/update-venda';
 import { Contas } from '../../services/contas';
 import { CompradoresService } from '../../services/compradores-service';
 import { Comprador } from '../../models/comprador';
+import { Formatar } from '../../services/formatar';
 
 @Component({
   standalone: true,
@@ -26,7 +27,6 @@ export class Historico {
   compradorFiltro: number | '' = '';
 
   Editando: Venda | null = null;
-  email: string = localStorage.getItem('email') || 'Nenhum';
 
   constructor(
     private salvar: Salvar,
@@ -34,10 +34,10 @@ export class Historico {
     private compradoresService: CompradoresService,
     private rota: ActivatedRoute,
     private cd: ChangeDetectorRef,
+    private formatar: Formatar,
   ) {}
 
   ngOnInit() {
-    this.email = localStorage.getItem('email') || 'Nenhum';
     this.compradores = this.compradoresService.listar();
     this.aplicarFiltroDaUrl();
     this.carregar();
@@ -78,6 +78,12 @@ export class Historico {
     return this.vendasFiltradas
       .filter((venda) => !venda.pago)
       .reduce((soma, venda) => soma + (venda.valorTotal?.valor || 0), 0);
+  }
+
+  // "2.000,00" - mesmo formato do resto do app. Zerado vira "0,00" em vez de
+  // sumir, para o indicador não mudar de tamanho conforme o filtro.
+  get aReceber(): string {
+    return this.formatar.dinheiro(this.totalEmAberto);
   }
 
   async apagar(id: number) {

@@ -48,44 +48,155 @@ h1 {
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
 }
 
+/* alinhada com a largura dos cards da lista, senão a barra fica "solta" */
 .barra-filtro {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 1em;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5em;
+  width: 90vw;
   margin-bottom: 1.2em;
   padding: 0.9em 1.2em;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   border-radius: 1em;
+  box-shadow: var(--sombra);
 }
 
-.barra-filtro label {
+.campo-comprador {
   display: flex;
   flex-direction: column;
-  gap: 0.25em;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--terra);
+  gap: 0.35em;
+  min-width: 0;
 }
 
-.barra-filtro select {
+.campo-comprador label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--folha);
+}
+
+/* a seta é desenhada aqui porque o select perde a nativa com appearance:none */
+.caixa-select {
+  position: relative;
+  display: flex;
+}
+
+.caixa-select::after {
+  content: '';
+  position: absolute;
+  right: 0.9em;
+  top: 50%;
+  width: 0.5em;
+  height: 0.5em;
+  border-right: 2px solid var(--folha);
+  border-bottom: 2px solid var(--folha);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+
+.campo-comprador select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  min-width: 0;
   font-family: inherit;
   font-size: 0.95rem;
-  padding: 0.5em 0.6em;
-  border: 1px solid var(--borda-cinza);
-  border-radius: 0.5em;
+  font-weight: 600;
+  padding: 0.55em 2.4em 0.55em 0.9em;
+  border: 1.5px solid var(--folha-suave);
+  border-radius: 100px;
+  background: var(--creme);
+  color: var(--casca-escura);
+  cursor: pointer;
+  text-overflow: ellipsis;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+
+.campo-comprador select:hover {
+  border-color: var(--folha-clara);
+}
+
+.campo-comprador select:focus-visible {
+  outline: none;
+  border-color: var(--folha);
   background: #ffffff;
+}
+
+.indicadores {
+  display: flex;
+  align-items: stretch;
+  gap: 1.2em;
+  flex-shrink: 0;
+}
+
+.indicador {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15em;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.indicador + .indicador {
+  padding-left: 1.2em;
+  border-left: 1px solid var(--folha-suave);
+}
+
+.indicador .rotulo {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--folha);
+}
+
+/* tabular-nums: sem isso o número muda de largura conforme os dígitos e a
+   barra inteira "treme" a cada troca de filtro */
+.indicador .valor {
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  color: var(--borda-input);
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+
+/* só a cor muda quando há valor em aberto; o tamanho fica igual */
+.indicador:first-child .valor,
+.indicador.tem-aberto .valor {
   color: var(--casca-escura);
 }
 
-.resumo-filtro {
-  font-size: 0.9rem;
-  color: var(--terra);
-  padding-bottom: 0.6em;
+.indicador.tem-aberto .valor {
+  color: var(--erro);
 }
 
-.resumo-filtro .aberto {
-  color: var(--erro);
+@media (max-width: 700px) {
+  .barra-filtro {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1em;
+  }
+
+  .indicadores {
+    justify-content: space-between;
+  }
+
+  .indicador {
+    flex: 1;
+  }
+}
+
+@media (min-width: 1000px) {
+  .barra-filtro {
+    width: auto;
+    min-width: 600px;
+  }
 }
 
 .aviso {
