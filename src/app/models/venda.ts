@@ -3,6 +3,8 @@ import { ResumoTotal } from './resumo-total';
 
 export interface Venda {
   id?: number;
+  // só na tela: indica que ainda não foi enviada ao servidor
+  pendente?: boolean;
 
   nome: string;
   bananal: string;

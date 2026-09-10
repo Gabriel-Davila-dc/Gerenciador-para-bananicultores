@@ -3,6 +3,7 @@ Informações de venda
 -->
 <div class="card">
   <label class="labelCentral" for="">{{ venda.tipo }}</label>
+  <span class="selo-pendente" *ngIf="venda.pendente">Aguardando envio</span>
   <div class="resumo">
     <label for="">Cliente:</label>
     <label for="">{{ venda.nome }}</label>

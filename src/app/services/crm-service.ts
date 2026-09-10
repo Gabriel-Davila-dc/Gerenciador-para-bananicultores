@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { ServicoCrm } from '../models/servico-crm';
 import type { TipoCadastro } from './cadastros-service';
+import { SincronizacaoService } from './sincronizacao-service';
+
+export const RECURSO_CRM = 'crm';
 
 const CHAVE = 'servicos-crm';
 
 // exemplos que aparecem na primeira vez, só pra tela não abrir vazia
 const EXEMPLOS: ServicoCrm[] = [
   {
-    id: 1,
+    id: -1,
     bananal: 'Talhão do Córrego',
     servico: 'Desbrota',
     responsavel: 'Equipe própria',
@@ -17,7 +20,7 @@ const EXEMPLOS: ServicoCrm[] = [
     etapa: 'Planejado',
   },
   {
-    id: 2,
+    id: -2,
     bananal: 'Bananal da Serra',
     servico: 'Calcário',
     responsavel: 'Cooperativa',
@@ -27,7 +30,7 @@ const EXEMPLOS: ServicoCrm[] = [
     etapa: 'Esperando',
   },
   {
-    id: 3,
+    id: -3,
     bananal: 'Talhão do Córrego',
     servico: 'Combate à Sigatoka',
     responsavel: 'Terceirizado',
@@ -37,7 +40,7 @@ const EXEMPLOS: ServicoCrm[] = [
     etapa: 'Fazendo',
   },
   {
-    id: 4,
+    id: -4,
     bananal: 'Talhão Novo',
     servico: 'Roçada',
     responsavel: 'Diarista',
@@ -52,10 +55,30 @@ const EXEMPLOS: ServicoCrm[] = [
   providedIn: 'root',
 })
 export class CrmService {
+  /**
+   * O CRM ainda não tem backend, mas as alterações já entram na mesma fila
+   * de sincronização das vendas. Quando a API existir, basta registrar o
+   * handler abaixo que a fila acumulada é enviada sozinha:
+   *
+   * this.sincronizacao.registrar(RECURSO_CRM, {
+   *   criar: (dados) => this.api.criar(dados as ServicoCrm),
+   *   editar: (dados) => this.api.editar(dados as ServicoCrm),
+   *   apagar: (id) => this.api.apagar(id),
+   *   aoTrocarId: (idLocal, idServidor) => this.trocarId(idLocal, idServidor),
+   * });
+   */
+  constructor(private sincronizacao: SincronizacaoService) {}
+
   listar(): ServicoCrm[] {
     const salvos = localStorage.getItem(CHAVE);
 
     if (!salvos) {
+      // os exemplos entram como serviços criados offline: se o usuário
+      // mantiver algum, ele sobe junto quando existir backend
+      EXEMPLOS.forEach((exemplo) =>
+        this.sincronizacao.enfileirar(RECURSO_CRM, 'criar', exemplo.id, exemplo),
+      );
+
       this.guardar(EXEMPLOS);
       return [...EXEMPLOS];
     }
@@ -68,17 +91,39 @@ export class CrmService {
     const index = servicos.findIndex((s) => s.id === servico.id);
 
     if (index === -1) {
-      servico.id = Date.now();
+      // negativo, como nas vendas: não colide com id de servidor
+      servico.id = -Date.now();
       servicos.push(servico);
+      this.sincronizacao.enfileirar(RECURSO_CRM, 'criar', servico.id, servico);
     } else {
       servicos[index] = servico;
+      this.registrarEdicao(servico);
     }
 
     this.guardar(servicos);
   }
 
+  // usado quando o card muda de etapa pelo arrastar, sem passar pelo formulário
+  registrarEdicao(servico: ServicoCrm): void {
+    const criacao = this.sincronizacao.criacaoPendente(RECURSO_CRM, servico.id);
+
+    if (criacao) {
+      // ainda não existe no servidor: atualiza o conteúdo da criação pendente
+      this.sincronizacao.atualizarDados(criacao.id, servico);
+    } else {
+      this.sincronizacao.enfileirar(RECURSO_CRM, 'editar', servico.id, servico);
+    }
+  }
+
   apagar(id: number): void {
     this.guardar(this.listar().filter((s) => s.id !== id));
+
+    const naoEnviado = !!this.sincronizacao.criacaoPendente(RECURSO_CRM, id);
+    this.sincronizacao.removerDoRegistro(RECURSO_CRM, id);
+
+    if (!naoEnviado) {
+      this.sincronizacao.enfileirar(RECURSO_CRM, 'apagar', id);
+    }
   }
 
   // usado quando o card é arrastado de uma coluna pra outra

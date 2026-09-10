@@ -111,9 +111,9 @@ export class Crm {
   }
 
   soltar(evento: CdkDragDrop<ServicoCrm[]>, etapa: EtapaCrm): void {
-    if (evento.previousContainer === evento.container) {
-      moveItemInArray(evento.container.data, evento.previousIndex, evento.currentIndex);
-    } else {
+    const mudouDeEtapa = evento.previousContainer !== evento.container;
+
+    if (mudouDeEtapa) {
       transferArrayItem(
         evento.previousContainer.data,
         evento.container.data,
@@ -121,8 +121,16 @@ export class Crm {
         evento.currentIndex,
       );
       evento.container.data[evento.currentIndex].etapa = etapa;
+    } else {
+      moveItemInArray(evento.container.data, evento.previousIndex, evento.currentIndex);
     }
 
     this.crmService.guardarTodos(this.colunas.flatMap((coluna) => coluna.servicos));
+
+    // mudar de etapa é alteração de dado, então precisa ir para a fila;
+    // reordenar dentro da mesma coluna é só posição na tela
+    if (mudouDeEtapa) {
+      this.crmService.registrarEdicao(evento.container.data[evento.currentIndex]);
+    }
   }
 }
