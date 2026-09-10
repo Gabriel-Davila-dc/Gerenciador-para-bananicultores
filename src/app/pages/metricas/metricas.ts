@@ -20,6 +20,12 @@ const CORES = ['#2a78d6', '#eb6834', '#1baf7a', '#eda100', '#e87ba4', '#008300']
 
 const MAX_SERIES = 5; // além disso vira "Outros": nunca gerar uma 7ª cor
 
+// intervalo maior que isso passa a ser agrupado por mês, senão o eixo do
+// celular fica com rótulos demais para caber
+const DIAS_ATE_AGRUPAR_POR_MES = 60;
+
+const MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+
 type AgrupamentoServico = 'responsavel' | 'bananal' | 'servico';
 
 interface Ponto {
@@ -186,49 +192,91 @@ export class Metricas {
     return peso > 0 ? this.totalVendido / peso : 0;
   }
 
-  // ----- eixo de meses, comum aos dois gráficos de linha -----
+  // ----- eixo de tempo, comum aos dois gráficos de linha -----
 
-  private mesDe(iso: string): string {
-    return iso ? iso.slice(0, 7) : '';
+  /**
+   * O eixo escolhe sozinho entre dia e mês.
+   *
+   * Agrupar sempre por mês fazia duas vendas de dias diferentes virarem um
+   * ponto só, e quem tem pouco histórico via o gráfico inteiro como um ponto
+   * isolado. Agrupar sempre por dia resolveria isso e quebraria o outro lado:
+   * um ano de vendas viraria centenas de rótulos ilegíveis no celular.
+   */
+  private granularidade(isos: string[]): 'dia' | 'mes' {
+    const dias = isos.filter(Boolean).map((iso) => iso.slice(0, 10));
+
+    if (dias.length === 0) {
+      return 'dia';
+    }
+
+    const ordenados = [...dias].sort();
+    const inicio = Date.parse(`${ordenados[0]}T00:00:00Z`);
+    const fim = Date.parse(`${ordenados[ordenados.length - 1]}T00:00:00Z`);
+    const intervalo = (fim - inicio) / 86_400_000;
+
+    return intervalo > DIAS_ATE_AGRUPAR_POR_MES ? 'mes' : 'dia';
   }
 
-  private mesesDe(isos: string[]): string[] {
-    const meses = [...new Set(isos.filter(Boolean).map((iso) => this.mesDe(iso)))];
-    return meses.sort();
+  // "2026-09-10" quando o eixo é por dia, "2026-09" quando é por mês
+  private chaveDe(iso: string, granularidade: 'dia' | 'mes'): string {
+    if (!iso) {
+      return '';
+    }
+
+    return granularidade === 'dia' ? iso.slice(0, 10) : iso.slice(0, 7);
   }
 
-  rotuloMes(mes: string): string {
-    const [ano, m] = mes.split('-');
-    return `${m}/${ano.slice(2)}`;
+  private chavesDe(isos: string[]): string[] {
+    const granularidade = this.granularidade(isos);
+    const chaves = isos.filter(Boolean).map((iso) => this.chaveDe(iso, granularidade));
+
+    return [...new Set(chaves)].sort();
+  }
+
+  /**
+   * O tamanho da chave já diz a granularidade, então o rótulo não precisa
+   * receber essa informação por fora — e o template segue sem saber disso.
+   *
+   * O mês vem por extenso abreviado ("set/26"): o formato numérico "09/26"
+   * era lido como dia 09 do mês 26.
+   */
+  rotuloPeriodo(chave: string): string {
+    const [ano, mes, dia] = chave.split('-');
+
+    if (dia) {
+      return `${dia}/${mes}`;
+    }
+
+    return `${MESES[Number(mes) - 1]}/${ano.slice(2)}`;
   }
 
   // ----- gráfico de vendas -----
 
-  get mesesVendas(): string[] {
-    return this.mesesDe(this.vendasFiltradas.map((v) => this.formatar.dataBRParaISO(v.data)));
+  get periodosVendas(): string[] {
+    return this.chavesDe(this.vendasFiltradas.map((v) => this.formatar.dataBRParaISO(v.data)));
   }
 
-  get valoresPorMes(): number[] {
-    return this.mesesVendas.map((mes) =>
+  get valoresPorPeriodo(): number[] {
+    return this.periodosVendas.map((mes) =>
       this.vendasFiltradas
-        .filter((venda) => this.mesDe(this.formatar.dataBRParaISO(venda.data)) === mes)
+        .filter((venda) => this.formatar.dataBRParaISO(venda.data).slice(0, mes.length) === mes)
         .reduce((soma, venda) => soma + (venda.valorTotal?.valor || 0), 0),
     );
   }
 
   get serieVendas(): Serie | null {
-    const meses = this.mesesVendas;
+    const meses = this.periodosVendas;
 
     if (meses.length === 0) {
       return null;
     }
 
-    const valores = this.valoresPorMes;
+    const valores = this.valoresPorPeriodo;
     const maximo = Math.max(...valores, 1);
     const pontos = meses.map((mes, i) => ({
       x: this.posicaoX(i, meses.length),
       y: this.posicaoY(valores[i], maximo),
-      rotulo: this.rotuloMes(mes),
+      rotulo: this.rotuloPeriodo(mes),
       valor: valores[i],
     }));
 
@@ -241,17 +289,17 @@ export class Metricas {
   }
 
   get maximoVendas(): number {
-    return Math.max(...this.valoresPorMes, 1);
+    return Math.max(...this.valoresPorPeriodo, 1);
   }
 
   // ----- gráfico de fluxo de serviços -----
 
-  get mesesServicos(): string[] {
-    return this.mesesDe(this.servicosFiltrados.map((s) => s.dataInicio));
+  get periodosServicos(): string[] {
+    return this.chavesDe(this.servicosFiltrados.map((s) => s.dataInicio));
   }
 
   get seriesServicos(): Serie[] {
-    const meses = this.mesesServicos;
+    const meses = this.periodosServicos;
 
     if (meses.length === 0) {
       return [];
@@ -267,7 +315,7 @@ export class Metricas {
       const pontos = meses.map((mes, i) => ({
         x: this.posicaoX(i, meses.length),
         y: this.posicaoY(this.contarServicos(grupo, mes), maximo),
-        rotulo: this.rotuloMes(mes),
+        rotulo: this.rotuloPeriodo(mes),
         valor: this.contarServicos(grupo, mes),
       }));
 
@@ -281,7 +329,7 @@ export class Metricas {
   }
 
   get maximoServicos(): number {
-    const meses = this.mesesServicos;
+    const meses = this.periodosServicos;
 
     return Math.max(
       1,
@@ -315,7 +363,7 @@ export class Metricas {
     const principais = this.gruposDeServico().filter((g) => g !== 'Outros');
 
     return this.servicosFiltrados.filter((servico) => {
-      if (this.mesDe(servico.dataInicio) !== mes) return false;
+      if (servico.dataInicio.slice(0, mes.length) !== mes) return false;
 
       const chave = servico[this.agrupamento] || 'Sem informação';
       return grupo === 'Outros' ? !principais.includes(chave) : chave === grupo;

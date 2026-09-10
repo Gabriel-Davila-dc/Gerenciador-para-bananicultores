@@ -157,9 +157,9 @@
           </tr>
         </thead>
         <tbody>
-          @for (mes of mesesServicos; track mes; let i = $index) {
+          @for (mes of periodosServicos; track mes; let i = $index) {
             <tr>
-              <td>{{ rotuloMes(mes) }}</td>
+              <td>{{ rotuloPeriodo(mes) }}</td>
               @for (serie of seriesServicos; track serie.nome) {
                 <td class="num">{{ serie.pontos[i].valor }}</td>
               }
@@ -187,11 +187,11 @@
           }
         }
 
-        @for (mes of mesesServicos; track mes; let i = $index) {
+        @for (mes of periodosServicos; track mes; let i = $index) {
           <text class="rotulo-x" [attr.x]="seriesServicos[0].pontos[i].x"
-                [attr.y]="alturaGrafico - 12" text-anchor="middle">{{ rotuloMes(mes) }}</text>
-          <rect class="faixa" [attr.x]="faixaX(i, mesesServicos.length)" [attr.y]="margem.topo"
-                [attr.width]="larguraFaixa(mesesServicos.length)"
+                [attr.y]="alturaGrafico - 12" text-anchor="middle">{{ rotuloPeriodo(mes) }}</text>
+          <rect class="faixa" [attr.x]="faixaX(i, periodosServicos.length)" [attr.y]="margem.topo"
+                [attr.width]="larguraFaixa(periodosServicos.length)"
                 [attr.height]="alturaGrafico - margem.topo - margem.baixo"
                 (mouseenter)="destaqueServicos = i" (mouseleave)="destaqueServicos = null" />
         }
