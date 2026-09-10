@@ -18,15 +18,34 @@ export class Formatar {
   }
 
   data(data: string): string {
+    if (!data) {
+      return '';
+    }
+
     //se já estiver formatada para br
     if (/^\d{2}\/\d{2}\/\d{4}$/.test(data)) {
       return data;
     }
 
-    const dataFormatada = new Date(data).toLocaleDateString('pt-BR');
+    /**
+     * Vindo em ISO ("2026-09-10T00:00:00.000+00:00"), a data é lida do próprio
+     * texto, sem passar por new Date().
+     *
+     * new Date(...).toLocaleDateString() converteria o instante para o fuso do
+     * aparelho. Como a venda é gravada à meia-noite, no Brasil (UTC-3) isso
+     * volta para as 21h do dia anterior e a tela mostra um dia a menos. Pior:
+     * esse valor errado é o que a próxima edição reenvia, então a data andava
+     * um dia para trás a cada vez que a venda era salva.
+     */
+    const iso = data.match(/^(\d{4})-(\d{2})-(\d{2})/);
+
+    if (iso) {
+      const [, ano, mes, dia] = iso;
+      return `${dia}/${mes}/${ano}`;
+    }
 
     // 21/01/2026
-    return dataFormatada;
+    return new Date(data).toLocaleDateString('pt-BR');
   }
 
   // data de hoje em "aaaa-mm-dd", pronta pra jogar num input type="date".
