@@ -10,6 +10,9 @@ export interface Operacao {
   // id do registro no cache local; negativo = criado offline, ainda sem id do servidor
   idLocal: number;
   dados?: unknown;
+  // quantas vezes o SERVIDOR já respondeu erro para esta operação.
+  // Falha de rede não conta: ficar offline uma semana não pode descartar nada.
+  tentativas?: number;
 }
 
 export interface HandlerSincronizacao {
@@ -23,6 +26,12 @@ export interface HandlerSincronizacao {
 
 const CHAVE_FILA = 'fila-sincronizacao';
 const CHAVE_DESCARTADAS = 'sincronizacao-descartadas';
+
+// quantas respostas de erro do servidor (5xx) uma operação aguenta antes de ser
+// dada como perdida. Sem esse teto, um payload que o servidor nunca aceita vira
+// uma "poison message": retenta a cada 30s para sempre e trava a fila inteira,
+// porque o laço para na primeira falha para preservar a ordem das operações.
+const LIMITE_TENTATIVAS = 5;
 
 /**
  * Fila de operações pendentes (outbox).
@@ -206,6 +215,15 @@ export class SincronizacaoService {
             continue;
           }
 
+          // o servidor respondeu, mas quebrou (5xx). Pode ser instabilidade
+          // passageira, então ainda vale retentar - só que com teto, senão um
+          // erro que nunca passa segura todas as operações atrás desta.
+          if (this.erroDoServidor(erro) && this.contarTentativa(op.id) >= LIMITE_TENTATIVAS) {
+            this.remover(op.id);
+            this.registrarDescartada(op);
+            continue;
+          }
+
           // provavelmente sem conexão: mantém na fila e para por aqui, porque
           // as próximas operações podem depender desta ter passado
           break;
@@ -234,6 +252,27 @@ export class SincronizacaoService {
     }
 
     return status >= 400 && status < 500 && ![401, 408, 429].includes(status);
+  }
+
+  // o servidor respondeu e quebrou. Sem status é falha de rede, que não conta.
+  private erroDoServidor(erro: unknown): boolean {
+    const status = (erro as { status?: number })?.status;
+    return !!status && status >= 500;
+  }
+
+  // registra mais uma resposta de erro do servidor e devolve o total
+  private contarTentativa(operacaoId: string): number {
+    const fila = this.fila();
+    const op = fila.find((item) => item.id === operacaoId);
+
+    if (!op) {
+      return 0;
+    }
+
+    op.tentativas = (op.tentativas ?? 0) + 1;
+    this.guardar(fila);
+
+    return op.tentativas;
   }
 
   // guarda o que foi descartado, para não sumir sem deixar rastro
