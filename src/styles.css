@@ -75,3 +75,48 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+/* ==========================================================================
+   CELULAR
+   O app é usado quase sempre no celular, e muitas vezes no meio do bananal:
+   tela pequena, dedo grosso e sol batendo. O que vale para todas as telas
+   fica aqui; o que é de uma tela só fica no CSS dela.
+   ========================================================================== */
+
+html {
+  /* sem isto o iOS aumenta a fonte sozinho quando a tela gira */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* o flash azul do toque no Android suja a interface inteira; o retorno visual
+   fica por conta dos estados :active e :focus-visible de cada componente */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 100vh no celular inclui a barra de endereço, que some quando se rola a
+   página: a tela fica mais alta que o visível e o rodapé cai para fora.
+   dvh acompanha a barra. Fica depois do 100vh de propósito, como reforço
+   para quem entende, sem quebrar quem não entende. */
+body {
+  min-height: 100dvh;
+}
+
+@media (max-width: 900px) {
+  /* alvo de toque menor que ~44px é onde o dedo começa a errar */
+  button,
+  select,
+  [role='button'] {
+    min-height: 44px;
+  }
+}
+
+/* celular com entalhe: sem isso o conteúdo passa por baixo da barra lateral
+   no modo paisagem. Em aparelho sem entalhe o env() vale zero. */
+@supports (padding: env(safe-area-inset-left)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}

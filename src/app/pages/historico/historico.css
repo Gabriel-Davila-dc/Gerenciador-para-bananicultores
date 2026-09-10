@@ -4,6 +4,7 @@
 
   height: auto;
   min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
   align-items: center;
   /*borrar*/
@@ -21,7 +22,7 @@
   -webkit-backdrop-filter: blur(8px);
   background: rgba(0, 0, 0, 0.4);
   z-index: 1000;
-  height: 100vh;
+  height: 100dvh;
 }
 
 .editarCentral {
@@ -30,7 +31,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: auto;
-  height: 85vh;
+  height: 85dvh;
+  max-width: 96vw;
   z-index: 1000;
   overflow-y: scroll;
 
@@ -102,7 +104,7 @@ h1 {
   width: 100%;
   min-width: 0;
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 600;
   padding: 0.55em 2.4em 0.55em 0.9em;
   border: 1.5px solid var(--folha-suave);
