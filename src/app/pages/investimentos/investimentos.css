@@ -1,0 +1,413 @@
+:host {
+  display: block;
+}
+
+.painel {
+  background: #ffffff;
+  width: min(100% - 2em, 78em);
+  margin: 2.5em auto;
+  padding: 2em 1.5em 2.5em;
+  border-radius: 2em;
+  box-shadow: 0 12px 40px rgba(46, 32, 19, 0.22);
+}
+
+/* ---------- topo ---------- */
+
+.topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1em;
+  margin-bottom: 1.6em;
+}
+
+.topo-texto {
+  flex: 1;
+  min-width: 12em;
+}
+
+.topo h1 {
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+  color: var(--casca-escura);
+  margin: 0;
+}
+
+.topo p {
+  margin: 0.2em 0 0;
+  color: var(--terra);
+  opacity: 0.8;
+  font-size: 0.95rem;
+}
+
+.voltar {
+  padding: 0.4em 1em;
+  border-radius: 100px;
+  background: var(--folha-suave);
+  color: var(--folha);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.voltar:hover {
+  background: var(--banana-clara);
+}
+
+.btn-novo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.7em 1.3em;
+  border: none;
+  border-radius: 100px;
+  background: var(--folha);
+  color: #ffffff;
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(63, 107, 51, 0.32);
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+
+.btn-novo:hover {
+  background: var(--folha-clara);
+  transform: translateY(-2px);
+}
+
+/* ---------- resumo ---------- */
+
+.resumos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1em;
+  margin-bottom: 1.6em;
+}
+
+.resumo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+  padding: 1.1em 1.3em;
+  border-radius: 1.1em;
+  background: var(--bg-claro);
+  border-left: 5px solid var(--folha);
+}
+
+.resumo-planejado {
+  border-left-color: var(--banana);
+}
+
+.resumo-rotulo {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--terra);
+}
+
+.resumo strong {
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: 1.6rem;
+  color: var(--casca-escura);
+}
+
+.resumo-conta {
+  font-size: 0.8rem;
+  color: var(--terra);
+  opacity: 0.75;
+}
+
+/* ---------- filtros ---------- */
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-bottom: 1.4em;
+}
+
+.chip {
+  padding: 0.45em 1.1em;
+  border-radius: 100px;
+  border: 1px solid var(--borda-cinza);
+  background: #ffffff;
+  color: var(--terra);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chip:hover {
+  background: var(--folha-suave);
+}
+
+.chip-ativo {
+  background: var(--folha);
+  border-color: var(--folha);
+  color: #ffffff;
+}
+
+/* ---------- vitrine ---------- */
+
+.vitrine {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1.2em;
+}
+
+.produto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+  padding: 1.2em;
+  background: #ffffff;
+  border: 1px solid var(--borda-cinza);
+  border-top: 5px solid var(--folha);
+  border-radius: 1.1em;
+  box-shadow: 0 8px 22px rgba(46, 32, 19, 0.1);
+}
+
+/* o que ainda não foi comprado fica com contorno tracejado, como etiqueta de vitrine */
+.produto-planejado {
+  border-top-color: var(--banana);
+  border-style: dashed;
+  border-top-style: solid;
+  background: #fffdf7;
+}
+
+.produto-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+}
+
+.situacao {
+  padding: 0.15em 0.7em;
+  border-radius: 100px;
+  background: var(--folha-suave);
+  color: var(--folha);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.produto-planejado .situacao {
+  background: var(--banana-clara);
+  color: var(--terra);
+}
+
+.btn-editar {
+  display: inline-flex;
+  border: none;
+  background: transparent;
+  color: var(--folha);
+  border-radius: 50%;
+  padding: 0.2em;
+  cursor: pointer;
+}
+
+.btn-editar:hover {
+  background: var(--folha-suave);
+}
+
+.produto h2 {
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: 1.1rem;
+  margin: 0.2em 0 0;
+  color: var(--casca-escura);
+  line-height: 1.25;
+}
+
+.quantidade {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--terra);
+}
+
+.valor {
+  margin: 0.1em 0 0.3em;
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: 1.35rem;
+  color: var(--folha);
+}
+
+.produto-planejado .valor {
+  color: var(--terra);
+}
+
+.detalhes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3em 0.9em;
+  font-size: 0.82rem;
+  color: var(--terra);
+}
+
+.detalhes span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+}
+
+.detalhes mat-icon,
+.btn-comprei mat-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+}
+
+.observacao {
+  margin: 0.5em 0 0;
+  padding-top: 0.5em;
+  border-top: 1px solid var(--borda-cinza);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--terra);
+  opacity: 0.85;
+}
+
+.btn-comprei {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3em;
+  margin-top: 0.8em;
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 100px;
+  background: var(--folha);
+  color: #ffffff;
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.btn-comprei:hover {
+  background: var(--folha-clara);
+}
+
+.vazio {
+  grid-column: 1 / -1;
+  padding: 2em;
+  text-align: center;
+  color: var(--terra);
+  opacity: 0.6;
+}
+
+/* ---------- formulário ---------- */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1em;
+}
+
+.formulario {
+  background: #ffffff;
+  border-radius: 1.4em;
+  padding: 1.8em;
+  width: min(100%, 30em);
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9em;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.formulario h2 {
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  margin: 0;
+  color: var(--casca-escura);
+}
+
+.formulario label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--terra);
+}
+
+.formulario input,
+.formulario select,
+.formulario textarea {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.6em 0.7em;
+  border: 1px solid var(--borda-cinza);
+  border-radius: 0.6em;
+  background: #ffffff;
+  color: var(--casca-escura);
+}
+
+.formulario input:focus,
+.formulario select:focus,
+.formulario textarea:focus {
+  outline: 2px solid var(--folha-clara);
+  outline-offset: 1px;
+}
+
+.formulario textarea {
+  resize: vertical;
+}
+
+.linha {
+  display: flex;
+  gap: 0.8em;
+}
+
+.linha label {
+  flex: 1;
+  min-width: 0;
+}
+
+.form-botoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6em;
+  margin-top: 0.4em;
+}
+
+.form-botoes button {
+  padding: 0.6em 1.2em;
+  border-radius: 100px;
+  border: none;
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-salvar {
+  background: var(--folha);
+  color: #ffffff;
+}
+.btn-salvar:hover {
+  background: var(--folha-clara);
+}
+
+.btn-cancelar {
+  background: var(--bg-claro);
+  color: var(--terra);
+}
+.btn-cancelar:hover {
+  background: var(--borda-cinza);
+}
+
+.btn-apagar {
+  margin-right: auto;
+  background: transparent;
+  color: var(--erro);
+}
+.btn-apagar:hover {
+  background: rgba(172, 38, 38, 0.12);
+}

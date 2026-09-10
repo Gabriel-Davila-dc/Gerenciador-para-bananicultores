@@ -47,8 +47,9 @@ export class Gerenciador {
     },
     {
       titulo: 'Investimentos',
-      descricao: 'Custos do bananal, insumos e o retorno de cada aplicação.',
+      descricao: 'O que já foi comprado para o bananal e o que ainda falta comprar.',
       icone: 'savings',
+      rota: '/gerenciador/investimentos',
     },
   ];
 }

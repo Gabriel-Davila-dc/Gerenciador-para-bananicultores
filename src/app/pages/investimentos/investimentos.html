@@ -1,0 +1,146 @@
+<section class="painel">
+  <header class="topo">
+    <a class="voltar" routerLink="/gerenciador">‹ Gerenciador</a>
+    <div class="topo-texto">
+      <h1>Investimentos</h1>
+      <p>O que já foi comprado para o bananal e o que ainda falta.</p>
+    </div>
+    <button class="btn-novo" (click)="novo()">
+      <mat-icon>add</mat-icon>
+      Novo investimento
+    </button>
+  </header>
+
+  <!-- RESUMO -->
+  <div class="resumos">
+    <div class="resumo resumo-comprado">
+      <span class="resumo-rotulo">Já comprado</span>
+      <strong>R$ {{ formatar.dinheiro(totalDe('Comprado')) }}</strong>
+      <span class="resumo-conta">{{ quantosDe('Comprado') }} item(ns)</span>
+    </div>
+    <div class="resumo resumo-planejado">
+      <span class="resumo-rotulo">Ainda a comprar</span>
+      <strong>R$ {{ formatar.dinheiro(totalDe('A comprar')) }}</strong>
+      <span class="resumo-conta">{{ quantosDe('A comprar') }} item(ns)</span>
+    </div>
+  </div>
+
+  <!-- FILTRO -->
+  <div class="filtros">
+    @for (opcao of filtros; track opcao) {
+      <button
+        type="button"
+        class="chip"
+        [class.chip-ativo]="filtro === opcao"
+        (click)="filtro = opcao"
+      >
+        {{ opcao }}
+      </button>
+    }
+  </div>
+
+  <!-- VITRINE -->
+  <div class="vitrine">
+    @for (item of visiveis; track item.id) {
+      <article class="produto" [class.produto-planejado]="item.situacao === 'A comprar'">
+        <div class="produto-topo">
+          <span class="situacao">{{ item.situacao }}</span>
+          <button type="button" class="btn-editar" title="Editar" (click)="editar(item)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+
+        <h2>{{ item.produto }}</h2>
+
+        <p class="quantidade">{{ item.quantidade }} {{ item.unidade }}</p>
+
+        <p class="valor">R$ {{ formatar.dinheiro(item.valor) }}</p>
+
+        <div class="detalhes">
+          <span><mat-icon>event</mat-icon> {{ formatar.isoParaBR(item.data) }}</span>
+          <span><mat-icon>payments</mat-icon> {{ item.formaPagamento }}</span>
+        </div>
+
+        <p class="observacao" *ngIf="item.observacao">{{ item.observacao }}</p>
+
+        @if (item.situacao === 'A comprar') {
+          <button type="button" class="btn-comprei" (click)="marcarComprado(item)">
+            <mat-icon>check</mat-icon>
+            Já comprei
+          </button>
+        }
+      </article>
+    }
+
+    @if (visiveis.length === 0) {
+      <p class="vazio">Nada aqui ainda.</p>
+    }
+  </div>
+</section>
+
+<!-- FORMULÁRIO -->
+<div class="overlay" *ngIf="editando" (click)="fechar()">
+  <div class="formulario" (click)="$event.stopPropagation()">
+    <h2>{{ editando!.id ? 'Editar investimento' : 'Novo investimento' }}</h2>
+
+    <label>
+      Produto
+      <input type="text" [(ngModel)]="editando!.produto" placeholder="Ex.: Adubo NPK" />
+    </label>
+
+    <div class="linha">
+      <label>
+        Quantidade
+        <input type="number" min="0" [(ngModel)]="editando!.quantidade" />
+      </label>
+      <label>
+        Unidade
+        <select [(ngModel)]="editando!.unidade">
+          @for (unidade of unidades; track unidade) {
+            <option [value]="unidade">{{ unidade }}</option>
+          }
+        </select>
+      </label>
+    </div>
+
+    <label>
+      Valor total (R$)
+      <input type="number" min="0" step="0.01" [(ngModel)]="editando!.valor" />
+    </label>
+
+    <div class="linha">
+      <label>
+        Data
+        <input type="date" [(ngModel)]="editando!.data" />
+      </label>
+      <label>
+        Pagamento
+        <select [(ngModel)]="editando!.formaPagamento">
+          @for (forma of formasPagamento; track forma) {
+            <option [value]="forma">{{ forma }}</option>
+          }
+        </select>
+      </label>
+    </div>
+
+    <label>
+      Situação
+      <select [(ngModel)]="editando!.situacao">
+        @for (situacao of situacoes; track situacao) {
+          <option [value]="situacao">{{ situacao }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Observação
+      <textarea rows="2" [(ngModel)]="editando!.observacao"></textarea>
+    </label>
+
+    <div class="form-botoes">
+      <button class="btn-apagar" *ngIf="editando!.id" (click)="apagar(editando!)">Apagar</button>
+      <button class="btn-cancelar" (click)="fechar()">Cancelar</button>
+      <button class="btn-salvar" (click)="salvar()">Salvar</button>
+    </div>
+  </div>
+</div>
