@@ -21,6 +21,29 @@ h3 {
   text-align: center;
 }
 
+/**
+ * Véu suave atrás do texto.
+ *
+ * A foto do bananal é clara justo no meio (céu e folhas ao sol), e ali ficavam
+ * o amarelo do "Calculadora de Banana" e o creme do título — claro sobre
+ * claro, ilegível. Só a sombra do texto não resolvia.
+ *
+ * É um degradê que morre antes das beiradas, então continua não sendo um
+ * filtro por cima da imagem: as laterais do bananal seguem limpas.
+ */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 65% 65% at 50% 45%,
+    rgba(24, 16, 8, 0.62) 0%,
+    rgba(24, 16, 8, 0.38) 50%,
+    rgba(24, 16, 8, 0) 76%
+  );
+  pointer-events: none;
+}
+
 .hero-conteudo {
   position: relative;
   z-index: 1;
@@ -34,13 +57,13 @@ h3 {
 
 .hero-eyebrow {
   font-family: 'Fredoka', sans-serif;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   color: var(--banana);
-  /* sombra no texto em vez de véu por cima da imagem: o fundo fica 100% */
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  /* sombra curta e opaca: a difusa de antes espalhava em vez de destacar */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95);
 }
 
 .hero h1 {
@@ -49,7 +72,12 @@ h3 {
   font-weight: 600;
   line-height: 1.15;
   text-wrap: balance;
-  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.75);
+  /* branco puro no lugar do creme: sobre folha ao sol o creme sumia.
+     Duas sombras — uma curta que define a letra, uma larga que a descola. */
+  color: #ffffff;
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.9),
+    0 4px 16px rgba(0, 0, 0, 0.6);
 }
 
 .hero-botoes {
@@ -341,5 +369,23 @@ label {
 @keyframes moverDireita {
   to {
     transform: translateX(99vw);
+  }
+}
+
+/* ---------- celular: menos respiro, mais conteúdo por tela ---------- */
+
+@media (max-width: 700px) {
+  /* no desktop esse espaço dá elegância; no celular obriga a rolar bastante
+     só para chegar na calculadora, que é o motivo de abrir o app */
+  .hero {
+    padding: 2.2em 1em 2em;
+  }
+
+  .secao-calculadora {
+    padding: 1.8em 0.8em 1.6em;
+  }
+
+  .recursos {
+    padding: 2em 1em;
   }
 }

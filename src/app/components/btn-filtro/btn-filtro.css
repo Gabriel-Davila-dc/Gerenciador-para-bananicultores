@@ -19,6 +19,7 @@ h1 {
   align-content: center;
   justify-content: center;
   width: 100%;
+  gap: 0.6em;
 }
 
 .label-btn {
@@ -55,4 +56,29 @@ input[type='radio']:checked + .label-btn {
 /* Efeito hover */
 .label-btn:hover {
   background-color: var(--folha-suave);
+}
+
+/* ---------- celular ---------- */
+
+@media (max-width: 700px) {
+  /* 3em em cima e 3em embaixo, com dois blocos empilhados, davam quase 100px
+     de vazio entre uma pergunta e outra - metade da tela era espaço morto */
+  .container {
+    margin: 1.1em 0;
+  }
+
+  /* o tamanho do título fica como está; o que sobra é o respiro em volta,
+     que com duas linhas de texto grande virava um bloco alto demais */
+  h1 {
+    line-height: 1.2;
+    margin: 0 0 0.5em;
+  }
+
+  /* os dois botões dividem a largura em vez de somarem 320px fixos, que numa
+     tela de 360px encostavam nas bordas */
+  .label-btn {
+    flex: 1;
+    min-width: 0;
+    padding: 0.7rem 0.6rem;
+  }
 }

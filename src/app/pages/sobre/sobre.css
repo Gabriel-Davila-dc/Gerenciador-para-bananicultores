@@ -40,15 +40,17 @@ p {
   margin: 3em 0;
 }
 /* HEADER */
+/* min-height em vez de height: com altura fixa e overflow:hidden, o título
+   que cresce no celular era cortado em vez de empurrar o bloco */
 .sobre-header {
   position: relative;
   width: 100vw;
-  height: 45vh;
-  overflow: hidden;
+  min-height: 45vh;
   margin-left: calc(-50vw + 50%);
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 2em 1em;
 }
 .header-img {
   width: 100%;
@@ -56,9 +58,9 @@ p {
   object-fit: cover;
 }
 
+/* a altura acompanha o texto: fixada em 50%, o título de três linhas do
+   celular transbordava e caía por cima do subtítulo */
 .header-overlay {
-  inset: 0;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -66,19 +68,23 @@ p {
   text-align: center;
   color: var(--casca-escura);
 
-  height: 50%;
-  width: 60%;
+  width: min(90%, 40em);
+  padding: 1em;
   border-radius: 40px;
 }
 
+/* clamp no lugar de um tamanho fixo: 3.2rem cabia no desktop e quebrava
+   "Sobre a Banana" em três linhas numa tela de 360px */
 .header-overlay h1 {
-  font-size: 3.2rem;
+  font-size: clamp(1.9rem, 8vw, 3.2rem);
+  line-height: 1.15;
   margin-bottom: 0.3em;
   text-shadow: 1px 3px 5px white;
 }
 
 .header-overlay p {
-  font-size: 1.4rem;
+  font-size: clamp(1rem, 4vw, 1.4rem);
   width: 100%;
+  margin: 0;
   background: radial-gradient(circle, white 0%, transparent 100%);
 }

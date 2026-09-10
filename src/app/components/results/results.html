@@ -1,14 +1,16 @@
 <div [ngClass]="estiloEscolhido">
+  <!-- rótulo e valor são irmãos numa linha flex: soltos, o navegador
+       quebrava "Valor Total:" no meio e jogava o número para fora -->
   <div class="resumos">
-    <label for="">Valor Total:</label>
-    <label id="resultado-valor">{{ formatar.dinheiro(resultados[0]) }}</label>
+    <span class="rotulo">Valor Total:</span>
+    <span class="valor">R$ {{ formatar.dinheiro(resultados[0]) }}</span>
   </div>
   <div class="resumos">
-    <label id="resultado-peso">Peso Total:</label>
-    <label id="resultado-valor">{{ resultados[1] }}</label>
+    <span class="rotulo">Peso Total:</span>
+    <span class="valor">{{ formatar.dinheiro(resultados[1]) }} kg</span>
   </div>
   <div class="resumos">
-    <label id="resultado-caixa">{{ inputFiltro.result }}</label>
-    <label id="resultado-valor">{{ formatar.dinheiro(resultados[2]) }}</label>
+    <span class="rotulo">{{ inputFiltro.result }}</span>
+    <span class="valor">R$ {{ formatar.dinheiro(resultados[2]) }}</span>
   </div>
 </div>

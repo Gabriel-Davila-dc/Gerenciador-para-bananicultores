@@ -1,66 +1,71 @@
-.resultado-simples {
+/* os três cartões só diferem pela faixa colorida da esquerda */
+.resultado-simples,
+.resultado-boa,
+.resultado-fraca {
   display: flex;
-  min-width: 98%;
   flex-direction: column;
-  justify-content: center;
-  justify-self: center;
-  align-items: start;
-  margin: 2em 0;
+  width: 100%;
   background-color: var(--bg-branco);
   border-radius: 8px;
   border: 1px solid var(--borda-cinza);
   box-shadow: var(--sombra);
-  padding: 2em 0em;
+  /* o padding lateral vem daqui, não do .resumos: no celular os 3em à direita
+     empurravam o número e forçavam a quebra do rótulo */
+  padding: 0.4em 1.1em;
+}
+
+.resultado-simples {
+  margin: 1.2em 0;
 }
 
 .resultado-boa {
-  display: flex;
-  min-width: 95%;
-  flex-direction: column;
-  justify-content: center;
-  justify-self: center;
-  align-items: start;
   margin: 0.5em 0;
-  background-color: var(--bg-branco);
-  border-radius: 8px;
-  border: 1px solid var(--borda-cinza);
   border-left: 0.4em solid var(--folha);
-  box-shadow: var(--sombra);
-  padding: 2em 0em;
 }
 
 .resultado-fraca {
-  display: flex;
-  min-width: 95%;
-  flex-direction: column;
-  justify-content: center;
-  justify-self: center;
-  align-items: start;
   margin: 0.5em 0;
-  background-color: var(--bg-branco);
-  border-radius: 8px;
-  border: 1px solid var(--borda-cinza);
   border-left: 0.4em solid var(--banana);
-  box-shadow: var(--sombra);
-  padding: 2em 0em;
 }
 
-.resultado-simples label {
-  font-size: 1.8em;
-  margin: 0.5em;
-  color: var(--casca-escura);
-}
-
-label {
-  font-size: 1.8em;
-  margin: 0.5em;
-  color: var(--casca-escura);
-}
-
+/* uma linha por informação: rótulo à esquerda, valor à direita */
 .resumos {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8em;
+  padding: 0.75em 0;
   color: var(--casca-escura);
-  font-size: 1em;
-  border-radius: 7px;
-  padding: 0em 3em 0em 0em;
-  margin: 1.5em 0em;
+}
+
+.resumos + .resumos {
+  border-top: 1px solid var(--folha-suave);
+}
+
+.rotulo {
+  font-size: 1rem;
+  font-weight: 600;
+  /* nunca quebrar no meio: era o que virava "Valor / Total:" */
+  white-space: nowrap;
+}
+
+/* tabular-nums mantém a largura estável enquanto o valor muda a cada dígito
+   digitado, senão a linha inteira dança durante o preenchimento */
+.valor {
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-align: right;
+}
+
+/* telas bem estreitas: o rótulo pode encolher, o número nunca */
+@media (max-width: 380px) {
+  .rotulo {
+    font-size: 0.9rem;
+  }
+
+  .valor {
+    font-size: 1.1rem;
+  }
 }

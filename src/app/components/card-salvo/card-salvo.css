@@ -16,8 +16,31 @@
   width: 100%;
   height: auto;
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
+  gap: 0.8em;
+  /* o respiro vem da linha, não das margens dos labels: com margem de 1em de
+     cada lado sobrava pouca largura e o valor era empurrado para fora */
+  padding: 0.5em 0.9em;
+}
+
+.resumo label {
+  margin: 0;
+  font-size: 1.15rem;
+  /* sem isto um item de flex nunca encolhe além do próprio conteúdo, e um
+     nome comprido como "Bananal do Gabriel" estourava a borda do card */
+  min-width: 0;
+}
+
+.resumo label:first-child {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.resumo label:last-child {
+  text-align: right;
+  /* quebra dentro do card mesmo quando é uma palavra só e comprida */
+  overflow-wrap: anywhere;
 }
 
 .selo-pago {

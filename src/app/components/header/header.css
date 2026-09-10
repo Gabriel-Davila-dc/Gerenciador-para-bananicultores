@@ -94,6 +94,11 @@ li:nth-child(2) a:hover {
   font-weight: bold;
   display: flex;
   align-items: center;
+  gap: 0.4em;
+  /* sem isto o título cresce e empurra o ☰ para fora da tela, em vez de
+     encolher: item de flex não passa do próprio conteúdo por padrão */
+  min-width: 0;
+  padding-left: 0.6em;
 }
 
 /* BURG */
@@ -146,48 +151,27 @@ li:nth-child(2) a:hover {
     display: none;
   }
 
-  html {
-    font-size: 0.7rem;
+  /* antes o título quebrava em duas linhas e era isso que dava altura à
+     barra; agora que cabe em uma, a altura precisa ser garantida aqui */
+  header {
+    min-height: 4.2rem;
+    padding: 0.5em 0;
+  }
+
+  /* o título não pode empurrar o botão do menu para fora da tela */
+  #header .logo h1 {
+    font-size: clamp(1.15rem, 5.2vw, 1.6rem);
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  #header .logo img {
+    max-height: 2.8em;
+  }
+
+  #burg {
+    font-size: 2.6rem;
+    align-items: center;
   }
 }
 
-@media (max-width: 1500px) {
-  html {
-    font-size: 0.9rem;
-  }
-}
-@media (max-width: 1000px) {
-  html {
-    font-size: 0.9rem;
-  }
-}
-@media (max-width: 900px) {
-  html {
-    font-size: 0.8rem;
-  }
-}
-@media (max-width: 700px) {
-  html {
-    font-size: 0.6rem;
-  }
-}
-@media (max-width: 500px) {
-  html {
-    font-size: 0.55rem;
-  }
-}
-@media (max-width: 450px) {
-  html {
-    font-size: 0.5rem;
-  }
-}
-@media (max-width: 400px) {
-  html {
-    font-size: 0.45rem;
-  }
-}
-@media (max-width: 350px) {
-  html {
-    font-size: 0.4rem;
-  }
-}
