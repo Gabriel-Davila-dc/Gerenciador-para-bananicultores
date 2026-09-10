@@ -30,8 +30,8 @@
 
 h1 {
   padding: 3vh 40px 4vh 40px;
-  color: var(--azul-escuro);
-  background: linear-gradient(172deg, rgba(255, 255, 255, 0) 55%, var(--verde-hover));
+  color: var(--casca-escura);
+  background: linear-gradient(172deg, rgba(255, 255, 255, 0) 55%, var(--folha-clara));
   border: solid 2px 0px black;
   box-shadow: 1px 1px 1px black;
   border-radius: 28px;
@@ -39,12 +39,12 @@ h1 {
 button {
   width: 50%;
   font-size: 2em;
-  background: linear-gradient(90deg, var(--verde-principal) 0%, var(--verde-fraco) 100%);
-  color: black;
+  background: linear-gradient(90deg, var(--folha) 0%, var(--folha-clara) 100%);
+  color: var(--bg-branco);
 }
 button:hover {
-  background: linear-gradient(90deg, var(--verde-principal) 0%, var(--verde-fraco) 100%);
-  filter: brightness(1.2);
+  background: linear-gradient(90deg, var(--folha) 0%, var(--folha-clara) 100%);
+  filter: brightness(1.15);
 }
 .btn-cadastrar {
   width: 30%;
@@ -52,10 +52,10 @@ button:hover {
   background: white;
 }
 p {
-  color: rgb(172, 38, 38);
+  color: var(--erro);
   font-size: 1.3em;
 }
 a {
   text-decoration: none;
-  color: rgb(0, 5, 53);
+  color: var(--folha);
 }

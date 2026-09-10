@@ -5,14 +5,14 @@
 }
 .container-boa {
   border: 1px solid #cccccc;
-  border-left: 1em solid var(--verde-bom);
+  border-left: 1em solid var(--folha);
   border-radius: 8px;
   padding: 16px;
 }
 
 .container-fraca {
   border: 1px solid #cccccc;
-  border-left: 1em solid var(--verde-fraco);
+  border-left: 1em solid var(--banana);
   border-radius: 8px;
   padding: 16px;
 }

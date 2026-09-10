@@ -12,33 +12,42 @@ body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 
   min-height: 100vh;
-  background: linear-gradient(180deg, #ffffffbd 70%, rgba(94, 255, 0, 0.733));
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
+  /* bananal como fundo de toda a página: aparece nas beiradas, atrás do conteúdo */
+  background: url('/img/bananal.png') center center / cover no-repeat fixed;
+}
+
+/* no celular, background fixo trava/pisca em vários navegadores */
+@media (max-width: 800px) {
+  body {
+    background-attachment: scroll;
+  }
 }
 
 :root {
-  /* CORES PRINCIPAIS */
-  --azul-escuro: rgb(0, 0, 52);
-  --azul-escuro-2: rgb(0, 0, 35);
+  /* MARCA - bananicultor */
+  --banana: #f4b400;
+  --banana-clara: #fde9a8;
+  --folha: #3f6b33;
+  --folha-clara: #6b9450;
+  --folha-suave: #dce9d3;
+  --terra: #5c3d22;
+  --casca-escura: #2e2013;
+  --creme: #fff8e7;
 
-  --verde-principal: rgb(170, 255, 0);
-  --verde-hover: rgb(157, 255, 0);
-  --verde-bom: rgb(82, 205, 0);
-  --verde-fraco: rgb(207, 244, 0);
-  --verde-fundo: rgba(226, 252, 58, 0.467);
-
-  /* BACKGROUNDS */
+  /* BACKGROUNDS E NEUTROS */
   --bg-claro: rgb(245, 245, 245);
   --bg-branco: rgb(250, 250, 250);
   --bg-input: rgba(240, 248, 255, 0.501);
+  --bg-botao-neutro: rgb(238, 236, 228);
 
   /* BORDAS E SOMBRAS */
   --borda-preta: rgb(0, 0, 0);
   --borda-cinza: rgba(0, 0, 0, 0.335);
   --borda-input: rgb(107, 108, 107);
-  --sombra: 0 8px 24px rgba(0, 0, 0, 0.795);
+  --sombra: 0 8px 24px rgba(46, 32, 19, 0.18);
+
+  /* ESTADO SEMÂNTICO */
+  --erro: rgb(172, 38, 38);
 }
 
 /* ========================= */

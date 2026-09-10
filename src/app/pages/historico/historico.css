@@ -1,0 +1,64 @@
+.container {
+  display: flex;
+  flex-direction: column;
+
+  height: auto;
+  min-height: 100vh;
+  width: 100%;
+  align-items: center;
+  /*borrar*/
+  background: rgba(37, 37, 36, 0.281);
+}
+
+.card-salvo {
+  margin-bottom: 20px;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  height: 100vh;
+}
+
+.editarCentral {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: auto;
+  height: 85vh;
+  z-index: 1000;
+  overflow-y: scroll;
+
+  /* Firefox */
+  scrollbar-width: none;
+
+  /* IE / Edge antigo */
+  -ms-overflow-style: none;
+} /* Chrome, Edge, Safari */
+.conteudo::-webkit-scrollbar {
+  display: none;
+}
+h1 {
+  color: #ffffff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.voltar {
+  align-self: flex-start;
+  margin: 1em 0 0 1em;
+  padding: 0.4em 1em;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--folha);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.voltar:hover {
+  background: #ffffff;
+}

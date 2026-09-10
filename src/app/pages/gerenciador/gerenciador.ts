@@ -1,49 +1,54 @@
-import { Venda } from './../../models/venda';
 import { Component } from '@angular/core';
-import { CardSalvo } from '../../components/card-salvo/card-salvo';
-import { Salvar } from '../../services/salvar';
 import { CommonModule } from '@angular/common';
-import { from, Observable } from 'rxjs';
-import { UpdateVenda } from '../../components/update-venda/update-venda';
-import { Contas } from '../../services/contas';
+import { RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+
+interface OpcaoGerenciador {
+  titulo: string;
+  descricao: string;
+  icone: string;
+  // sem rota = ainda não existe, aparece como "em breve"
+  rota?: string;
+}
 
 @Component({
   standalone: true,
   selector: 'app-gerenciador',
-  imports: [CardSalvo, CommonModule, UpdateVenda],
+  imports: [CommonModule, RouterModule, MatIconModule],
   templateUrl: './gerenciador.html',
   styleUrl: './gerenciador.css',
 })
 export class Gerenciador {
-  vendas$!: Observable<Venda[]>;
+  email = localStorage.getItem('email') || '';
 
-  Editando: Venda | null = null;
-  email: string = localStorage.getItem('email') || 'Nenhum';
-
-  constructor(
-    private salvar: Salvar,
-    private contas: Contas,
-  ) {}
-
-  ngOnInit() {
-    this.vendas$ = from(this.salvar.pegarVendas());
-    this.email = localStorage.getItem('email') || 'Nenhum';
-    console.log(localStorage.getItem('email'));
-  }
-
-  apagar(id: number) {
-    this.vendas$ = from(this.salvar.apagarVenda(id).then(() => this.salvar.pegarVendas()));
-  }
-
-  editarVenda(vendaEditada: Venda) {
-    this.Editando = vendaEditada;
-    console.log('Editando venda com ID:', vendaEditada.id);
-  }
-  atualizarVenda(vendaAtualizada: Venda) {
-    this.salvar.atualizarVenda(vendaAtualizada);
-  }
-
-  fechar() {
-    this.Editando = null;
-  }
+  opcoes: OpcaoGerenciador[] = [
+    {
+      titulo: 'Histórico',
+      descricao: 'Todas as vendas registradas, com edição e exclusão.',
+      icone: 'history',
+      rota: '/gerenciador/historico',
+    },
+    {
+      titulo: 'CRM de serviços',
+      descricao: 'Serviços do bananal por etapa: planejado, esperando, fazendo e finalizado.',
+      icone: 'view_kanban',
+      rota: '/gerenciador/crm',
+    },
+    {
+      titulo: 'Cadastros',
+      descricao: 'Bananais, serviços e trabalhadores que aparecem nas listas do CRM.',
+      icone: 'list_alt',
+      rota: '/gerenciador/cadastros',
+    },
+    {
+      titulo: 'Métricas',
+      descricao: 'Preço médio do quilo, volume por safra e comparação entre períodos.',
+      icone: 'insights',
+    },
+    {
+      titulo: 'Investimentos',
+      descricao: 'Custos do bananal, insumos e o retorno de cada aplicação.',
+      icone: 'savings',
+    },
+  ];
 }

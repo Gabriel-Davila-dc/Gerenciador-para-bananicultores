@@ -7,6 +7,10 @@ Informações de venda
     <label for="">Cliente:</label>
     <label for="">{{ venda.nome }}</label>
   </div>
+  <div class="resumo" *ngIf="venda.bananal">
+    <label for="">Bananal:</label>
+    <label for="">{{ venda.bananal }}</label>
+  </div>
   <div class="resumo">
     <label for="">Data:</label>
     <label for="">{{ formatar.data(venda.data) }}</label>
@@ -84,16 +88,16 @@ sempre aparece o result
 
   <!-- BOTÕES -->
   <div class="div-botoes">
-    <button mat-icon-button color="warn" (click)="apagar()">
+    <button mat-icon-button class="btn-apagar" (click)="apagar()">
       <mat-icon>delete</mat-icon>
     </button>
 
-    <button mat-raised-button color="primary" (click)="verDetalhes()">
-      <mat-icon color="warn">visibility</mat-icon>
+    <button mat-raised-button class="btn-detalhes" (click)="verDetalhes()">
+      <mat-icon>visibility</mat-icon>
       Ver Detalhes
     </button>
 
-    <button mat-icon-button color="primary" (click)="editar()">
+    <button mat-icon-button class="btn-editar" (click)="editar()">
       <mat-icon>edit</mat-icon>
     </button>
   </div>

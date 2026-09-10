@@ -1,22 +1,26 @@
-<div class="container">
-  <h1>Histórico de vendas</h1>
-  <p>{{ email }}</p>
-  @for (venda of vendas$ | async; track venda.id) {
-    <app-card-salvo
-      [infos]="venda"
-      (apagarVenda)="apagar($event)"
-      (editarVenda)="editarVenda($event)"
-      class="card-salvo"
-    >
-    </app-card-salvo>
-  }
-  <div *ngIf="Editando !== null" class="overlay" (click)="fechar()">
-    <div class="editarCentral" (click)="$event.stopPropagation()">
-      <app-update-venda
-        [venda]="Editando"
-        (cancela)="fechar()"
-        (salva)="atualizarVenda($event)"
-      ></app-update-venda>
-    </div>
+<section class="painel">
+  <header class="topo">
+    <h1>Gerenciador</h1>
+    <p *ngIf="email">Conectado como {{ email }}</p>
+  </header>
+
+  <div class="opcoes">
+    @for (opcao of opcoes; track opcao.titulo) {
+      @if (opcao.rota) {
+        <a class="opcao" [routerLink]="opcao.rota">
+          <span class="opcao-icone"><mat-icon>{{ opcao.icone }}</mat-icon></span>
+          <h2>{{ opcao.titulo }}</h2>
+          <p>{{ opcao.descricao }}</p>
+          <span class="opcao-acao">Abrir</span>
+        </a>
+      } @else {
+        <div class="opcao opcao-breve">
+          <span class="opcao-icone"><mat-icon>{{ opcao.icone }}</mat-icon></span>
+          <h2>{{ opcao.titulo }}</h2>
+          <p>{{ opcao.descricao }}</p>
+          <span class="opcao-badge">em breve</span>
+        </div>
+      }
+    }
   </div>
-</div>
+</section>

@@ -1,4 +1,74 @@
-<div class="container">
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div class="hero-conteudo">
+    <span class="hero-eyebrow">Calculadora de Banana</span>
+    <h1>Quanto vale sua caixa de banana hoje?</h1>
+    <div class="hero-botoes">
+      <button class="btn-primario" (click)="irParaCalculadora()">Calcular agora</button>
+      <a
+        class="btn-secundario"
+        [routerLink]="logado ? '/gerenciador' : '/register'"
+        >{{ logado ? 'Ver meu Gerenciador' : 'Criar conta grátis' }}</a
+      >
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COMO FUNCIONA ===================== -->
+<section class="recursos">
+  <h2>Feito pra quem vive da banana</h2>
+  <p class="recursos-sub">
+    Calcule o preço da venda simples ou classificada — por caixa ou por quilo — do jeito que você já
+    negocia com o comprador. Sem sinal na roça? Sem problema, funciona offline.
+  </p>
+
+  <div class="degraus">
+    <article class="degrau">
+      <span class="degrau-numero">01</span>
+      <div class="degrau-texto">
+        <span class="degrau-icone" aria-hidden="true">🍌</span>
+        <h3>Simples ou classificada</h3>
+        <p>
+          Vende "a varrer" ou separa a Boa da Fraca? A calculadora se adapta aos dois jeitos que
+          você já usa pra negociar.
+        </p>
+      </div>
+    </article>
+
+    <article class="degrau">
+      <span class="degrau-numero">02</span>
+      <div class="degrau-texto">
+        <span class="degrau-icone" aria-hidden="true">🧮</span>
+        <h3>Por caixa ou por quilo</h3>
+        <p>
+          Uns compradores fecham por caixa, outros por quilo. Calcule dos dois jeitos, sem conta
+          de cabeça e sem margem de erro.
+        </p>
+      </div>
+    </article>
+
+    <article class="degrau">
+      <span class="degrau-numero">03</span>
+      <div class="degrau-texto">
+        <span class="degrau-icone" aria-hidden="true">📒</span>
+        <h3>Histórico da safra</h3>
+        <p>
+          Toda venda registrada fica guardada no Gerenciador — mesmo sem internet na hora,
+          sincroniza sozinha depois.
+        </p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ===================== CALCULADORA ===================== -->
+<section class="secao-calculadora" id="calculadora">
+  <div class="calculadora-titulo">
+    <h2>Calcule sua venda</h2>
+    <p>Preencha os dados abaixo — o resultado aparece na hora.</p>
+  </div>
+
+  <div class="container">
   <!-- Primeiros filtros -->
   <app-btn-filtro [modelo]="1" (filtroEscolhido)="setFiltroNegocio($event)"></app-btn-filtro>
 
@@ -66,9 +136,21 @@
       <input matInput [(ngModel)]="nome" />
     </mat-form-field>
 
+    <!-- De qual bananal saiu essa venda -->
+    <label class="campo-bananal">
+      Bananal
+      <select [(ngModel)]="bananal">
+        <option value="">Não informar</option>
+        @for (item of bananais; track item) {
+          <option [value]="item">{{ item }}</option>
+        }
+      </select>
+    </label>
+
     <button mat-raised-button id="button" (click)="salvarVenda()">
       <mat-icon></mat-icon>
       <label for="">Salvar Venda</label>
     </button>
   </div>
-</div>
+  </div>
+</section>

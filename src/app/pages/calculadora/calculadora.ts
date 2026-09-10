@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 import { BtnFiltro } from '../../components/btn-filtro/btn-filtro';
 import { InputFiltro } from '../../components/input-filtro/input-filtro';
@@ -13,6 +14,7 @@ import { Venda } from '../../models/venda';
 import { Categoria } from '../../models/categoria';
 import { ResumoTotal } from '../../models/resumo-total';
 import { Salvar } from '../../services/salvar';
+import { CadastrosService } from '../../services/cadastros-service';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
@@ -29,6 +31,7 @@ type Resultados = [valor: number, peso: number, preco: number];
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     BtnFiltro,
     InputFiltro,
     Results,
@@ -81,6 +84,8 @@ export class Calculadora {
   mediaNaoMostrada: number = 0;
 
   nome: string = '';
+  bananal: string = '';
+  bananais: string[] = [];
   data: string = new Date().toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: '2-digit',
@@ -89,7 +94,19 @@ export class Calculadora {
 
   venda: Venda = this.Vendendo();
 
-  constructor(private salvar: Salvar) {}
+  //se já tem token salvo, manda pro Gerenciador em vez de Criar conta na landing
+  logado = !!localStorage.getItem('token');
+
+  constructor(
+    private salvar: Salvar,
+    private cadastros: CadastrosService,
+  ) {
+    this.bananais = this.cadastros.listar('bananais');
+  }
+
+  irParaCalculadora(): void {
+    document.getElementById('calculadora')?.scrollIntoView({ behavior: 'smooth' });
+  }
 
   /* =====================
      Setters de Filtro
@@ -255,6 +272,7 @@ export class Calculadora {
 
     const vendida: Venda = {
       nome: this.nome,
+      bananal: this.bananal,
       data: this.data,
       tipo: this.filtroNegocio,
       simples: CaixaSimples,

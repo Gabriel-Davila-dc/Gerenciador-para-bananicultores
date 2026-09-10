@@ -1,0 +1,23 @@
+<div class="container">
+  <a class="voltar" routerLink="/gerenciador">‹ Gerenciador</a>
+  <h1>Histórico de vendas</h1>
+  <p>{{ email }}</p>
+  @for (venda of vendas$ | async; track venda.id) {
+    <app-card-salvo
+      [infos]="venda"
+      (apagarVenda)="apagar($event)"
+      (editarVenda)="editarVenda($event)"
+      class="card-salvo"
+    >
+    </app-card-salvo>
+  }
+  <div *ngIf="Editando !== null" class="overlay" (click)="fechar()">
+    <div class="editarCentral" (click)="$event.stopPropagation()">
+      <app-update-venda
+        [venda]="Editando"
+        (cancela)="fechar()"
+        (salva)="atualizarVenda($event)"
+      ></app-update-venda>
+    </div>
+  </div>
+</div>

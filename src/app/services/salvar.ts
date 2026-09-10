@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Venda } from '../models/venda';
-import { HttpClient } from '@angular/common/http';
 import { VendaService } from './venda-service';
 import { VendaApi } from '../Types/VendaApi';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,24 +10,26 @@ import { Formatar } from './formatar';
   providedIn: 'root',
 })
 export class Salvar {
-  private tokenValido: string = '';
+  // lê sempre o valor atual do localStorage, em vez de guardar em cache
+  // (o cache ficava desatualizado quando o login acontecia depois da service já criada)
+  private get token(): string {
+    return localStorage.getItem('token') || '';
+  }
+
   constructor(
-    private http: HttpClient,
     private vendaService: VendaService,
     private snackBar: MatSnackBar,
     private userService: UserService,
     private formatar: Formatar,
-  ) {
-    this.tokenValido = localStorage.getItem('token') || '';
-  }
+  ) {}
 
   async salvarVenda(venda: Venda): Promise<void> {
     //trás as vendas salvas
     const vendasSalvas = localStorage.getItem('vendas');
     //se tiver vendas joga pro array de vendas "vendidas", ou cria um vazio
     const vendidas: Venda[] = vendasSalvas ? JSON.parse(vendasSalvas) : [];
-    //colocas as novas vendas no array de vendas
-    venda.id = vendidas.length + 1;
+    //id negativo: nunca colide com o id (positivo, autoincremento) que o servidor atribui
+    venda.id = -Date.now();
     vendidas.push(venda);
     //transforma o array atualizado em Json
     const vendasJSON = JSON.stringify(vendidas, null, 2);
@@ -37,40 +38,31 @@ export class Salvar {
 
     //  Salvar no banco de dados do servidor
     // Ver se o usuario permanece logado e conectado, verificando o token
-    const tokenValido = this.tokenValido;
-
-    if (!tokenValido) {
+    if (!this.token) {
       this.snackBar.open(' Faça Login em uma conta para salvar permanentemente.', '⚠️', {
         duration: 2500,
         verticalPosition: 'top',
         horizontalPosition: 'right',
       });
+      return;
+    }
+
+    // Verifica se o token é válido
+    const conectado = await this.userService.getUser();
+    //conectado, pode mandar salvar
+    if (conectado) {
+      this.rotinaSalvarVendas();
     } else {
-      // Verifica se o token é válido
-      this.http
-        .get('http://localhost:3333/users/token', {
-          headers: {
-            Authorization: `Bearer ${tokenValido}`,
-          },
-        })
-        .subscribe({
-          //conectado, pode mandar salvar
-          next: async () => {
-            this.rotinaSalvarVendas();
-          },
-          //Não conectado, deixa no localStorage
-          error: () => {
-            this.snackBar.open(
-              ' Você não está logado. Conecte-se a internet para salvar permanentemente.',
-              '⚠️',
-              {
-                duration: 2500,
-                verticalPosition: 'top',
-                horizontalPosition: 'right',
-              },
-            );
-          },
-        });
+      //Não conectado, deixa no localStorage
+      this.snackBar.open(
+        ' Você não está logado. Conecte-se a internet para salvar permanentemente.',
+        '⚠️',
+        {
+          duration: 2500,
+          verticalPosition: 'top',
+          horizontalPosition: 'right',
+        },
+      );
     }
   }
 
@@ -82,8 +74,9 @@ export class Salvar {
     //se tiver vendas offline, salva
     while (0 < vendidas.length) {
       const vendaParaSalvar = vendidas.shift();
+      if (!vendaParaSalvar) break;
 
-      const resultado = await this.vendaService.salvarVenda(vendaParaSalvar, this.tokenValido);
+      const resultado = await this.vendaService.salvarVenda(vendaParaSalvar);
       //se tiver sido salvo no banco de dados, apaga do localStorage
       if (resultado == true) {
         const vendasJSON = JSON.stringify(vendidas, null, 2);
@@ -106,7 +99,7 @@ export class Salvar {
     const vendidas: Venda[] = vendasSalvas ? JSON.parse(vendasSalvas) : [];
     try {
       //servidor online
-      const vendaApi: VendaApi[] = await this.vendaService.listarVendas(this.tokenValido);
+      const vendaApi: VendaApi[] = await this.vendaService.listarVendas();
 
       const vendasConvertidas: Venda[] = vendaApi.map((api) => this.mapVendaApiParaVenda(api));
 
@@ -125,7 +118,6 @@ export class Salvar {
   }
 
   async apagarVenda(id: number): Promise<void> {
-    const tokenValido = this.tokenValido;
     const vendasStorage = localStorage.getItem('vendas');
     const vendidas: Venda[] = vendasStorage ? JSON.parse(vendasStorage) : [];
     //Remove a venda do localStorage, e mantem as outras salvas
@@ -135,7 +127,7 @@ export class Salvar {
     localStorage.setItem('vendas', vendasJSON);
     console.log(`Venda com ID ${id} foi apagada.`);
 
-    if (!tokenValido) {
+    if (!this.token) {
       this.snackBar.open('Conecte-se para apagar permanentemente.', '🔓', {
         duration: 2500,
         verticalPosition: 'top',
@@ -143,10 +135,10 @@ export class Salvar {
       });
     } else {
       // Verifica se o token é válido
-      const logado = this.userService.getUser();
+      const logado = await this.userService.getUser();
       //conectado, pode mandar salvar
-      if (await logado) {
-        await this.vendaService.apagarVenda(id, tokenValido);
+      if (logado) {
+        await this.vendaService.apagarVenda(id);
       } else {
         this.snackBar.open('Você não está logado. Conecte-se a internet para apagar.', '🚫', {
           duration: 2500,
@@ -158,7 +150,7 @@ export class Salvar {
   }
 
   async atualizarVenda(vendaAtualizada: Venda): Promise<void> {
-    const salvoServer = await this.vendaService.atualizarVenda(vendaAtualizada, this.tokenValido);
+    const salvoServer = await this.vendaService.atualizarVenda(vendaAtualizada);
     //se não salvou no server, salva no localStorage
     if (!salvoServer) {
       const vendasStorage = localStorage.getItem('vendas');
@@ -178,6 +170,7 @@ export class Salvar {
       id: api.id,
 
       nome: api.cliente ?? 'Sem nome',
+      bananal: api.bananal ?? '',
       data: this.formatar.data(api.createdAt),
       tipo: api.tipo,
 

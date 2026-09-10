@@ -10,7 +10,8 @@
       <li><a routerLink="/">Início</a></li>
       <li><a routerLink="/gerenciador">Gerenciador</a></li>
       <li><a routerLink="/sobre">Infos</a></li>
-      <li><a routerLink="/login">Login</a></li>
+      <li *ngIf="!logado"><a routerLink="/login">Entrar</a></li>
+      <li *ngIf="logado"><a (click)="sair()">Sair</a></li>
     </ul>
   </nav>
 </header>
@@ -19,6 +20,7 @@
     <li><a routerLink="/">Início</a></li>
     <li><a routerLink="/gerenciador">Gerenciador</a></li>
     <li><a routerLink="/sobre">Sobre</a></li>
-    <li><a routerLink="/login">Login</a></li>
+    <li *ngIf="!logado"><a routerLink="/login">Entrar</a></li>
+    <li *ngIf="logado"><a (click)="sair()">Sair</a></li>
   </ul>
 </nav>

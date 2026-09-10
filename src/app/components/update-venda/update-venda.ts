@@ -4,6 +4,7 @@ import { Component, EventEmitter, Input, Output, output } from '@angular/core';
 import { Venda } from '../../models/venda';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -11,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { Contas } from '../../services/contas';
+import { CadastrosService } from '../../services/cadastros-service';
 
 @Component({
   selector: 'app-update-venda',
@@ -22,6 +24,7 @@ import { Contas } from '../../services/contas';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     MatButtonModule,
     MatDividerModule,
     MatDatepickerModule,
@@ -43,18 +46,23 @@ export class UpdateVenda {
   vendaComparadas!: Venda[];
   vendaAntiga!: Venda;
 
+  bananais: string[] = [];
+
   constructor(
     private fb: FormBuilder,
     private fornatar: Formatar,
     private contas: Contas,
-  ) {}
+    private cadastros: CadastrosService,
+  ) {
+    this.bananais = this.cadastros.listar('bananais');
+  }
 
   ngOnInit() {
     //não apontará na memoria, mas fará um clone do objeto, segurando uma versão segura
     this.vendaAntiga = structuredClone(this.venda);
     this.setVariaveis();
     this.form.valueChanges.subscribe(() => {
-      this.calcular;
+      this.calcular();
     });
   }
 
@@ -90,6 +98,7 @@ export class UpdateVenda {
     console.log(typeof dataIso);
     this.form = this.fb.group({
       cliente: [this.venda.nome],
+      bananal: [this.venda.bananal ?? ''],
       data: [new Date(dataIso)],
       tipo: [this.venda.tipo],
 
@@ -145,6 +154,7 @@ export class UpdateVenda {
   setVenda() {
     //venda
     this.venda.nome = this.form.value.cliente;
+    this.venda.bananal = this.form.value.bananal;
     this.venda.data = this.fornatar.dataISOParaBR(this.form.value.data);
     //simples
     this.venda.simples.pesoCaixa = this.form.value.simplesPeso;

@@ -53,14 +53,12 @@ export class Contas {
   recalcular(venda: Venda[]) {
     const vendaAntiga = venda[0];
     const vendaNova = venda[1];
-    console.log('venda contada quilo:', vendaNova);
 
     //   SIMPLES   //
 
     if (vendaNova.tipo === 'Simples') {
-      //se mudou o da preço caixa, recalcular tudo com base no preço da caixa
-      //if (vendaAntiga.simples.precoCaixa !== vendaNova.simples.precoCaixa) {
-      if (true) {
+      //se mudou o preço da caixa, recalcular tudo com base no preço da caixa
+      if (vendaAntiga.simples.precoCaixa !== vendaNova.simples.precoCaixa) {
         const resultado = this.caixa(
           vendaNova.simples.pesoCaixa,
           vendaNova.simples.precoCaixa,
@@ -72,7 +70,6 @@ export class Contas {
         vendaNova.simples.pesoTotal = resultado[1];
         vendaNova.valorTotal.mediaQuilos = resultado[2];
         vendaNova.simples.precoQuilo = resultado[2];
-        console.log('venda contada caixa simples:', vendaNova);
         return vendaNova;
       }
       //SE QUILO, recalcular tudo com base no preço do quilo
@@ -88,14 +85,17 @@ export class Contas {
         vendaNova.simples.pesoTotal = resultado[1];
         vendaNova.valorTotal.mediaCaixas = resultado[2];
         vendaNova.simples.precoCaixa = resultado[2];
-        console.log('venda contada quilo simples:', vendaNova);
         return vendaNova;
       }
     }
     //   CLASSIFICADA   //
     else {
-      if (true) {
-        //Vou deixar aqui como TRUE por que ainda não encontrei um jeito de calcular qual dos dois tipos de preço foi alterado, então por enquanto, toda vez que for classificada, vai recalcular como se fosse o preço da caixa que tivesse sido alterado, mas isso pode ser melhorado no futuro, mas o else está como deveria funcionar caso consiga.
+      //se mudou o preço da caixa (boa ou fraca), recalcular com base no preço da caixa
+      const mudouPrecoCaixa =
+        vendaAntiga.boa.precoCaixa !== vendaNova.boa.precoCaixa ||
+        vendaAntiga.fraca.precoCaixa !== vendaNova.fraca.precoCaixa;
+
+      if (mudouPrecoCaixa) {
         //boa
         const resultadoBC = this.caixa(
           vendaNova.boa.pesoCaixa,
@@ -126,7 +126,6 @@ export class Contas {
         vendaNova.valorTotal.pesos = PesoTotal;
         vendaNova.valorTotal.mediaQuilos = valorPorQuilo;
         vendaNova.valorTotal.mediaCaixas = valorPorCaixa;
-        console.log('venda contada caixa classificada:', vendaNova);
         return vendaNova;
       }
       //SE QUILO, recalcular tudo com base no preço do quilo
@@ -161,7 +160,6 @@ export class Contas {
         vendaNova.valorTotal.pesos = PesoTotal;
         vendaNova.valorTotal.mediaQuilos = valorPorQuilo;
         vendaNova.valorTotal.mediaCaixas = valorPorCaixa;
-        console.log('venda contada quilo classificada:', vendaNova);
         return vendaNova;
       }
     }

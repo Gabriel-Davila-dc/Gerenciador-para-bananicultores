@@ -1,10 +1,11 @@
 .card {
   display: flex;
-  border: 1px solid var(--verde-bom);
+  /* a borda com a cor da marca ficava aqui só na aparência: a linha de baixo a
+     sobrescrevia sempre. ficou só a de baixo, que é a que realmente valia. */
   background-color: white;
   border-radius: 8px;
   flex-direction: column;
-  border: 1px solid #cccccc;
+  border: 1px solid var(--borda-cinza);
   box-shadow: var(--sombra);
   min-width: 90vw;
   padding-bottom: 1em;
@@ -38,16 +39,39 @@ p {
 .div-botoes {
   display: flex;
   justify-content: space-around;
+  align-items: center;
   margin-top: 1em;
   width: 100%;
 }
 
-button:hover {
-  background-color: var(--verde-principal) !important;
+/* ação principal: sólida, verde da marca */
+.btn-detalhes {
+  background-color: var(--folha) !important;
+  color: var(--bg-branco) !important;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(63, 107, 51, 0.3);
+}
+.btn-detalhes mat-icon {
+  color: var(--bg-branco);
+}
+.btn-detalhes:hover {
+  background-color: var(--folha-clara) !important;
 }
 
-mat-icon {
-  color: #010f36; /* amarelo */
+/* apagar é destrutivo, então vai de vermelho */
+.btn-apagar mat-icon {
+  color: var(--erro);
+}
+.btn-apagar:hover {
+  background-color: rgba(172, 38, 38, 0.12);
+}
+
+.btn-editar mat-icon {
+  color: var(--folha);
+}
+.btn-editar:hover {
+  background-color: var(--folha-suave);
 }
 
 @media (min-width: 1000px) {

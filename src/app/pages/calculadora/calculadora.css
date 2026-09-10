@@ -1,3 +1,239 @@
+:host {
+  display: block;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+}
+
+/* ========================= */
+/*            HERO           */
+/* ========================= */
+
+.hero {
+  position: relative;
+  padding: 4.5em 1.2em 4em;
+  /* transparente de propósito: quem aparece aqui é o fundo da página */
+  background: transparent;
+  color: var(--creme);
+  text-align: center;
+}
+
+.hero-conteudo {
+  position: relative;
+  z-index: 1;
+  max-width: 42em;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9em;
+}
+
+.hero-eyebrow {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  color: var(--banana);
+  /* sombra no texto em vez de véu por cima da imagem: o fundo fica 100% */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+  font-weight: 600;
+  line-height: 1.15;
+  text-wrap: balance;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.75);
+}
+
+.hero-botoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8em;
+  margin-top: 0.6em;
+}
+
+.btn-primario,
+.btn-secundario {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.75em 1.6em;
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+
+.btn-primario {
+  background: var(--banana);
+  color: var(--casca-escura);
+}
+.btn-primario:hover {
+  background: #ffcc33;
+  transform: translateY(-1px);
+}
+
+.btn-secundario {
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--creme);
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+}
+.btn-secundario:hover {
+  background: rgba(0, 0, 0, 0.5);
+  transform: translateY(-1px);
+}
+
+/* ========================= */
+/*      COMO FUNCIONA        */
+/* ========================= */
+
+.recursos {
+  background: #ffffff;
+  padding: 3.5em 1.2em;
+  text-align: center;
+  /* painel centralizado: as beiradas ficam livres pro fundo da página aparecer */
+  width: min(100% - 2em, 76em);
+  margin: 2.5em auto;
+  border-radius: 2em;
+  box-shadow: 0 12px 40px rgba(46, 32, 19, 0.22);
+}
+
+.recursos h2 {
+  margin: 0 0 0.3em;
+  color: var(--terra);
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+}
+
+.recursos-sub {
+  margin: 0 auto 2.2em;
+  color: var(--terra);
+  opacity: 0.8;
+  max-width: 40em;
+  line-height: 1.6;
+}
+
+.degraus {
+  display: flex;
+  flex-direction: column;
+  gap: 2.2em;
+  max-width: 46em;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.degrau {
+  display: flex;
+  align-items: flex-start;
+  gap: 1em;
+  background: #ffffff;
+  border-radius: 1.2em;
+  padding: 1.8em 1.8em 1.8em 1.4em;
+  box-shadow: 0 8px 22px rgba(46, 32, 19, 0.1);
+  border-left: 5px solid var(--folha);
+  max-width: 36em;
+}
+
+/* cada degrau entra mais pra dentro que o anterior, como uma escada descendo */
+/* só alterna entre as duas cores da marca, pra não competir com o resto da paleta */
+.degrau:nth-child(2) {
+  margin-left: 3.5em;
+  border-left-color: var(--banana);
+}
+.degrau:nth-child(3) {
+  margin-left: 7em;
+  border-left-color: var(--folha);
+}
+
+.degrau-numero {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--banana);
+  flex-shrink: 0;
+}
+
+.degrau-icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2em;
+  height: 2.2em;
+  border-radius: 50%;
+  background: var(--banana-clara);
+  font-size: 1.2rem;
+  margin-bottom: 0.6em;
+}
+
+.degrau-texto h3 {
+  margin: 0 0 0.4em;
+  color: var(--casca-escura);
+  font-size: 1.25rem;
+}
+
+.degrau-texto p {
+  margin: 0;
+  color: var(--terra);
+  line-height: 1.6;
+  font-size: 1rem;
+  max-width: 30em;
+}
+
+@media (max-width: 640px) {
+  .degrau,
+  .degrau:nth-child(2),
+  .degrau:nth-child(3) {
+    margin-left: 0;
+    max-width: 100%;
+  }
+  .degrau-numero {
+    font-size: 2rem;
+  }
+}
+
+/* ========================= */
+/*    SEÇÃO DA CALCULADORA   */
+/* ========================= */
+
+.secao-calculadora {
+  background: var(--bg-claro);
+  padding: 3.5em 1em 3em;
+  scroll-margin-top: 1em;
+  /* mesmo painel centralizado da seção de cima */
+  width: min(100% - 2em, 76em);
+  margin: 0 auto 3em;
+  border-radius: 2em;
+  box-shadow: 0 12px 40px rgba(46, 32, 19, 0.22);
+}
+
+.calculadora-titulo {
+  text-align: center;
+  max-width: 32em;
+  margin: 0 auto 1.6em;
+}
+
+.calculadora-titulo h2 {
+  margin: 0 0 0.3em;
+  color: var(--terra);
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+}
+
+.calculadora-titulo p {
+  margin: 0;
+  color: var(--terra);
+  opacity: 0.75;
+}
+
 .container {
   justify-self: center;
   width: 100%;
@@ -7,33 +243,67 @@
 }
 
 .calculos {
-  background-color: var(--bg-claro);
+  background-color: #ffffff;
   display: flex;
   flex-direction: column;
-  border-radius: 1em;
-  padding: 1em 1px;
+  border-radius: 1.4em;
+  padding: 1.8em 1em 1.6em;
   width: 97%;
+  max-width: 42em;
+  border-top: 6px solid var(--folha);
+  box-shadow: 0 16px 36px rgba(46, 32, 19, 0.16), 0 3px 10px rgba(46, 32, 19, 0.08);
+}
+
+.campo-bananal {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+  align-self: center;
+  width: 90%;
+  max-width: 22em;
+  margin-bottom: 0.5em;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--terra);
+}
+
+.campo-bananal select {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.7em;
+  border: 1px solid var(--borda-cinza);
+  border-radius: 0.6em;
+  background: #ffffff;
+  color: var(--casca-escura);
+}
+
+.campo-bananal select:focus {
+  outline: 2px solid var(--folha-clara);
+  outline-offset: 1px;
 }
 
 #button {
-  font-size: 2.5em;
-  background: linear-gradient(90deg, var(--verde-principal) 0%, var(--verde-fraco) 100%);
-  border-bottom: 3px solid var(--preto);
-  color: var(--bg-claro);
-  border-radius: 9px;
-  padding: 0.2em 1em;
-  width: 9em;
-  margin: auto;
+  font-size: 1.7em;
+  background: linear-gradient(135deg, var(--folha) 0%, var(--folha-clara) 100%);
+  border: none;
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 0.35em 1em;
+  width: auto;
+  min-width: 8.5em;
+  margin: 1em auto 0;
+  box-shadow: 0 10px 22px rgba(63, 107, 51, 0.38);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
 }
 
 #button:hover {
-  background-color: var(--verde-fraco);
-  border-bottom: 3px solid var(--preto);
-  color: var(--bg-claro);
+  background: linear-gradient(135deg, var(--folha-clara) 0%, var(--folha) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(63, 107, 51, 0.44);
 }
 
 label {
-  color: var(--bg-claro);
+  color: #ffffff;
 }
 
 /* ========================= */

@@ -25,7 +25,7 @@
   margin-top: 0.5em;
   border-radius: 20px;
   border: 1px solid var(--borda-cinza);
-  border-left: 0.5em solid var(--verde-bom);
+  border-left: 0.5em solid var(--folha);
 }
 
 .container-fraca {
@@ -41,17 +41,17 @@
   background-color: var(--bg-branco);
   border-radius: 20px;
   border: 1px solid var(--borda-cinza);
-  border-left: 0.5em solid var(--verde-fraco);
+  border-left: 0.5em solid var(--banana);
 }
 
 label {
   font-size: 1.8em;
   margin: 0.5em;
-  color: var(--azul-escuro-2);
+  color: var(--casca-escura);
 }
 
 input {
-  color: var(--azul-escuro);
+  color: var(--casca-escura);
   width: 80%;
   font-size: 2.5em;
   border-radius: 7px;
@@ -61,7 +61,7 @@ input {
 }
 
 .resumos {
-  color: var(--azul-escuro);
+  color: var(--casca-escura);
   font-size: 1.2em;
   border-radius: 7px;
   margin: 1.5em 0em;

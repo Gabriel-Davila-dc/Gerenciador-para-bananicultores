@@ -5,7 +5,7 @@ header {
   justify-content: space-between;
   align-items: center;
   max-width: 100%;
-  background: var(--verde-principal);
+  background: var(--folha);
   padding: 0px 0px;
   color: var(--bg-branco);
   transition: top 0.3s;
@@ -36,7 +36,7 @@ img {
   border-radius: 0px 0px 15px 15px;
 
   width: 100%;
-  background-color: var(--verde-principal);
+  background-color: var(--folha);
 
   z-index: 2000; /* acima do header */
   transform: translateX(100%);
@@ -58,7 +58,7 @@ img {
 li a:hover {
   text-decoration: underline;
   text-decoration-color: var(--bg-branco);
-  background: var(--verde-hover);
+  background: var(--folha-clara);
   text-decoration-thickness: 3px;
   border: 1px solid rgba(0, 0, 0, 0.458);
   border-radius: 17px;
@@ -70,16 +70,16 @@ li a:hover {
 }
 
 li:nth-child(2) a {
-  background: var(--verde-bom);
+  background: var(--folha);
   border: 1px solid var(--borda-preta);
-  color: black;
+  color: var(--bg-branco);
   transition: 0.3s;
   border-radius: 17px;
 }
 
 li:nth-child(2) a:hover {
-  background: var(--verde-fraco);
-  color: var(--borda-preta);
+  background: var(--banana);
+  color: var(--casca-escura);
   border-radius: 17px;
   text-decoration: none;
 }
@@ -123,7 +123,7 @@ li:nth-child(2) a:hover {
 }
 
 #header nav a:hover {
-  background: var(--verde-hover);
+  background: var(--folha-clara);
 }
 
 /* RESPONSIVO */

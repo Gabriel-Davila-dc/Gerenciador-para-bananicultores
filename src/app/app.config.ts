@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { provideRouter } from '@angular/router';
 
@@ -13,6 +13,7 @@ import { routes } from './app.routes';
 
 import { FormsModule } from '@angular/forms';
 import { importProvidersFrom } from '@angular/core';
+import { authInterceptor } from './interceptors/auth-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,7 +21,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([authInterceptor])),
     importProvidersFrom(FormsModule),
   ],
 };

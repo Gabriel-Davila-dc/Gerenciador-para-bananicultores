@@ -21,12 +21,12 @@ mat-card-content {
 }
 
 mat-card-title {
-  color: var(--azul-escuro);
+  color: var(--casca-escura);
   align-self: center;
 }
 
 mat-icon {
-  color: var(--verde-bom);
+  color: var(--folha);
 }
 
 p {
@@ -64,7 +64,7 @@ p {
   justify-content: center;
   align-items: center;
   text-align: center;
-  color: black;
+  color: var(--casca-escura);
 
   height: 50%;
   width: 60%;

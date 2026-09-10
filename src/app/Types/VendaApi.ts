@@ -2,6 +2,7 @@ export interface VendaApi {
   id: number;
   userId: number;
   cliente: string | null;
+  bananal: string | null;
   tipo: string;
 
   tipoSimples: string;

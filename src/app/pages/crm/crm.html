@@ -1,0 +1,128 @@
+<section class="painel">
+  <header class="topo">
+    <a class="voltar" routerLink="/gerenciador">‹ Gerenciador</a>
+    <div class="topo-texto">
+      <h1>CRM de serviços</h1>
+      <p>Arraste o card para mover o serviço de etapa.</p>
+    </div>
+    <button class="btn-novo" (click)="novo()">
+      <mat-icon>add</mat-icon>
+      Novo serviço
+    </button>
+  </header>
+
+  <div class="quadro" cdkDropListGroup>
+    @for (coluna of colunas; track coluna.etapa) {
+      <div class="coluna" [class]="'coluna-' + coluna.etapa.toLowerCase()">
+        <div class="coluna-topo">
+          <h2>{{ coluna.etapa }}</h2>
+          <span class="contador">{{ coluna.servicos.length }}</span>
+        </div>
+
+        <div
+          class="lista"
+          cdkDropList
+          [cdkDropListData]="coluna.servicos"
+          (cdkDropListDropped)="soltar($event, coluna.etapa)"
+        >
+          @for (servico of coluna.servicos; track servico.id) {
+            <article class="card" cdkDrag (click)="editar(servico)">
+              <h3>{{ servico.servico }}</h3>
+              <p class="card-bananal">
+                <mat-icon>place</mat-icon>
+                {{ servico.bananal }}
+              </p>
+              <p class="card-linha">
+                <mat-icon>person</mat-icon>
+                {{ servico.responsavel || 'Sem responsável' }}
+              </p>
+              <p class="card-linha" *ngIf="servico.dataInicio || servico.dataFim">
+                <mat-icon>event</mat-icon>
+                {{ formatar.isoParaBR(servico.dataInicio) || '—' }}
+                <span *ngIf="servico.dataFim"> até {{ formatar.isoParaBR(servico.dataFim) }}</span>
+              </p>
+              <p class="card-descricao" *ngIf="servico.descricao">{{ servico.descricao }}</p>
+            </article>
+          }
+
+          @if (coluna.servicos.length === 0) {
+            <p class="vazio">Nenhum serviço aqui.</p>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- FORMULÁRIO -->
+<div class="overlay" *ngIf="editando" (click)="fechar()">
+  <div class="formulario" (click)="$event.stopPropagation()">
+    <h2>{{ editando!.id ? 'Editar serviço' : 'Novo serviço' }}</h2>
+
+    <label>
+      Bananal
+      <select [(ngModel)]="editando!.bananal">
+        <option value="" disabled>Selecione</option>
+        @for (item of opcoesCom(bananais, editando!.bananal); track item) {
+          <option [value]="item">{{ item }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Serviço
+      <select [(ngModel)]="editando!.servico">
+        <option value="" disabled>Selecione</option>
+        @for (item of opcoesCom(servicos, editando!.servico); track item) {
+          <option [value]="item">{{ item }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Quem fez
+      <select [(ngModel)]="editando!.responsavel">
+        <option value="" disabled>Selecione</option>
+        @for (item of opcoesCom(trabalhadores, editando!.responsavel); track item) {
+          <option [value]="item">{{ item }}</option>
+        }
+      </select>
+    </label>
+
+    <div class="linha-datas">
+      <label>
+        Início
+        <input type="date" [(ngModel)]="editando!.dataInicio" />
+      </label>
+      <label>
+        Fim
+        <input type="date" [(ngModel)]="editando!.dataFim" />
+      </label>
+    </div>
+
+    <label>
+      Etapa
+      <select [(ngModel)]="editando!.etapa">
+        @for (coluna of colunas; track coluna.etapa) {
+          <option [value]="coluna.etapa">{{ coluna.etapa }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Descrição
+      <textarea rows="3" [(ngModel)]="editando!.descricao"></textarea>
+    </label>
+
+    <p class="dica-cadastro">
+      Faltou alguma opção nas listas?
+      <a routerLink="/gerenciador/cadastros">Abrir Cadastros</a>
+    </p>
+
+    <div class="form-botoes">
+      <button class="btn-apagar" *ngIf="editando!.id" (click)="apagar(editando!)">Apagar</button>
+      <button class="btn-cancelar" (click)="fechar()">Cancelar</button>
+      <button class="btn-salvar" (click)="salvar()">Salvar</button>
+    </div>
+  </div>
+</div>

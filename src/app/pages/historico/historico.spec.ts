@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Gerenciador } from './gerenciador';
+import { Historico } from './historico';
 
-describe('Gerenciador', () => {
-  let component: Gerenciador;
-  let fixture: ComponentFixture<Gerenciador>;
+describe('Historico', () => {
+  let component: Historico;
+  let fixture: ComponentFixture<Historico>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Gerenciador]
-    })
-    .compileComponents();
+      imports: [Historico],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(Gerenciador);
+    fixture = TestBed.createComponent(Historico);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

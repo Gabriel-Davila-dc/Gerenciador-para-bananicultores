@@ -5,6 +5,7 @@ export interface Venda {
   id?: number;
 
   nome: string;
+  bananal: string;
   data: string;
   tipo: string;
 

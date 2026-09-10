@@ -1,49 +1,46 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
-import { map, tap } from 'rxjs';
+import { firstValueFrom, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { LoginResponse, RegisterResponse } from '../Types/auth';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'http://localhost:3333';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
   //Ver se está conectado -----------------------------------------------------------------------
   async getUser(): Promise<boolean> {
     try {
-      await firstValueFrom(
-        this.http.get('http://localhost:3333/users/token', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }),
-      );
-
-      console.log('Token válido (200)');
+      await firstValueFrom(this.http.get(`${this.apiUrl}/users/token`));
       return true;
     } catch (error) {
-      console.log('Erro ao verificar o token:', error);
       return false;
     }
   }
   //Login--------------------------------------------------------------------------------------
   getUserLogin(email: string, password: string) {
-    let dados = this.http.post<any>('http://localhost:3333/users/login', { email, password }).pipe(
+    return this.http.post<LoginResponse>(`${this.apiUrl}/users/login`, { email, password }).pipe(
       tap((res) => {
         localStorage.setItem('token', res.token);
-        console.log('token service:' + res.token);
         localStorage.setItem('email', res.email);
       }),
     );
-
-    return dados;
   }
   //Registrar------------------------------------------------------------------------------------
   postUserRegister(email: string, password: string) {
-    let dados = this.http.post<any>('http://localhost:3333/users', { email, password });
-    return dados;
+    return this.http.post<RegisterResponse>(`${this.apiUrl}/users`, { email, password });
+  }
+  //Logout---------------------------------------------------------------------------------------
+  async logout(): Promise<void> {
+    try {
+      await firstValueFrom(this.http.post(`${this.apiUrl}/users/logout`, {}));
+    } finally {
+      localStorage.removeItem('token');
+      localStorage.removeItem('email');
+    }
   }
 }

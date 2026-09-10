@@ -10,6 +10,16 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full">
+        <mat-label>Bananal</mat-label>
+        <mat-select formControlName="bananal">
+          <mat-option value="">Não informar</mat-option>
+          @for (item of bananais; track item) {
+            <mat-option [value]="item">{{ item }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full">
         <mat-label>Data</mat-label>
 
         <input matInput [matDatepicker]="picker" formControlName="data" />

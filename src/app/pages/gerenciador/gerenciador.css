@@ -1,49 +1,116 @@
-.container {
+:host {
+  display: block;
+}
+
+/* painel centralizado, no mesmo padrão da tela inicial:
+   as beiradas ficam livres pro bananal do fundo aparecer */
+.painel {
+  background: #ffffff;
+  width: min(100% - 2em, 68em);
+  margin: 2.5em auto;
+  padding: 2.5em 1.5em 3em;
+  border-radius: 2em;
+  box-shadow: 0 12px 40px rgba(46, 32, 19, 0.22);
+}
+
+.topo {
+  text-align: center;
+  margin-bottom: 2.2em;
+}
+
+.topo h1 {
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  color: var(--casca-escura);
+  margin: 0 0 0.2em;
+}
+
+.topo p {
+  margin: 0;
+  color: var(--terra);
+  opacity: 0.8;
+}
+
+.opcoes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.4em;
+  max-width: 56em;
+  margin: 0 auto;
+}
+
+.opcao {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5em;
+  padding: 1.6em 1.4em;
+  background: #ffffff;
+  border: 1px solid var(--borda-cinza);
+  border-top: 5px solid var(--folha);
+  border-radius: 1.2em;
+  box-shadow: 0 8px 22px rgba(46, 32, 19, 0.1);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
 
-  height: auto;
-  min-height: 100vh;
-  width: 100%;
+a.opcao:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(46, 32, 19, 0.18);
+}
+
+.opcao-icone {
+  display: inline-flex;
   align-items: center;
-  /*borrar*/
-  background: rgba(37, 37, 36, 0.281);
+  justify-content: center;
+  width: 2.6em;
+  height: 2.6em;
+  border-radius: 50%;
+  background: var(--folha-suave);
+  color: var(--folha);
 }
 
-.card-salvo {
-  margin-bottom: 20px;
+.opcao h2 {
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: 1.2rem;
+  margin: 0.2em 0 0;
+  color: var(--casca-escura);
 }
 
-.overlay {
-  position: fixed;
-  inset: 0;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 1000;
-  height: 100vh;
+.opcao p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--terra);
 }
 
-.editarCentral {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: auto;
-  height: 85vh;
-  z-index: 1000;
-  overflow-y: scroll;
-
-  /* Firefox */
-  scrollbar-width: none;
-
-  /* IE / Edge antigo */
-  -ms-overflow-style: none;
-} /* Chrome, Edge, Safari */
-.conteudo::-webkit-scrollbar {
-  display: none;
+.opcao-acao {
+  margin-top: auto;
+  padding-top: 0.6em;
+  font-weight: 600;
+  color: var(--folha);
 }
-h1 {
-  color: #ffffff;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+
+/* opções que ainda não existem: apagadas e sem interação */
+.opcao-breve {
+  border-top-color: var(--borda-cinza);
+  box-shadow: none;
+  opacity: 0.65;
+  cursor: default;
+}
+
+.opcao-breve .opcao-icone {
+  background: var(--bg-claro);
+  color: var(--terra);
+}
+
+.opcao-badge {
+  margin-top: auto;
+  padding-top: 0.6em;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--terra);
 }
