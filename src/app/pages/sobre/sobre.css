@@ -1,90 +1,330 @@
-section {
-  margin: 0px;
-  background-image: url('/img/bananal.png');
-  background-size: cover; /* cobre toda a div */
-  background-position: center; /* centraliza a imagem */
-  background-repeat: no-repeat; /* não repete */
-  background-attachment: fixed; /* deixa a imagem estática */
-}
-.sobre-container {
-  max-width: 900px;
-  margin: 2em auto;
-  background: var(--bg-branco);
-  box-shadow: var(--sombra);
+:host {
+  display: block;
+  /* o fundo de bananal já vem do body: repetir a imagem aqui criava uma
+     segunda camada que não emendava com o resto do app */
+  padding-bottom: 3em;
 }
 
-mat-card-content {
+/* ============================ CAPA ============================ */
+
+.capa {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42vh;
+  min-height: 42dvh;
+  padding: 3.5em 1.2em;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* véu que morre antes das beiradas: escurece atrás do texto e deixa o
+   bananal limpo nas laterais, em vez de um filtro sobre a imagem toda */
+.capa::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 70% 65% at 50% 50%,
+    rgba(24, 16, 8, 0.68) 0%,
+    rgba(24, 16, 8, 0.4) 52%,
+    rgba(24, 16, 8, 0) 78%
+  );
+  pointer-events: none;
+}
+
+.capa-conteudo {
+  position: relative;
+  z-index: 1;
+  max-width: 34em;
   display: flex;
   flex-direction: column;
-  gap: 1.5em;
-  border-radius: 9px;
+  align-items: center;
+  gap: 0.5em;
 }
 
-mat-card-title {
+.capa-etiqueta {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--banana);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95);
+}
+
+.capa h1 {
+  margin: 0;
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: clamp(2rem, 9vw, 3.4rem);
+  line-height: 1.1;
+  color: #ffffff;
+  text-wrap: balance;
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.9),
+    0 4px 18px rgba(0, 0, 0, 0.6);
+}
+
+.capa-linha {
+  margin: 0;
+  font-size: clamp(1rem, 4vw, 1.25rem);
+  color: var(--creme);
+  text-wrap: balance;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+/* ============================ ÍNDICE ============================ */
+
+/* a página é longa; sem atalho, no celular só resta rolar até achar */
+.indice {
+  display: flex;
+  gap: 0.6em;
+  overflow-x: auto;
+  padding: 0 1em 0.4em;
+  margin: 0 auto 2em;
+  width: min(100% - 2em, 62em);
+  scrollbar-width: none;
+}
+
+.indice::-webkit-scrollbar {
+  display: none;
+}
+
+.indice a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  flex-shrink: 0;
+  padding: 0.6em 1.1em;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--folha);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  box-shadow: var(--sombra);
+  transition: background 0.15s, transform 0.1s;
+}
+
+.indice a:hover {
+  background: #ffffff;
+  transform: translateY(-2px);
+}
+
+.indice-num {
+  font-size: 0.75rem;
+  color: var(--banana);
+  font-weight: 800;
+}
+
+/* ============================ SEÇÕES ============================ */
+
+.conteudo {
+  width: min(100% - 2em, 62em);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.secao {
+  background: #ffffff;
+  border-radius: 1.4em;
+  padding: 1.8em 1.5em 1.5em;
+  box-shadow: var(--sombra);
+  /* o cabeçalho fixo cobriria o título ao pular pelo índice */
+  scroll-margin-top: 5.5em;
+  /* faixa de cor por tema, na lateral: identifica a seção sem precisar ler */
+  border-left: 6px solid var(--cor-secao);
+}
+
+.secao-mercado {
+  --cor-secao: var(--folha);
+}
+.secao-internacional {
+  --cor-secao: var(--banana);
+}
+.secao-apoio {
+  --cor-secao: var(--folha-clara);
+}
+.secao-bananal {
+  --cor-secao: var(--terra);
+}
+
+/* escada: número, título e só depois o texto */
+.secao-topo {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7em;
+  margin-bottom: 0.8em;
+}
+
+.secao-num {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--cor-secao);
+  flex-shrink: 0;
+}
+
+.secao h2 {
+  margin: 0;
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: clamp(1.3rem, 5.5vw, 1.9rem);
+  line-height: 1.2;
   color: var(--casca-escura);
-  align-self: center;
+  text-wrap: balance;
 }
 
-mat-icon {
+.secao-intro {
+  margin: 0 0 1em;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--terra);
+}
+
+/* ============================ PAINÉIS ============================ */
+
+/* <details> nativo: abre e fecha sem JavaScript e continua acessível */
+.painel {
+  border: 1px solid var(--folha-suave);
+  border-radius: 0.9em;
+  margin-top: 0.6em;
+  overflow: hidden;
+  background: var(--bg-claro);
+  transition: background 0.15s;
+}
+
+.painel[open] {
+  background: #ffffff;
+  border-color: var(--cor-secao);
+}
+
+.painel summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8em;
+  padding: 0.95em 1.1em;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--casca-escura);
+  list-style: none;
+  /* alvo de toque confortável no celular */
+  min-height: 44px;
+}
+
+/* tira o triângulo padrão dos dois motores */
+.painel summary::-webkit-details-marker {
+  display: none;
+}
+.painel summary::marker {
+  content: '';
+}
+
+/* seta própria, que gira ao abrir */
+.painel summary::after {
+  content: '';
+  flex-shrink: 0;
+  width: 0.55em;
+  height: 0.55em;
+  border-right: 2.5px solid var(--cor-secao);
+  border-bottom: 2.5px solid var(--cor-secao);
+  transform: rotate(45deg) translate(-2px, -2px);
+  transition: transform 0.2s ease;
+}
+
+.painel[open] summary::after {
+  transform: rotate(-135deg) translate(-2px, -2px);
+}
+
+.painel summary:hover {
   color: var(--folha);
 }
 
-p {
-  font-size: 1.1rem;
+.painel-corpo {
+  padding: 0 1.1em 1.1em;
+}
+
+.painel-corpo p {
+  margin: 0 0 0.8em;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--terra);
+}
+
+.painel-corpo p:last-child {
+  margin-bottom: 0;
+}
+
+.painel-corpo strong {
+  color: var(--casca-escura);
+}
+
+/* o painel de doenças avisa de prejuízo: merece peso visual diferente */
+.painel-alerta {
+  --cor-secao: var(--erro);
+}
+
+/* ============================ FECHO ============================ */
+
+.fecho {
+  background: var(--folha);
+  color: var(--creme);
+  border-radius: 1.4em;
+  padding: 2em 1.5em;
+  text-align: center;
+  box-shadow: var(--sombra);
+}
+
+.fecho h2 {
+  margin: 0 0 0.3em;
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: clamp(1.3rem, 5.5vw, 1.8rem);
+  color: #ffffff;
+}
+
+.fecho p {
+  margin: 0 0 1.2em;
+  font-size: 1.05rem;
   line-height: 1.6;
 }
 
-.btn-area {
-  display: flex;
-  justify-content: center;
-  margin: 3em 0;
-}
-/* HEADER */
-/* min-height em vez de height: com altura fixa e overflow:hidden, o título
-   que cresce no celular era cortado em vez de empurrar o bloco */
-.sobre-header {
-  position: relative;
-  width: 100vw;
-  min-height: 45vh;
-  margin-left: calc(-50vw + 50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2em 1em;
-}
-.header-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* a altura acompanha o texto: fixada em 50%, o título de três linhas do
-   celular transbordava e caía por cima do subtítulo */
-.header-overlay {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+.fecho-botao {
+  display: inline-block;
+  padding: 0.8em 1.8em;
+  border-radius: 100px;
+  background: var(--banana);
   color: var(--casca-escura);
-
-  width: min(90%, 40em);
-  padding: 1em;
-  border-radius: 40px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-decoration: none;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+  transition: transform 0.1s, background 0.15s;
 }
 
-/* clamp no lugar de um tamanho fixo: 3.2rem cabia no desktop e quebrava
-   "Sobre a Banana" em três linhas numa tela de 360px */
-.header-overlay h1 {
-  font-size: clamp(1.9rem, 8vw, 3.2rem);
-  line-height: 1.15;
-  margin-bottom: 0.3em;
-  text-shadow: 1px 3px 5px white;
+.fecho-botao:hover {
+  background: var(--banana-clara);
+  transform: translateY(-2px);
 }
 
-.header-overlay p {
-  font-size: clamp(1rem, 4vw, 1.4rem);
-  width: 100%;
-  margin: 0;
-  background: radial-gradient(circle, white 0%, transparent 100%);
+/* ============================ CELULAR ============================ */
+
+@media (max-width: 700px) {
+  .secao {
+    padding: 1.4em 1.1em 1.2em;
+    border-radius: 1.1em;
+  }
+
+  .conteudo {
+    gap: 1.4em;
+  }
+
+  .secao-intro,
+  .painel-corpo p {
+    font-size: 1rem;
+  }
 }

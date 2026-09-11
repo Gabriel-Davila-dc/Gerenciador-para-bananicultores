@@ -20,6 +20,8 @@ export const appConfig: ApplicationConfig = {
     { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
+    // a rolagem por fragmento é feita na própria tela que usa âncora
+    // (pages/sobre), porque o anchorScrolling do Router não surtiu efeito aqui
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
     importProvidersFrom(FormsModule),
