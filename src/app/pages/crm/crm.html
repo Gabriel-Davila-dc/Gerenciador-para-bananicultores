@@ -3,7 +3,13 @@
     <a class="voltar" routerLink="/gerenciador">‹ Gerenciador</a>
     <div class="topo-texto">
       <h1>CRM de serviços</h1>
-      <p>Arraste o card para mover o serviço de etapa.</p>
+      <p>
+        @if (visao === 'calendario') {
+          Toque num dia para marcar um serviço.
+        } @else {
+          Arraste o card para mover o serviço de etapa.
+        }
+      </p>
     </div>
     <button class="btn-novo" (click)="novo()">
       <mat-icon>add</mat-icon>
@@ -11,7 +17,68 @@
     </button>
   </header>
 
-  <div class="quadro" cdkDropListGroup>
+  <div class="alternador" role="tablist">
+    <button
+      role="tab"
+      [class.ativo]="visao === 'calendario'"
+      [attr.aria-selected]="visao === 'calendario'"
+      (click)="trocarVisao('calendario')"
+    >
+      Calendário
+    </button>
+    <button
+      role="tab"
+      [class.ativo]="visao === 'quadro'"
+      [attr.aria-selected]="visao === 'quadro'"
+      (click)="trocarVisao('quadro')"
+    >
+      Quadro
+    </button>
+  </div>
+
+  @if (visao === 'calendario') {
+    <div class="calendario">
+      <button class="carregar-antes" (click)="carregarSemanaAnterior()">
+        ↑ carregar semanas anteriores
+      </button>
+
+      @for (semana of semanas; track semana.dias[0].iso) {
+        @if (semana.rotuloMes) {
+          <h2 class="mes">{{ semana.rotuloMes }}</h2>
+        }
+
+        <div class="semana" [class.semana-atual]="semana.contemHoje">
+          @for (dia of semana.dias; track dia.iso) {
+            <div class="dia" [class.dia-hoje]="dia.hoje">
+              <span class="dia-semana">{{ dia.diaSemana }}</span>
+              <button
+                class="dia-numero"
+                (click)="novoNoDia(dia.iso)"
+                [attr.aria-label]="'Marcar serviço em ' + dia.iso"
+              >
+                {{ dia.numero }}
+              </button>
+
+              <div class="dia-servicos">
+                @for (servico of dia.servicos; track servico.id) {
+                  <button
+                    class="etiqueta"
+                    [class]="'etiqueta etapa-' + servico.etapa.toLowerCase()"
+                    (click)="editar(servico)"
+                    [title]="servico.servico + ' — ' + servico.bananal + ' (' + servico.etapa + ')'"
+                  >
+                    {{ servico.servico || 'Sem nome' }}
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <div class="quadro" cdkDropListGroup [hidden]="visao !== 'quadro'">
     @for (coluna of colunas; track coluna.etapa) {
       <div class="coluna" [class]="'coluna-' + coluna.etapa.toLowerCase()">
         <div class="coluna-topo">

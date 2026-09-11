@@ -77,6 +77,12 @@
 
 /* ---------- quadro ---------- */
 
+/* [hidden] sozinho não esconde isto: o atributo vale como display:none na
+   folha do navegador, e a regra de display abaixo, sendo do autor, ganha */
+.quadro[hidden] {
+  display: none;
+}
+
 .quadro {
   display: grid;
   grid-template-columns: repeat(4, minmax(230px, 1fr));
@@ -347,5 +353,199 @@
 @media (max-width: 900px) {
   .quadro {
     grid-template-columns: repeat(4, 78vw);
+  }
+}
+
+/* ========================= ALTERNADOR ========================= */
+
+.alternador {
+  display: flex;
+  gap: 0.4em;
+  margin-bottom: 1.2em;
+  padding: 0.3em;
+  border-radius: 100px;
+  background: var(--bg-botao-neutro);
+  align-self: flex-start;
+}
+
+.alternador button {
+  border: none;
+  background: transparent;
+  padding: 0.55em 1.4em;
+  border-radius: 100px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--terra);
+  cursor: pointer;
+  min-height: 44px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.alternador button.ativo {
+  background: var(--folha);
+  color: var(--bg-branco);
+  box-shadow: 0 2px 6px rgba(46, 32, 19, 0.3);
+}
+
+/* ========================= CALENDÁRIO ========================= */
+
+.calendario {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.carregar-antes {
+  align-self: center;
+  border: none;
+  background: transparent;
+  padding: 0.7em 1.2em;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--folha);
+  cursor: pointer;
+  border-radius: 100px;
+  min-height: 44px;
+}
+
+.carregar-antes:hover {
+  background: var(--folha-suave);
+}
+
+.mes {
+  margin: 0.8em 0 0.2em;
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: 1.4rem;
+  color: var(--casca-escura);
+}
+
+/* sete colunas iguais: minmax(0,1fr) e não 1fr, senão uma etiqueta comprida
+   alarga a coluna e desalinha a semana inteira */
+.semana {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.3em;
+  padding: 0.3em;
+  border: 2px solid transparent;
+  border-radius: 0.8em;
+}
+
+/* a semana de hoje ganha moldura: referência imediata ao abrir a tela */
+.semana-atual {
+  border-color: var(--banana);
+}
+
+.dia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15em;
+  min-height: 4.5em;
+  padding: 0.3em 0.15em;
+  border-radius: 0.6em;
+  background: var(--bg-claro);
+  min-width: 0;
+}
+
+.dia-semana {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--folha);
+}
+
+.dia-numero {
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--casca-escura);
+  cursor: pointer;
+  width: 1.9em;
+  height: 1.9em;
+  border-radius: 50%;
+  padding: 0;
+}
+
+.dia-numero:hover {
+  background: var(--folha-suave);
+}
+
+.dia-hoje .dia-numero {
+  background: var(--banana);
+  color: var(--casca-escura);
+}
+
+.dia-servicos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15em;
+  width: 100%;
+  min-width: 0;
+}
+
+/* a etiqueta corta com reticências: o nome inteiro fica no title e no toque */
+.etiqueta {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: 0.4em;
+  padding: 0.25em 0.4em;
+  font-family: inherit;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-align: left;
+  color: var(--bg-branco);
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.etiqueta:hover {
+  filter: brightness(1.12);
+}
+
+/* mesmas cores das colunas do quadro, para as duas visões combinarem */
+.etapa-planejado {
+  background: var(--terra);
+}
+.etapa-esperando {
+  background: var(--banana);
+  color: var(--casca-escura);
+}
+.etapa-fazendo {
+  background: var(--folha-clara);
+}
+.etapa-finalizado {
+  background: var(--folha);
+}
+
+@media (max-width: 700px) {
+  .semana {
+    gap: 0.15em;
+    padding: 0.15em;
+  }
+
+  .dia {
+    min-height: 3.8em;
+    padding: 0.25em 0.1em;
+    border-radius: 0.45em;
+  }
+
+  .dia-numero {
+    font-size: 0.9rem;
+  }
+
+  .etiqueta {
+    font-size: 0.55rem;
+    padding: 0.2em 0.25em;
+  }
+
+  .mes {
+    font-size: 1.2rem;
   }
 }
