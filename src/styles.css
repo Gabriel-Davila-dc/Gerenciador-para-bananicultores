@@ -12,19 +12,32 @@ body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 
   min-height: 100vh;
-  /* bananal como fundo de toda a página: aparece nas beiradas, atrás do conteúdo.
-     webp em vez do png: a mesma imagem, na mesma resolução, sai de 3,2 MB para
-     400 KB. Num fundo atrás de conteúdo a perda não aparece, e esses 2,8 MB
-     eram quase meio minuto de espera na conexão de roça que o app precisa
-     atender. O png fica ao lado, caso se queira reexportar. */
-  background: url('/img/bananal.webp') center center / cover no-repeat fixed;
 }
 
-/* no celular, background fixo trava/pisca em vários navegadores */
-@media (max-width: 800px) {
-  body {
-    background-attachment: scroll;
-  }
+/**
+ * O bananal, atrás de tudo.
+ *
+ * webp em vez do png: a mesma imagem, na mesma resolução, sai de 3,2 MB para
+ * 400 KB. Num fundo atrás de conteúdo a perda não aparece, e esses 2,8 MB eram
+ * quase meio minuto de espera na conexão de roça que o app precisa atender. O
+ * png fica ao lado, caso se queira reexportar.
+ *
+ * Fica numa camada fixa própria, e não no background do body, porque o body
+ * tem height: 100% — a altura da tela, não a da página. No computador o
+ * background-attachment: fixed escondia isso, mas no celular ele trava e pisca
+ * em vários navegadores, então lá o fundo era scroll e acabava junto com a
+ * primeira tela: ao rolar, o bananal terminava e sobrava branco embaixo.
+ *
+ * Camada fixa cobre sempre o que está visível, seja qual for a altura da
+ * página, e sem repintar a cada rolagem como o attachment fixed fazia.
+ */
+body::before {
+  content: '';
+  position: fixed;
+  /* inset e não 100vh: vh e dvh mudam de valor quando a barra de endereço some */
+  inset: 0;
+  z-index: -1;
+  background: url('/img/bananal.webp') center center / cover no-repeat;
 }
 
 :root {
