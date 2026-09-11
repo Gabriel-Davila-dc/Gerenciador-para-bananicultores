@@ -238,7 +238,8 @@ export class Salvar {
     return {
       id: api.id,
 
-      nome: api.cliente ?? 'Sem nome',
+      // venda sem comprador: o card esconde a linha, como faz com o bananal
+      nome: api.cliente ?? '',
       bananal: api.bananal ?? '',
       compradorId: api.compradorId ?? null,
       // MySQL devolve boolean como 0/1

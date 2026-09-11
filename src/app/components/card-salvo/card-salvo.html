@@ -15,7 +15,7 @@ Informações de venda
     <mat-icon>{{ venda.pago ? 'check_circle' : 'schedule' }}</mat-icon>
     {{ venda.pago ? 'Pago' : 'Em aberto' }}
   </button>
-  <div class="resumo">
+  <div class="resumo" *ngIf="venda.nome">
     <label for="">Cliente:</label>
     <label for="">{{ venda.nome }}</label>
   </div>

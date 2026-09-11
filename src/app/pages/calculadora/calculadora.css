@@ -336,6 +336,9 @@ h3 {
   margin: 1em auto 0;
   box-shadow: 0 10px 22px rgba(63, 107, 51, 0.38);
   transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+  /* o caminhão do salvar sai andando de dentro do botão e some na beirada */
+  position: relative;
+  overflow: hidden;
 }
 
 #button:hover {
@@ -374,10 +377,15 @@ label {
   }
 }
 
+/* absoluto para não empurrar o texto do botão quando aparece */
 .truck-icon {
+  position: absolute;
+  left: 0.4em;
+  top: 50%;
+  translate: 0 -50%;
   transform: translateX(0);
   animation: moverDireita 1.6s ease-in-out forwards;
-  color: rgb(0, 0, 0);
+  color: inherit;
 }
 
 @keyframes moverDireita {

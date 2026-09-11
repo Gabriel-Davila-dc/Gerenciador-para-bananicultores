@@ -124,24 +124,10 @@
       [resultados]="resultados"
     ></app-results>
 
-    <!-- Nome do Cliente -->
-    <mat-form-field appearance="outline">
-      <mat-label>Nome</mat-label>
-
-      <mat-icon matPrefix class="truck-icon" *ngIf="moverCaminhao"> local_shipping </mat-icon>
-
-      <input matInput [(ngModel)]="nome" />
-    </mat-form-field>
-
-    <!-- Comprador cadastrado: preenche o nome e liga a venda a ele -->
+    <!-- Comprador cadastrado: liga a venda a ele e dá o nome que vai para o histórico -->
     <label class="campo-bananal">
       Comprador
-      <app-seletor
-        titulo="Comprador"
-        [opcoes]="opcoesComprador"
-        [(ngModel)]="compradorId"
-        (ngModelChange)="aoEscolherComprador()"
-      />
+      <app-seletor titulo="Comprador" [opcoes]="opcoesComprador" [(ngModel)]="compradorId" />
     </label>
 
     <!-- De qual bananal saiu essa venda -->
@@ -151,7 +137,7 @@
     </label>
 
     <button mat-raised-button id="button" (click)="salvarVenda()">
-      <mat-icon></mat-icon>
+      <mat-icon class="truck-icon" *ngIf="moverCaminhao">local_shipping</mat-icon>
       <label for="">Salvar Venda</label>
     </button>
   </div>

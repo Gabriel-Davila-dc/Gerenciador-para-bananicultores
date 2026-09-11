@@ -22,8 +22,6 @@ import { OpcaoSeletor, Seletor } from '../../components/seletor/seletor';
 const NAO_INFORMAR = 'Não informar';
 import { CompradoresService } from '../../services/compradores-service';
 import { Comprador } from '../../models/comprador';
-import { MatFormField } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 
 /* =====================
@@ -44,8 +42,6 @@ type Resultados = [valor: number, peso: number, preco: number];
     Results,
     MatButtonModule,
     MatIconModule,
-    MatFormField,
-    MatInputModule,
     FormsModule,
     Seletor,
   ],
@@ -91,7 +87,6 @@ export class Calculadora {
   resultadosFraca: Resultados = [0, 0, 0];
   mediaNaoMostrada: number = 0;
 
-  nome: string = '';
   bananal: string = '';
   bananais: string[] = [];
   compradorId: number | null = null;
@@ -146,16 +141,6 @@ export class Calculadora {
 
     // zoneless: o que muda depois do await não é percebido sozinho
     this.cd.markForCheck();
-  }
-
-  // o nome do comprador escolhido também vai gravado, para o histórico
-  // continuar legível mesmo se o cadastro for apagado depois
-  aoEscolherComprador(): void {
-    const comprador = this.compradoresService.porId(this.compradorId);
-
-    if (comprador) {
-      this.nome = comprador.nome;
-    }
   }
 
   irParaCalculadora(): void {
@@ -325,7 +310,11 @@ export class Calculadora {
     console.log('Salvando venda...' + this.mediaNaoMostrada);
 
     const vendida: Venda = {
-      nome: this.nome,
+      // o nome do comprador escolhido vai gravado junto, para o histórico
+      // continuar legível mesmo se o cadastro for apagado depois. Lido da lista
+      // e não do service: Vendendo() também roda no inicializador de `venda`,
+      // antes de o construtor atribuir os services. Sem comprador, fica vazio.
+      nome: this.compradores.find((comprador) => comprador.id === this.compradorId)?.nome ?? '',
       bananal: this.bananal,
       compradorId: this.compradorId,
       pago: false,
@@ -341,11 +330,6 @@ export class Calculadora {
   }
 
   salvarVenda(): void {
-    // se o nome faltar no input, avisa e não deixa salvar
-    if (!this.nome) {
-      alert('Por favor, insira o nome do comprador antes de salvar a venda.');
-      return;
-    }
     this.ativarAnimacao();
 
     //coloca tudo dentro de venda pela função Vendendo
