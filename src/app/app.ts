@@ -2,8 +2,6 @@ import { AlertService } from './services/alert-service';
 import { UserService } from './services/user-service';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
 import { Header } from './components/header/header';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Salvar } from './services/salvar';
@@ -11,7 +9,7 @@ import { Salvar } from './services/salvar';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MatToolbarModule, MatButtonModule, Header],
+  imports: [RouterOutlet, Header],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

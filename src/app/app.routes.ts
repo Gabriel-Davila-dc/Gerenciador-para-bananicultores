@@ -1,44 +1,68 @@
 import { Routes } from '@angular/router';
-import { Calculadora } from './pages/calculadora/calculadora';
-import { Gerenciador } from './pages/gerenciador/gerenciador';
-import { Historico } from './pages/historico/historico';
-import { Crm } from './pages/crm/crm';
-import { Cadastros } from './pages/cadastros/cadastros';
-import { Investimentos } from './pages/investimentos/investimentos';
-import { Metricas } from './pages/metricas/metricas';
-import { Compradores } from './pages/compradores/compradores';
-import { Sobre } from './pages/sobre/sobre';
-import { LoginPage } from './pages/login-page/login-page';
-import { RegisterPage } from './pages/register-page/register-page';
 import { authGuard } from './guards/auth-guard';
+
+/**
+ * Cada tela é carregada só quando alguém entra nela.
+ *
+ * Com os componentes importados de cima, o primeiro acesso baixava o app
+ * inteiro — inclusive o drag-and-drop do CDK, que só o quadro do CRM usa, e as
+ * seis telas do Gerenciador, que nem aparecem para quem não fez login. Numa
+ * conexão de roça isso é espera pura antes da primeira conta.
+ *
+ * O import dinâmico é o que faz o Angular separar cada tela em um arquivo
+ * próprio. Trocar por import de cima volta a juntar tudo no bundle inicial.
+ */
 export const routes: Routes = [
   {
     path: '',
-    component: Calculadora,
+    loadComponent: () => import('./pages/calculadora/calculadora').then((m) => m.Calculadora),
   },
   {
     path: 'gerenciador',
     canActivate: [authGuard],
     children: [
-      { path: '', component: Gerenciador },
-      { path: 'historico', component: Historico },
-      { path: 'crm', component: Crm },
-      { path: 'cadastros', component: Cadastros },
-      { path: 'investimentos', component: Investimentos },
-      { path: 'metricas', component: Metricas },
-      { path: 'compradores', component: Compradores },
+      {
+        path: '',
+        loadComponent: () => import('./pages/gerenciador/gerenciador').then((m) => m.Gerenciador),
+      },
+      {
+        path: 'historico',
+        loadComponent: () => import('./pages/historico/historico').then((m) => m.Historico),
+      },
+      {
+        path: 'crm',
+        loadComponent: () => import('./pages/crm/crm').then((m) => m.Crm),
+      },
+      {
+        path: 'cadastros',
+        loadComponent: () => import('./pages/cadastros/cadastros').then((m) => m.Cadastros),
+      },
+      {
+        path: 'investimentos',
+        loadComponent: () =>
+          import('./pages/investimentos/investimentos').then((m) => m.Investimentos),
+      },
+      {
+        path: 'metricas',
+        loadComponent: () => import('./pages/metricas/metricas').then((m) => m.Metricas),
+      },
+      {
+        path: 'compradores',
+        loadComponent: () =>
+          import('./pages/compradores/compradores').then((m) => m.Compradores),
+      },
     ],
   },
   {
     path: 'sobre',
-    component: Sobre,
+    loadComponent: () => import('./pages/sobre/sobre').then((m) => m.Sobre),
   },
   {
     path: 'login',
-    component: LoginPage,
+    loadComponent: () => import('./pages/login-page/login-page').then((m) => m.LoginPage),
   },
   {
     path: 'register',
-    component: RegisterPage,
+    loadComponent: () => import('./pages/register-page/register-page').then((m) => m.RegisterPage),
   },
 ];
