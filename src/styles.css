@@ -12,8 +12,12 @@ body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 
   min-height: 100vh;
-  /* bananal como fundo de toda a página: aparece nas beiradas, atrás do conteúdo */
-  background: url('/img/bananal.png') center center / cover no-repeat fixed;
+  /* bananal como fundo de toda a página: aparece nas beiradas, atrás do conteúdo.
+     webp em vez do png: a mesma imagem, na mesma resolução, sai de 3,2 MB para
+     400 KB. Num fundo atrás de conteúdo a perda não aparece, e esses 2,8 MB
+     eram quase meio minuto de espera na conexão de roça que o app precisa
+     atender. O png fica ao lado, caso se queira reexportar. */
+  background: url('/img/bananal.webp') center center / cover no-repeat fixed;
 }
 
 /* no celular, background fixo trava/pisca em vários navegadores */
