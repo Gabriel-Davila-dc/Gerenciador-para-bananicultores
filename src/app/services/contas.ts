@@ -138,7 +138,10 @@ export class Contas {
         );
         vendaNova.boa.valorTotal = resultadoBC[0];
         vendaNova.boa.pesoTotal = resultadoBC[1];
-        vendaNova.boa.precoQuilo = resultadoBC[2];
+        // quilo() devolve o preco da CAIXA na terceira casa, nao o do quilo:
+        // gravar em precoQuilo trocava o preco digitado pelo preco da caixa, e
+        // o historico passava a mostrar 66,00 o quilo no lugar de 3,00
+        vendaNova.boa.precoCaixa = resultadoBC[2];
 
         //fraca
         const resultadoFC = this.quilo(
@@ -148,7 +151,7 @@ export class Contas {
         );
         vendaNova.fraca.valorTotal = resultadoFC[0];
         vendaNova.fraca.pesoTotal = resultadoFC[1];
-        vendaNova.fraca.precoQuilo = resultadoFC[2];
+        vendaNova.fraca.precoCaixa = resultadoFC[2];
 
         //media
         const ValorTotal = vendaNova.boa.valorTotal + vendaNova.fraca.valorTotal;
