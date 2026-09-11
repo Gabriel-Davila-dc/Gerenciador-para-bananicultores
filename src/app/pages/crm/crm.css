@@ -263,7 +263,6 @@
 }
 
 .formulario input,
-.formulario select,
 .formulario textarea {
   font-family: inherit;
   font-size: 1rem;
@@ -275,7 +274,6 @@
 }
 
 .formulario input:focus,
-.formulario select:focus,
 .formulario textarea:focus {
   outline: 2px solid var(--folha-clara);
   outline-offset: 1px;
@@ -304,6 +302,37 @@
 
 .linha-datas label {
   flex: 1;
+}
+
+/* Tirar um dia é ação de risco menor que apagar, mas ainda é perda de dado:
+   fica fora da fileira de Salvar/Cancelar, com a cara de aviso e não de erro,
+   para não ser tocado no lugar de Salvar. */
+.btn-tirar-dia {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.6em 1em;
+  border: 2px solid var(--banana);
+  border-radius: 100px;
+  background: transparent;
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--terra);
+  cursor: pointer;
+}
+
+.btn-tirar-dia:hover {
+  background: var(--banana-clara);
+}
+
+.btn-tirar-dia mat-icon {
+  font-size: 1.1rem;
+  width: 1.1rem;
+  height: 1.1rem;
 }
 
 .form-botoes {
@@ -524,28 +553,198 @@
   background: var(--folha);
 }
 
+/* A etiqueta corta com reticências: o nome inteiro fica no title e no toque.
+   Na agenda do celular sobra largura, então lá ela volta a caber inteira. */
+.etiqueta-nome {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* o bananal só cabe na agenda do celular; na grade a coluna é estreita demais */
+.etiqueta-bananal,
+.semana-titulo,
+.marcar-dia {
+  display: none;
+}
+
+/* ==================================================================
+   CELULAR: a agenda empilhada
+
+   A grade de 7 colunas não sobrevive a 360px de tela — cada dia fica com
+   ~48px, a etiqueta cai para 9px e vira risco colorido. Aqui a semana deixa
+   de ser linha da grade e vira uma lista: cada dia ocupa a largura toda,
+   com o número à esquerda e os serviços legíveis à direita.
+   ================================================================== */
+
 @media (max-width: 700px) {
-  .semana {
-    gap: 0.15em;
-    padding: 0.15em;
-  }
-
-  .dia {
-    min-height: 3.8em;
-    padding: 0.25em 0.1em;
-    border-radius: 0.45em;
-  }
-
-  .dia-numero {
-    font-size: 0.9rem;
-  }
-
-  .etiqueta {
-    font-size: 0.55rem;
-    padding: 0.2em 0.25em;
+  /* o painel devolve ao calendário a largura que gastava em moldura */
+  .painel {
+    width: min(100% - 1.2em, 82em);
+    margin: 1.2em auto;
+    padding: 1.4em 0.9em 1.8em;
+    border-radius: 1.4em;
   }
 
   .mes {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
+    margin: 1.1em 0 0.1em;
+  }
+
+  .calendario {
+    gap: 0.9em;
+  }
+
+  /* ---- cabeçalho da semana ---- */
+
+  .semana-titulo {
+    display: block;
+    margin: 0.4em 0 0;
+    padding: 0 0.2em 0.35em;
+    font-family: 'Fredoka', 'Roboto', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--folha);
+    border-bottom: 2px solid var(--folha-suave);
+  }
+
+  .semana-titulo-atual {
+    color: var(--casca-escura);
+    border-bottom-color: var(--banana);
+  }
+
+  /* ---- a semana vira lista, não grade ---- */
+
+  .semana {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    background: var(--bg-branco);
+    border: 2px solid var(--borda-cinza);
+    border-radius: 1em;
+    /* segura o canto arredondado sobre o fundo do primeiro e do último dia */
+    overflow: hidden;
+  }
+
+  .semana-atual {
+    border-color: var(--banana);
+  }
+
+  /* ---- cada dia é uma faixa da tela inteira ---- */
+
+  .dia {
+    display: grid;
+    grid-template-columns: 3.6em 1fr;
+    grid-template-areas:
+      'semana servicos'
+      'numero servicos';
+    align-items: center;
+    gap: 0 0.7em;
+    min-height: 4.4em;
+    padding: 0.7em 0.8em;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  /* a divisória entre os dias, que era o vão da grade */
+  .dia + .dia {
+    border-top: 2px solid var(--borda-cinza);
+  }
+
+  .dia-semana {
+    grid-area: semana;
+    justify-self: center;
+    font-size: 0.8rem;
+  }
+
+  .dia-numero {
+    grid-area: numero;
+    justify-self: center;
+    width: 2.2em;
+    height: 2.2em;
+    font-size: 1.35rem;
+  }
+
+  /* o dia de hoje se acha de longe: faixa pintada e etiqueta embaixo do dia */
+  .dia-hoje {
+    background: var(--banana-clara);
+  }
+
+  .dia-hoje .dia-semana::after {
+    content: 'HOJE';
+    display: block;
+    margin-top: 0.15em;
+    font-size: 0.6rem;
+    letter-spacing: 0.05em;
+    color: var(--terra);
+  }
+
+  /* ---- os serviços do dia ---- */
+
+  .dia-servicos {
+    grid-area: servicos;
+    gap: 0.4em;
+    padding-left: 0.7em;
+    /* a linha que separa o número dos serviços dentro da faixa */
+    border-left: 2px solid var(--folha-suave);
+  }
+
+  .dia-hoje .dia-servicos {
+    border-left-color: var(--banana);
+  }
+
+  /* agora sobra largura: o nome aparece inteiro e o bananal entra embaixo */
+  .etiqueta {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.1em;
+    min-height: 44px;
+    padding: 0.5em 0.7em;
+    border-radius: 0.6em;
+    font-size: 0.95rem;
+    white-space: normal;
+    overflow: visible;
+  }
+
+  .etiqueta-nome {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    line-height: 1.25;
+  }
+
+  .etiqueta-bananal {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    opacity: 0.85;
+    line-height: 1.2;
+  }
+
+  /* dia livre: a faixa inteira continua tocável, sem parecer um serviço */
+  .marcar-dia {
+    display: block;
+    width: 100%;
+    min-height: 40px;
+    padding: 0.5em 0.7em;
+    border: 2px dashed var(--folha-suave);
+    border-radius: 0.6em;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: left;
+    color: var(--folha);
+    cursor: pointer;
+  }
+
+  .dia-hoje .marcar-dia {
+    border-color: var(--banana);
+    color: var(--terra);
   }
 }

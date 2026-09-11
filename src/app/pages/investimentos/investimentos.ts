@@ -13,13 +13,14 @@ import {
 } from '../../models/investimento';
 import { InvestimentosService } from '../../services/investimentos-service';
 import { Formatar } from '../../services/formatar';
+import { Seletor } from '../../components/seletor/seletor';
 
 type Filtro = 'Todos' | SituacaoInvestimento;
 
 @Component({
   standalone: true,
   selector: 'app-investimentos',
-  imports: [CommonModule, RouterModule, FormsModule, MatIconModule],
+  imports: [CommonModule, RouterModule, FormsModule, MatIconModule, Seletor],
   templateUrl: './investimentos.html',
   styleUrl: './investimentos.css',
 })

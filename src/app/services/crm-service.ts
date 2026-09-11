@@ -17,6 +17,7 @@ const EXEMPLOS: ServicoCrm[] = [
     responsavel: 'Equipe própria',
     dataInicio: '2026-09-14',
     dataFim: '2026-09-16',
+    diasPulados: [],
     descricao: 'Deixar só mãe, filho e neto por touceira.',
     etapa: 'Planejado',
   },
@@ -27,6 +28,7 @@ const EXEMPLOS: ServicoCrm[] = [
     responsavel: 'Cooperativa',
     dataInicio: '2026-09-20',
     dataFim: '',
+    diasPulados: [],
     descricao: 'Aguardando a entrega do programa de calcário subsidiado.',
     etapa: 'Esperando',
   },
@@ -37,6 +39,7 @@ const EXEMPLOS: ServicoCrm[] = [
     responsavel: 'Terceirizado',
     dataInicio: '2026-09-08',
     dataFim: '2026-09-12',
+    diasPulados: [],
     descricao: 'Segunda aplicação da safra, focar nas folhas mais baixas.',
     etapa: 'Fazendo',
   },
@@ -47,6 +50,7 @@ const EXEMPLOS: ServicoCrm[] = [
     responsavel: 'Diarista',
     dataInicio: '2026-08-28',
     dataFim: '2026-08-30',
+    diasPulados: [],
     descricao: 'Roçada entre as linhas antes da adubação.',
     etapa: 'Finalizado',
   },
@@ -104,7 +108,12 @@ export class CrmService {
       return [...EXEMPLOS];
     }
 
-    return JSON.parse(salvos);
+    // quem já tinha serviço salvo antes dos dias pulados existirem traz o
+    // campo ausente; sem o [] aqui, todo uso adiante quebraria no undefined
+    return (JSON.parse(salvos) as ServicoCrm[]).map((servico) => ({
+      ...servico,
+      diasPulados: servico.diasPulados ?? [],
+    }));
   }
 
   salvar(servico: ServicoCrm): void {

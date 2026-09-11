@@ -139,23 +139,18 @@
     <!-- Comprador cadastrado: preenche o nome e liga a venda a ele -->
     <label class="campo-bananal">
       Comprador
-      <select [(ngModel)]="compradorId" (ngModelChange)="aoEscolherComprador()">
-        <option [ngValue]="null">Não informar</option>
-        @for (comprador of compradores; track comprador.id) {
-          <option [ngValue]="comprador.id">{{ comprador.nome }}</option>
-        }
-      </select>
+      <app-seletor
+        titulo="Comprador"
+        [opcoes]="opcoesComprador"
+        [(ngModel)]="compradorId"
+        (ngModelChange)="aoEscolherComprador()"
+      />
     </label>
 
     <!-- De qual bananal saiu essa venda -->
     <label class="campo-bananal">
       Bananal
-      <select [(ngModel)]="bananal">
-        <option value="">Não informar</option>
-        @for (item of bananais; track item) {
-          <option [value]="item">{{ item }}</option>
-        }
-      </select>
+      <app-seletor titulo="Bananal" [opcoes]="opcoesBananal" [(ngModel)]="bananal" />
     </label>
 
     <button mat-raised-button id="button" (click)="salvarVenda()">

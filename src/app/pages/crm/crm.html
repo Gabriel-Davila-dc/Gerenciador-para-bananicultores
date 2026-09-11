@@ -47,6 +47,12 @@
           <h2 class="mes">{{ semana.rotuloMes }}</h2>
         }
 
+        <!-- só aparece na agenda do celular: lá os dias vêm empilhados e
+             nada mais marca onde uma semana acaba e a outra começa -->
+        <h3 class="semana-titulo" [class.semana-titulo-atual]="semana.contemHoje">
+          {{ semana.rotuloSemana }}
+        </h3>
+
         <div class="semana" [class.semana-atual]="semana.contemHoje">
           @for (dia of semana.dias; track dia.iso) {
             <div class="dia" [class.dia-hoje]="dia.hoje">
@@ -64,10 +70,26 @@
                   <button
                     class="etiqueta"
                     [class]="'etiqueta etapa-' + servico.etapa.toLowerCase()"
-                    (click)="editar(servico)"
+                    (click)="editar(servico, dia.iso)"
                     [title]="servico.servico + ' — ' + servico.bananal + ' (' + servico.etapa + ')'"
                   >
-                    {{ servico.servico || 'Sem nome' }}
+                    <span class="etiqueta-nome">{{ servico.servico || 'Sem nome' }}</span>
+                    @if (servico.bananal) {
+                      <span class="etiqueta-bananal">{{ servico.bananal }}</span>
+                    }
+                  </button>
+                }
+
+                <!-- dia livre na agenda do celular: na grade o número já é o
+                     alvo do toque, mas empilhado sobrava uma faixa larga e
+                     morta do lado dele -->
+                @if (dia.servicos.length === 0) {
+                  <button
+                    class="marcar-dia"
+                    (click)="novoNoDia(dia.iso)"
+                    [attr.aria-label]="'Marcar serviço em ' + dia.iso"
+                  >
+                    + marcar
                   </button>
                 }
               </div>
@@ -128,32 +150,32 @@
 
     <label>
       Bananal
-      <select [(ngModel)]="editando!.bananal">
-        <option value="" disabled>Selecione</option>
-        @for (item of opcoesCom(bananais, editando!.bananal); track item) {
-          <option [value]="item">{{ item }}</option>
-        }
-      </select>
+      <app-seletor
+        titulo="Bananal"
+        placeholder="Selecione"
+        [opcoes]="opcoesCom(bananais, editando!.bananal)"
+        [(ngModel)]="editando!.bananal"
+      />
     </label>
 
     <label>
       Serviço
-      <select [(ngModel)]="editando!.servico">
-        <option value="" disabled>Selecione</option>
-        @for (item of opcoesCom(servicos, editando!.servico); track item) {
-          <option [value]="item">{{ item }}</option>
-        }
-      </select>
+      <app-seletor
+        titulo="Serviço"
+        placeholder="Selecione"
+        [opcoes]="opcoesCom(servicos, editando!.servico)"
+        [(ngModel)]="editando!.servico"
+      />
     </label>
 
     <label>
       Quem fez
-      <select [(ngModel)]="editando!.responsavel">
-        <option value="" disabled>Selecione</option>
-        @for (item of opcoesCom(trabalhadores, editando!.responsavel); track item) {
-          <option [value]="item">{{ item }}</option>
-        }
-      </select>
+      <app-seletor
+        titulo="Quem fez"
+        placeholder="Selecione"
+        [opcoes]="opcoesCom(trabalhadores, editando!.responsavel)"
+        [(ngModel)]="editando!.responsavel"
+      />
     </label>
 
     <div class="linha-datas">
@@ -169,11 +191,7 @@
 
     <label>
       Etapa
-      <select [(ngModel)]="editando!.etapa">
-        @for (coluna of colunas; track coluna.etapa) {
-          <option [value]="coluna.etapa">{{ coluna.etapa }}</option>
-        }
-      </select>
+      <app-seletor titulo="Etapa" [opcoes]="etapas" [(ngModel)]="editando!.etapa" />
     </label>
 
     <label>
@@ -186,8 +204,19 @@
       <a routerLink="/gerenciador/cadastros">Abrir Cadastros</a>
     </p>
 
+    <!-- só quando o serviço pega mais de um dia e o formulário veio de um dia
+         do calendário: tirar o único dia seria apagar o serviço -->
+    @if (podeTirarDoDia) {
+      <button class="btn-tirar-dia" (click)="tirarDoDia()">
+        <mat-icon>event_busy</mat-icon>
+        Tirar só do dia {{ rotuloDiaClicado }}
+      </button>
+    }
+
     <div class="form-botoes">
-      <button class="btn-apagar" *ngIf="editando!.id" (click)="apagar(editando!)">Apagar</button>
+      <button class="btn-apagar" *ngIf="editando!.id" (click)="apagar(editando!)">
+        {{ podeTirarDoDia ? 'Apagar tudo' : 'Apagar' }}
+      </button>
       <button class="btn-cancelar" (click)="fechar()">Cancelar</button>
       <button class="btn-salvar" (click)="salvar()">Salvar</button>
     </div>

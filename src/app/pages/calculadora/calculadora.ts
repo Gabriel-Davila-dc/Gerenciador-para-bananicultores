@@ -15,6 +15,11 @@ import { Categoria } from '../../models/categoria';
 import { ResumoTotal } from '../../models/resumo-total';
 import { Salvar } from '../../services/salvar';
 import { CadastrosService } from '../../services/cadastros-service';
+import { OpcaoSeletor, Seletor } from '../../components/seletor/seletor';
+
+// primeira linha das duas listas da calculadora: venda pode ser registrada
+// sem comprador e sem bananal, e a lista precisa deixar isso escolher de volta
+const NAO_INFORMAR = 'Não informar';
 import { CompradoresService } from '../../services/compradores-service';
 import { Comprador } from '../../models/comprador';
 import { MatFormField } from '@angular/material/form-field';
@@ -42,6 +47,7 @@ type Resultados = [valor: number, peso: number, preco: number];
     MatFormField,
     MatInputModule,
     FormsModule,
+    Seletor,
   ],
   templateUrl: './calculadora.html',
   styleUrl: './calculadora.css',
@@ -90,6 +96,25 @@ export class Calculadora {
   bananais: string[] = [];
   compradorId: number | null = null;
   compradores: Comprador[] = [];
+
+  // as duas listas ganham a opcao de nao informar como primeira linha:
+  // antes era um <option> solto dentro do select
+  protected get opcoesComprador(): OpcaoSeletor[] {
+    return [
+      { valor: null, rotulo: NAO_INFORMAR },
+      ...this.compradores.map((comprador) => ({
+        valor: comprador.id,
+        rotulo: comprador.nome,
+      })),
+    ];
+  }
+
+  protected get opcoesBananal(): OpcaoSeletor[] {
+    return [
+      { valor: '', rotulo: NAO_INFORMAR },
+      ...this.bananais.map((item) => ({ valor: item, rotulo: item })),
+    ];
+  }
   data: string = new Date().toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: '2-digit',

@@ -12,6 +12,7 @@ import { CrmService } from '../../services/crm-service';
 import { InvestimentosService } from '../../services/investimentos-service';
 import { CadastrosService } from '../../services/cadastros-service';
 import { Formatar } from '../../services/formatar';
+import { OpcaoSeletor, Seletor } from '../../components/seletor/seletor';
 
 // paleta categórica validada (validate_palette.js, superfície #ffffff):
 // banda de luminosidade, piso de croma, separação para daltonismo e piso de
@@ -56,13 +57,21 @@ interface Fatia {
 @Component({
   standalone: true,
   selector: 'app-metricas',
-  imports: [CommonModule, RouterModule, FormsModule, MatIconModule],
+  imports: [CommonModule, RouterModule, FormsModule, MatIconModule, Seletor],
   templateUrl: './metricas.html',
   styleUrl: './metricas.css',
 })
 export class Metricas {
   // ----- filtros (uma linha só, no topo, valendo para tudo que der) -----
   bananais: string[] = [];
+
+  // "Todos" e o filtro sem bananal escolhido, representado pela string vazia
+  protected get opcoesBananal(): OpcaoSeletor[] {
+    return [
+      { valor: '', rotulo: 'Todos' },
+      ...this.bananais.map((item) => ({ valor: item, rotulo: item })),
+    ];
+  }
   bananalFiltro = '';
   dataDe = '';
   dataAte = '';

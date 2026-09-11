@@ -75,7 +75,6 @@
   color: var(--terra);
 }
 
-.filtros select,
 .filtros input {
   font-family: inherit;
   font-size: 1rem;
@@ -86,7 +85,6 @@
   color: var(--casca-escura);
 }
 
-.filtros select:focus,
 .filtros input:focus {
   outline: 2px solid var(--folha-clara);
   outline-offset: 1px;

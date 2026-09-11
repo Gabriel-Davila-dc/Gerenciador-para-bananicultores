@@ -71,7 +71,7 @@ h1 {
   min-width: 0;
 }
 
-.campo-comprador label {
+.campo-comprador .rotulo-filtro {
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -79,54 +79,12 @@ h1 {
   color: var(--folha);
 }
 
-/* a seta é desenhada aqui porque o select perde a nativa com appearance:none */
+/* a seta agora vem do app-seletor, que desenha a sua */
 .caixa-select {
   position: relative;
   display: flex;
 }
 
-.caixa-select::after {
-  content: '';
-  position: absolute;
-  right: 0.9em;
-  top: 50%;
-  width: 0.5em;
-  height: 0.5em;
-  border-right: 2px solid var(--folha);
-  border-bottom: 2px solid var(--folha);
-  transform: translateY(-70%) rotate(45deg);
-  pointer-events: none;
-}
-
-.campo-comprador select {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 100%;
-  min-width: 0;
-  font-family: inherit;
-  font-size: 1rem;
-  font-weight: 600;
-  padding: 0.55em 2.4em 0.55em 0.9em;
-  border: 1.5px solid var(--folha-suave);
-  border-radius: 100px;
-  background: var(--creme);
-  color: var(--casca-escura);
-  cursor: pointer;
-  text-overflow: ellipsis;
-  transition:
-    border-color 0.15s,
-    background 0.15s;
-}
-
-.campo-comprador select:hover {
-  border-color: var(--folha-clara);
-}
-
-.campo-comprador select:focus-visible {
-  outline: none;
-  border-color: var(--folha);
-  background: #ffffff;
-}
 
 .indicadores {
   display: flex;

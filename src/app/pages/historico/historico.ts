@@ -10,11 +10,12 @@ import { Contas } from '../../services/contas';
 import { CompradoresService } from '../../services/compradores-service';
 import { Comprador } from '../../models/comprador';
 import { Formatar } from '../../services/formatar';
+import { OpcaoSeletor, Seletor } from '../../components/seletor/seletor';
 
 @Component({
   standalone: true,
   selector: 'app-historico',
-  imports: [CardSalvo, CommonModule, FormsModule, RouterModule, UpdateVenda],
+  imports: [CardSalvo, CommonModule, FormsModule, RouterModule, UpdateVenda, Seletor],
   templateUrl: './historico.html',
   styleUrl: './historico.css',
 })
@@ -23,6 +24,16 @@ export class Historico {
   carregando = true;
 
   compradores: Comprador[] = [];
+
+  protected get opcoesComprador(): OpcaoSeletor[] {
+    return [
+      { valor: '', rotulo: 'Todos os compradores' },
+      ...this.compradores.map((comprador) => ({
+        valor: comprador.id,
+        rotulo: comprador.nome,
+      })),
+    ];
+  }
   // '' = todos; vem da URL quando você chega pela tela de compradores
   compradorFiltro: number | '' = '';
 

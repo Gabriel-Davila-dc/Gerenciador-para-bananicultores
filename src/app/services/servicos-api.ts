@@ -49,6 +49,7 @@ export class ServicosApi {
       responsavel: servico.responsavel ?? '',
       dataInicio: servico.dataInicio ?? '',
       dataFim: servico.dataFim ?? '',
+      diasPulados: servico.diasPulados ?? [],
       descricao: servico.descricao ?? '',
     };
   }

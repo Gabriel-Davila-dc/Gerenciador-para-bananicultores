@@ -95,11 +95,7 @@
       </label>
       <label>
         Unidade
-        <select [(ngModel)]="editando!.unidade">
-          @for (unidade of unidades; track unidade) {
-            <option [value]="unidade">{{ unidade }}</option>
-          }
-        </select>
+        <app-seletor titulo="Unidade" [opcoes]="unidades" [(ngModel)]="editando!.unidade" />
       </label>
     </div>
 
@@ -115,21 +111,13 @@
       </label>
       <label>
         Pagamento
-        <select [(ngModel)]="editando!.formaPagamento">
-          @for (forma of formasPagamento; track forma) {
-            <option [value]="forma">{{ forma }}</option>
-          }
-        </select>
+        <app-seletor titulo="Pagamento" [opcoes]="formasPagamento" [(ngModel)]="editando!.formaPagamento" />
       </label>
     </div>
 
     <label>
       Situação
-      <select [(ngModel)]="editando!.situacao">
-        @for (situacao of situacoes; track situacao) {
-          <option [value]="situacao">{{ situacao }}</option>
-        }
-      </select>
+      <app-seletor titulo="Situação" [opcoes]="situacoes" [(ngModel)]="editando!.situacao" />
     </label>
 
     <label>

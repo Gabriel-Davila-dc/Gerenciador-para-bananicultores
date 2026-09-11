@@ -4,14 +4,14 @@
 
   <div class="barra-filtro">
     <div class="campo-comprador">
-      <label for="filtro-comprador">Comprador</label>
+      <span class="rotulo-filtro">Comprador</span>
       <div class="caixa-select">
-        <select id="filtro-comprador" [(ngModel)]="compradorFiltro">
-          <option [ngValue]="''">Todos os compradores</option>
-          @for (comprador of compradores; track comprador.id) {
-            <option [ngValue]="comprador.id">{{ comprador.nome }}</option>
-          }
-        </select>
+        <app-seletor
+          aparencia="pilula"
+          titulo="Comprador"
+          [opcoes]="opcoesComprador"
+          [(ngModel)]="compradorFiltro"
+        />
       </div>
     </div>
 

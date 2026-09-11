@@ -11,6 +11,7 @@ import {
 } from '@angular/cdk/drag-drop';
 
 import { ETAPAS_CRM, EtapaCrm, ServicoCrm } from '../../models/servico-crm';
+import { Seletor } from '../../components/seletor/seletor';
 import { CrmService } from '../../services/crm-service';
 import { CadastrosService } from '../../services/cadastros-service';
 import { Formatar } from '../../services/formatar';
@@ -35,6 +36,9 @@ interface SemanaCalendario {
   contemHoje: boolean;
   // preenchido só quando a semana começa um mês novo, para virar cabeçalho
   rotuloMes: string | null;
+  // "8 a 14 de setembro": cabeçalho de cada semana na agenda do celular, onde
+  // não existe grade de 7 colunas dizendo sozinha onde a semana termina
+  rotuloSemana: string;
 }
 
 const DIAS_SEMANA = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB', 'DOM'];
@@ -61,12 +65,15 @@ const SEMANAS_POR_CLIQUE = 4;
 @Component({
   standalone: true,
   selector: 'app-crm',
-  imports: [CommonModule, RouterModule, FormsModule, MatIconModule, DragDropModule],
+  imports: [CommonModule, RouterModule, FormsModule, MatIconModule, DragDropModule, Seletor],
   templateUrl: './crm.html',
   styleUrl: './crm.css',
 })
 export class Crm {
   colunas: Coluna[] = [];
+  // a lista da etapa no formulário sai daqui, não das colunas do quadro:
+  // o seletor quer os nomes, não os baldes com os serviços dentro
+  protected etapas = ETAPAS_CRM;
   // null = formulário fechado
   editando: ServicoCrm | null = null;
 
@@ -78,6 +85,14 @@ export class Crm {
    * tela — gesto que praticamente não se completa no dedo.
    */
   visao: VisaoCrm = 'calendario';
+
+  /**
+   * De qual dia do calendário o formulário foi aberto.
+   *
+   * É o que permite "tirar só deste dia": pelo quadro não existe dia nenhum
+   * em jogo, então lá fica null e o botão não aparece.
+   */
+  diaClicado: string | null = null;
 
   semanas: SemanaCalendario[] = [];
   // quantas semanas antes da atual já foram carregadas
@@ -176,6 +191,24 @@ export class Crm {
     return this.somarDias(data, -((diaDaSemana + 6) % 7));
   }
 
+  /**
+   * Rótulo da semana para a agenda do celular.
+   *
+   * Quando a semana atravessa a virada do mês os dois meses aparecem
+   * ("29 de setembro a 5 de outubro") — sem isso o cabeçalho mentiria sobre
+   * metade dos dias listados embaixo dele.
+   */
+  private rotuloDaSemana(segunda: Date, domingo: Date): string {
+    const mesInicio = MESES[segunda.getUTCMonth()].toLowerCase();
+    const mesFim = MESES[domingo.getUTCMonth()].toLowerCase();
+
+    if (mesInicio === mesFim) {
+      return `${segunda.getUTCDate()} a ${domingo.getUTCDate()} de ${mesFim}`;
+    }
+
+    return `${segunda.getUTCDate()} de ${mesInicio} a ${domingo.getUTCDate()} de ${mesFim}`;
+  }
+
   private montarCalendario(servicos: ServicoCrm[]): void {
     const hojeIso = this.formatar.hojeISO();
     const inicio = this.somarDias(
@@ -213,15 +246,21 @@ export class Crm {
         dias,
         contemHoje: dias.some((dia) => dia.hoje),
         rotuloMes: novoMes ? `${MESES[mes]} de ${segunda.getUTCFullYear()}` : null,
+        rotuloSemana: this.rotuloDaSemana(segunda, this.somarDias(segunda, 6)),
       });
     }
 
     this.semanas = semanas;
   }
 
-  // o serviço ocupa todos os dias entre início e fim; sem fim, ocupa só o início
+  // o serviço ocupa todos os dias entre início e fim, menos os que foram
+  // tirados à mão; sem fim, ocupa só o início
   private aconteceEm(servico: ServicoCrm, iso: string): boolean {
     if (!servico.dataInicio) {
+      return false;
+    }
+
+    if (servico.diasPulados?.includes(iso)) {
       return false;
     }
 
@@ -231,8 +270,91 @@ export class Crm {
     return iso >= servico.dataInicio && iso <= fim;
   }
 
+  // os dias em que o serviço realmente acontece, em ordem
+  private diasDoServico(servico: ServicoCrm): string[] {
+    if (!servico.dataInicio) {
+      return [];
+    }
+
+    const fim = servico.dataFim || servico.dataInicio;
+    const dias: string[] = [];
+
+    let data = this.isoParaData(servico.dataInicio);
+
+    for (let iso = this.dataParaIso(data); iso <= fim; iso = this.dataParaIso(data)) {
+      if (this.aconteceEm(servico, iso)) {
+        dias.push(iso);
+      }
+
+      data = this.somarDias(data, 1);
+    }
+
+    return dias;
+  }
+
+  // o botão só faz sentido quando sobra dia: tirar o único dia seria apagar
+  get podeTirarDoDia(): boolean {
+    if (!this.editando || !this.diaClicado) {
+      return false;
+    }
+
+    return this.diasDoServico(this.editando).length > 1;
+  }
+
+  get rotuloDiaClicado(): string {
+    if (!this.diaClicado) {
+      return "";
+    }
+
+    const [, mes, dia] = this.diaClicado.split("-");
+    return `${dia}/${mes}`;
+  }
+
+  /**
+   * Tira do serviço só o dia aberto, mantendo o resto do intervalo.
+   *
+   * Quando o dia é uma das pontas, o intervalo encolhe — guardar "pulei o
+   * primeiro dia" deixaria um buraco invisível, que reapareceria torto se
+   * depois se esticasse a data. Só o dia do meio vira dia pulado.
+   */
+  tirarDoDia(): void {
+    const servico = this.editando;
+
+    if (!servico || !this.diaClicado) {
+      return;
+    }
+
+    const dias = this.diasDoServico(servico);
+    const iso = this.diaClicado;
+
+    if (dias.length <= 1 || !dias.includes(iso)) {
+      return;
+    }
+
+    if (iso === dias[0]) {
+      servico.dataInicio = dias[1];
+    } else if (iso === dias[dias.length - 1]) {
+      servico.dataFim = dias[dias.length - 2];
+    } else {
+      servico.diasPulados = [...servico.diasPulados, iso].sort();
+    }
+
+    // depois de encolher, o que caiu fora do intervalo virou lixo
+    const fim = servico.dataFim || servico.dataInicio;
+    servico.diasPulados = servico.diasPulados.filter(
+      (pulado) => pulado > servico.dataInicio && pulado < fim,
+    );
+
+    this.crmService.salvar(servico);
+    this.fechar();
+    this.carregar();
+  }
+
   // clicar num dia vazio já abre o formulário com a data preenchida
   novoNoDia(iso: string): void {
+    // serviço novo não tem o que tirar: o botão do dia fica fora
+    this.diaClicado = null;
+
     this.editando = {
       id: 0,
       bananal: '',
@@ -240,6 +362,7 @@ export class Crm {
       responsavel: '',
       dataInicio: iso,
       dataFim: iso,
+      diasPulados: [],
       descricao: '',
       etapa: 'Planejado',
     };
@@ -248,6 +371,8 @@ export class Crm {
   novo(): void {
     const hoje = this.formatar.hojeISO();
 
+    this.diaClicado = null;
+
     this.editando = {
       id: 0,
       bananal: '',
@@ -255,14 +380,20 @@ export class Crm {
       responsavel: '',
       dataInicio: hoje,
       dataFim: hoje,
+      diasPulados: [],
       descricao: '',
       etapa: 'Planejado',
     };
   }
 
-  editar(servico: ServicoCrm): void {
-    // clone: se cancelar, o card da tela não fica alterado pela metade
-    this.editando = { ...servico };
+  // iso vem do calendário, onde o toque aconteceu num dia; do quadro vem vazio
+  editar(servico: ServicoCrm, iso?: string): void {
+    this.diaClicado = iso ?? null;
+
+    // clone: se cancelar, o card da tela não fica alterado pela metade.
+    // o array também é copiado, senão tirar um dia e cancelar já teria mexido
+    // no serviço que está no cache
+    this.editando = { ...servico, diasPulados: [...(servico.diasPulados ?? [])] };
   }
 
   salvar(): void {
@@ -271,18 +402,19 @@ export class Crm {
     }
 
     this.crmService.salvar(this.editando);
-    this.editando = null;
+    this.fechar();
     this.carregar();
   }
 
   apagar(servico: ServicoCrm): void {
     this.crmService.apagar(servico.id);
-    this.editando = null;
+    this.fechar();
     this.carregar();
   }
 
   fechar(): void {
     this.editando = null;
+    this.diaClicado = null;
   }
 
   soltar(evento: CdkDragDrop<ServicoCrm[]>, etapa: EtapaCrm): void {

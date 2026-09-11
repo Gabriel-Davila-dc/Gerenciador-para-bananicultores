@@ -11,12 +11,7 @@
   <div class="filtros">
     <label>
       Bananal
-      <select [(ngModel)]="bananalFiltro">
-        <option value="">Todos</option>
-        @for (item of bananais; track item) {
-          <option [value]="item">{{ item }}</option>
-        }
-      </select>
+      <app-seletor titulo="Bananal" [opcoes]="opcoesBananal" [(ngModel)]="bananalFiltro" />
     </label>
     <label>
       De

@@ -338,7 +338,6 @@
 }
 
 .formulario input,
-.formulario select,
 .formulario textarea {
   font-family: inherit;
   font-size: 1rem;
@@ -350,7 +349,6 @@
 }
 
 .formulario input:focus,
-.formulario select:focus,
 .formulario textarea:focus {
   outline: 2px solid var(--folha-clara);
   outline-offset: 1px;
