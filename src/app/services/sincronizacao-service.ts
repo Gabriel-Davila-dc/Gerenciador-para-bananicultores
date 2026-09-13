@@ -141,6 +141,24 @@ export class SincronizacaoService {
     this.guardar(this.fila().filter((op) => !(op.recurso === recurso && op.idLocal === idLocal)));
   }
 
+  /**
+   * Tira da fila as criações que o produtor nunca fez (os antigos exemplos da
+   * primeira vez), junto com qualquer edição pendente delas. Devolve os ids
+   * locais retirados, para o service limpar o próprio cache também.
+   */
+  descartarCriacoes(recurso: string, deveSair: (op: Operacao) => boolean): number[] {
+    const fila = this.fila();
+    const ids = fila
+      .filter((op) => op.recurso === recurso && op.tipo === 'criar' && deveSair(op))
+      .map((op) => op.idLocal);
+
+    if (ids.length > 0) {
+      this.guardar(fila.filter((op) => !(op.recurso === recurso && ids.includes(op.idLocal))));
+    }
+
+    return ids;
+  }
+
   idsComOperacao(recurso: string, tipo: TipoOperacao): number[] {
     return this.fila()
       .filter((op) => op.recurso === recurso && op.tipo === tipo)

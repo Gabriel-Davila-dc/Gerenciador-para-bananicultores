@@ -7,53 +7,14 @@ export const RECURSO_INVESTIMENTOS = 'investimentos';
 
 const CHAVE = 'investimentos';
 
-// exemplos da primeira vez, pra tela não abrir vazia
-const EXEMPLOS: Investimento[] = [
-  {
-    id: -1,
-    produto: 'Adubo NPK 20-05-20',
-    quantidade: 40,
-    unidade: 'saco',
-    valor: 6800,
-    data: '2026-08-22',
-    formaPagamento: 'A prazo',
-    situacao: 'Comprado',
-    observacao: 'Parcelado em 3x na cooperativa.',
-  },
-  {
-    id: -2,
-    produto: 'Calcário dolomítico',
-    quantidade: 12,
-    unidade: 'tonelada',
-    valor: 2400,
-    data: '2026-09-02',
-    formaPagamento: 'Boleto',
-    situacao: 'Comprado',
-    observacao: '',
-  },
-  {
-    id: -3,
-    produto: 'Mudas de bananeira',
-    quantidade: 500,
-    unidade: 'unidade',
-    valor: 1750,
-    data: '2026-09-30',
-    formaPagamento: 'Pix',
-    situacao: 'A comprar',
-    observacao: 'Para renovar o talhão mais velho.',
-  },
-  {
-    id: -4,
-    produto: 'Bomba de irrigação',
-    quantidade: 1,
-    unidade: 'unidade',
-    valor: 3200,
-    data: '2026-10-15',
-    formaPagamento: 'Cartão',
-    situacao: 'A comprar',
-    observacao: 'Orçar em pelo menos duas lojas antes.',
-  },
-];
+/**
+ * A tela abria com 4 investimentos de exemplo, e eles entravam na fila como se
+ * o produtor tivesse criado: cada aparelho ou navegador novo mandava mais uma
+ * cópia para o servidor. Os exemplos tinham estes ids fixos, e criação de
+ * verdade usa -Date.now(), então dá para achar os que ainda não subiram sem
+ * levar registro real junto.
+ */
+export const IDS_EXEMPLOS_ANTIGOS = [-1, -2, -3, -4];
 
 @Injectable({
   providedIn: 'root',
@@ -63,6 +24,8 @@ export class InvestimentosService {
     private sincronizacao: SincronizacaoService,
     private api: InvestimentosApi,
   ) {
+    this.descartarExemplosAntigos();
+
     this.sincronizacao.registrar(RECURSO_INVESTIMENTOS, {
       criar: (dados) => this.api.criar(dados as Investimento),
       editar: (dados) => this.api.editar(dados as Investimento),
@@ -97,16 +60,8 @@ export class InvestimentosService {
   listar(): Investimento[] {
     const salvos = localStorage.getItem(CHAVE);
 
-    if (!salvos) {
-      EXEMPLOS.forEach((exemplo) =>
-        this.sincronizacao.enfileirar(RECURSO_INVESTIMENTOS, 'criar', exemplo.id, exemplo),
-      );
-
-      this.guardar(EXEMPLOS);
-      return [...EXEMPLOS];
-    }
-
-    return JSON.parse(salvos);
+    // sem nada salvo a tela abre vazia: só entra na fila o que o produtor criou
+    return salvos ? JSON.parse(salvos) : [];
   }
 
   salvar(investimento: Investimento): void {
@@ -151,6 +106,21 @@ export class InvestimentosService {
 
     if (!naoEnviado) {
       this.sincronizacao.enfileirar(RECURSO_INVESTIMENTOS, 'apagar', id);
+    }
+  }
+
+  // o aparelho que já abriu a tela guarda os exemplos no cache e, se não
+  // sincronizou, também na fila; os dois lugares precisam perdê-los
+  private descartarExemplosAntigos(): void {
+    this.sincronizacao.descartarCriacoes(RECURSO_INVESTIMENTOS, (op) =>
+      IDS_EXEMPLOS_ANTIGOS.includes(op.idLocal),
+    );
+
+    const cache = this.listar();
+    const semExemplos = cache.filter((item) => !IDS_EXEMPLOS_ANTIGOS.includes(item.id));
+
+    if (semExemplos.length !== cache.length) {
+      this.guardar(semExemplos);
     }
   }
 

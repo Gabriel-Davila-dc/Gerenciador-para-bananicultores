@@ -36,7 +36,7 @@ describe('Crm — tirar um dia do serviço', () => {
 
   beforeEach(async () => {
     localStorage.clear();
-    // semeado antes de criar o componente: sem isso o service planta os exemplos
+    // semeado antes de criar o componente: é de onde a tela lê
     localStorage.setItem('servicos-crm', JSON.stringify([DESFOLHA]));
 
     await TestBed.configureTestingModule({

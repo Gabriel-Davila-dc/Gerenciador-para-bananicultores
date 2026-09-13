@@ -11,8 +11,13 @@ const CHAVE = 'cadastros-cache';
 // formato antigo: uma chave por tipo, guardando só os nomes
 const CHAVE_ANTIGA = (tipo: TipoCadastro) => `cadastro-${tipo}`;
 
-// listas iniciais, pra tela não abrir vazia. o usuário pode apagar e criar as dele.
-const PADROES: Record<TipoCadastro, string[]> = {
+/**
+ * A tela abria com estas listas, e elas entravam na fila como se o produtor
+ * tivesse cadastrado: apagar não adiantava, porque qualquer aparelho ou
+ * navegador novo semeava tudo de novo e mandava para o servidor. Ficam aqui só
+ * para achar e tirar da fila as que ainda não subiram.
+ */
+export const PADROES_ANTIGOS: Record<TipoCadastro, string[]> = {
   bananais: ['Bananal da Serra', 'Talhão do Córrego', 'Talhão Novo'],
   servicos: [
     'Adubação',
@@ -27,6 +32,11 @@ const PADROES: Record<TipoCadastro, string[]> = {
   trabalhadores: ['Cooperativa', 'Diarista', 'Equipe própria', 'Terceirizado'],
 };
 
+// Os padrões não tinham id fixo, então são reconhecidos pelo nome. Por isso a
+// limpeza roda uma vez só por aparelho: depois dela, um "Colheita" pendente na
+// fila foi o produtor que cadastrou, e não pode sumir.
+export const CHAVE_PADROES_DESCARTADOS = 'cadastros-padroes-descartados';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -35,6 +45,8 @@ export class CadastrosService {
     private sincronizacao: SincronizacaoService,
     private api: CadastrosApi,
   ) {
+    // antes da migração: o que ela enfileira é do produtor e não pode ser confundido com padrão
+    this.descartarPadroesAntigos();
     this.migrarFormatoAntigo();
 
     this.sincronizacao.registrar(RECURSO_CADASTROS, {
@@ -158,25 +170,25 @@ export class CadastrosService {
   private cache(): ItemCadastro[] {
     const salvo = localStorage.getItem(CHAVE);
 
-    if (salvo) {
-      return JSON.parse(salvo);
+    // sem nada salvo as listas abrem vazias: só entra na fila o que o produtor cadastrou
+    return salvo ? JSON.parse(salvo) : [];
+  }
+
+  private descartarPadroesAntigos(): void {
+    if (localStorage.getItem(CHAVE_PADROES_DESCARTADOS)) {
+      return;
     }
 
-    // primeira vez: semeia os padrões como itens criados offline
-    const iniciais: ItemCadastro[] = [];
-
-    (Object.keys(PADROES) as TipoCadastro[]).forEach((tipo) => {
-      PADROES[tipo].forEach((nome, indice) => {
-        iniciais.push({ id: -(Date.now() + iniciais.length + indice), tipo, nome });
-      });
+    const ids = this.sincronizacao.descartarCriacoes(RECURSO_CADASTROS, (op) => {
+      const item = op.dados as ItemCadastro | undefined;
+      return !!item && PADROES_ANTIGOS[item.tipo]?.includes(item.nome);
     });
 
-    this.guardar(iniciais);
-    iniciais.forEach((item) =>
-      this.sincronizacao.enfileirar(RECURSO_CADASTROS, 'criar', item.id, item),
-    );
+    if (ids.length > 0) {
+      this.guardar(this.cache().filter((item) => !ids.includes(item.id)));
+    }
 
-    return iniciais;
+    localStorage.setItem(CHAVE_PADROES_DESCARTADOS, '1');
   }
 
   private guardar(itens: ItemCadastro[]): void {

@@ -8,53 +8,14 @@ export const RECURSO_CRM = 'crm';
 
 const CHAVE = 'servicos-crm';
 
-// exemplos que aparecem na primeira vez, só pra tela não abrir vazia
-const EXEMPLOS: ServicoCrm[] = [
-  {
-    id: -1,
-    bananal: 'Talhão do Córrego',
-    servico: 'Desbrota',
-    responsavel: 'Equipe própria',
-    dataInicio: '2026-09-14',
-    dataFim: '2026-09-16',
-    diasPulados: [],
-    descricao: 'Deixar só mãe, filho e neto por touceira.',
-    etapa: 'Planejado',
-  },
-  {
-    id: -2,
-    bananal: 'Bananal da Serra',
-    servico: 'Calcário',
-    responsavel: 'Cooperativa',
-    dataInicio: '2026-09-20',
-    dataFim: '',
-    diasPulados: [],
-    descricao: 'Aguardando a entrega do programa de calcário subsidiado.',
-    etapa: 'Esperando',
-  },
-  {
-    id: -3,
-    bananal: 'Talhão do Córrego',
-    servico: 'Combate à Sigatoka',
-    responsavel: 'Terceirizado',
-    dataInicio: '2026-09-08',
-    dataFim: '2026-09-12',
-    diasPulados: [],
-    descricao: 'Segunda aplicação da safra, focar nas folhas mais baixas.',
-    etapa: 'Fazendo',
-  },
-  {
-    id: -4,
-    bananal: 'Talhão Novo',
-    servico: 'Roçada',
-    responsavel: 'Diarista',
-    dataInicio: '2026-08-28',
-    dataFim: '2026-08-30',
-    diasPulados: [],
-    descricao: 'Roçada entre as linhas antes da adubação.',
-    etapa: 'Finalizado',
-  },
-];
+/**
+ * O quadro abria com 4 serviços de exemplo, e eles entravam na fila como se o
+ * produtor tivesse criado: cada aparelho ou navegador novo mandava mais uma
+ * cópia para o servidor. Os exemplos tinham estes ids fixos, e criação de
+ * verdade usa -Date.now(), então dá para achar os que ainda não subiram sem
+ * levar registro real junto.
+ */
+export const IDS_EXEMPLOS_ANTIGOS = [-1, -2, -3, -4];
 
 @Injectable({
   providedIn: 'root',
@@ -64,6 +25,8 @@ export class CrmService {
     private sincronizacao: SincronizacaoService,
     private api: ServicosApi,
   ) {
+    this.descartarExemplosAntigos();
+
     this.sincronizacao.registrar(RECURSO_CRM, {
       criar: (dados) => this.api.criar(dados as ServicoCrm),
       editar: (dados) => this.api.editar(dados as ServicoCrm),
@@ -97,15 +60,9 @@ export class CrmService {
   listar(): ServicoCrm[] {
     const salvos = localStorage.getItem(CHAVE);
 
+    // sem nada salvo o quadro abre vazio: só entra na fila o que o produtor criou
     if (!salvos) {
-      // os exemplos entram como serviços criados offline: se o usuário
-      // mantiver algum, ele sobe junto quando existir backend
-      EXEMPLOS.forEach((exemplo) =>
-        this.sincronizacao.enfileirar(RECURSO_CRM, 'criar', exemplo.id, exemplo),
-      );
-
-      this.guardar(EXEMPLOS);
-      return [...EXEMPLOS];
+      return [];
     }
 
     // quem já tinha serviço salvo antes dos dias pulados existirem traz o
@@ -179,6 +136,21 @@ export class CrmService {
 
     if (mudou) {
       this.guardar(servicos);
+    }
+  }
+
+  // o aparelho que já abriu o quadro guarda os exemplos no cache e, se não
+  // sincronizou, também na fila; os dois lugares precisam perdê-los
+  private descartarExemplosAntigos(): void {
+    this.sincronizacao.descartarCriacoes(RECURSO_CRM, (op) =>
+      IDS_EXEMPLOS_ANTIGOS.includes(op.idLocal),
+    );
+
+    const servicos = this.listar();
+    const semExemplos = servicos.filter((item) => !IDS_EXEMPLOS_ANTIGOS.includes(item.id));
+
+    if (semExemplos.length !== servicos.length) {
+      this.guardar(semExemplos);
     }
   }
 
