@@ -1,0 +1,273 @@
+/* ==========================================================================
+   Moldura das telas de conta: entrar, criar conta e esqueci a senha.
+
+   Um arquivo só para as três porque são a mesma tela com outro miolo. O CSS
+   estava copiado nas três pastas e já tinha começado a divergir — mexer numa
+   deixava as outras atrás. Cada componente carrega este arquivo antes do seu.
+
+   Tela cheia e canto reto, não cartão flutuante: no celular o formulário é a
+   tela inteira, como num aplicativo; no computador a página se divide em duas
+   colunas, o bananal de um lado e o formulário do outro.
+
+   Campo nativo em vez de mat-form-field: o resto do app usa input nativo, e o
+   miolo do Material só se estiliza por dentro com ::ng-deep ou token do MDC.
+   ========================================================================== */
+
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.tela {
+  display: grid;
+  grid-template-columns: 1fr;
+  /* a altura vem do app-root, que é uma coluna com o header em cima: assim a
+     tela vai exatamente até o fim do visor, sem calc adivinhando o header */
+  flex: 1;
+}
+
+@media (min-width: 950px) {
+  .tela {
+    /* proporção e não largura fixa: em 30em o formulário encolhia até virar uma
+       tira estreita nos monitores grandes. O piso em 26em segura a coluna
+       quando a janela é pouco maior que o limite deste @media */
+    grid-template-columns: 1fr minmax(26em, 37%);
+  }
+}
+
+.painel {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-branco);
+  box-shadow: 0 0 40px rgba(46, 32, 19, 0.35);
+}
+
+/* ---------- topo: a faixa verde com a banana ---------- */
+
+.painel-topo {
+  display: flex;
+  align-items: center;
+  gap: 0.9em;
+  padding: 1.4em 1.6em;
+  background: var(--folha);
+  color: var(--creme);
+  border-bottom: 5px solid var(--banana);
+}
+
+.marca {
+  width: 3em;
+  flex-shrink: 0;
+}
+
+.painel-topo h1 {
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: clamp(1.4rem, 5vw, 1.8rem);
+  line-height: 1.15;
+  margin: 0;
+}
+
+.painel-topo .sub {
+  margin: 0.25em 0 0;
+  font-size: 0.95rem;
+  line-height: 1.35;
+  color: var(--folha-suave);
+}
+
+/* ---------- corpo: os campos ---------- */
+
+.painel-corpo {
+  display: flex;
+  flex-direction: column;
+  /* ocupa a sobra e centraliza os campos: encostados no topo, sobrava um vão
+     grande no meio do painel */
+  flex: 1;
+  justify-content: center;
+  gap: 1.2em;
+  padding: 2em 1.6em;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+}
+
+.campo-nome {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--terra);
+}
+
+.campo-caixa {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0 0.7em;
+  background: var(--bg-claro);
+  border: 1.5px solid var(--borda-cinza);
+  border-radius: 4px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+/* o anel fica na moldura e não no input, senão o ícone fica fora do destaque */
+.campo-caixa:focus-within {
+  background: #fff;
+  border-color: var(--folha);
+  box-shadow: 0 0 0 3px var(--folha-suave);
+}
+
+.campo-caixa > .material-icons {
+  color: var(--folha);
+  font-size: 1.4rem;
+}
+
+.campo-caixa input {
+  flex: 1;
+  /* sem isto o input não encolhe e o olho da senha sai da moldura */
+  min-width: 0;
+  padding: 0.9em 0;
+  border: none;
+  background: transparent;
+  font: inherit;
+  /* abaixo de 16px o iOS dá zoom sozinho ao focar o campo */
+  font-size: 1.05rem;
+  color: var(--casca-escura);
+  outline: none;
+}
+
+/* mostrar/esconder a senha: no celular, no sol, digitar às cegas erra muito */
+.olho {
+  display: grid;
+  place-items: center;
+  width: 2.4em;
+  height: 2.4em;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 4px;
+  background: none;
+  color: var(--terra);
+  cursor: pointer;
+}
+
+.olho:hover {
+  background: var(--folha-suave);
+}
+
+.dica {
+  font-size: 0.85rem;
+  color: var(--terra);
+  opacity: 0.85;
+}
+
+/* ---------- recados ---------- */
+
+.erro {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin: 0;
+  padding: 0.8em 1em;
+  border-left: 4px solid var(--erro);
+  background: rgba(172, 38, 38, 0.1);
+  color: var(--erro);
+  font-size: 0.97rem;
+}
+
+.erro .material-icons {
+  font-size: 1.3rem;
+}
+
+.explica {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--terra);
+}
+
+/* ---------- botões e links ---------- */
+
+.btn-principal {
+  padding: 0.9em 1em;
+  border: none;
+  border-radius: 4px;
+  background: var(--folha);
+  color: var(--creme);
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.btn-principal:hover:not(:disabled) {
+  background: var(--folha-clara);
+}
+
+.btn-principal:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn-principal:disabled {
+  opacity: 0.65;
+  cursor: progress;
+}
+
+.btn-secundario {
+  background: var(--bg-branco);
+  color: var(--folha);
+  border: 1.5px solid var(--folha);
+  font-size: 1.05rem;
+}
+
+.btn-secundario:hover:not(:disabled) {
+  background: var(--folha-suave);
+}
+
+/* alvo de toque: link de texto puro é pequeno demais para o dedo */
+.link-fraco {
+  align-self: flex-end;
+  padding: 0.4em 0.2em;
+  color: var(--folha);
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+.link-fraco:hover {
+  text-decoration: underline;
+}
+
+/* margin-top auto: o rodapé desce para o fim do painel, que agora vai até o
+   fim da tela */
+.painel-pe {
+  margin-top: auto;
+  padding: 1.2em 1.6em;
+  border-top: 1px solid rgba(46, 32, 19, 0.12);
+  background: var(--creme);
+  text-align: center;
+  font-size: 0.97rem;
+  color: var(--terra);
+}
+
+.painel-pe a {
+  display: inline-block;
+  padding: 0.4em;
+  color: var(--folha);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.painel-pe a:hover {
+  text-decoration: underline;
+}
+
+/* ---------- computador ---------- */
+
+@media (min-width: 950px) {
+  /* a coluna é mais larga que no celular, então a margem interna também sobe:
+     com o padding do celular o campo encostava nas beiradas do painel */
+  .painel-topo,
+  .painel-corpo,
+  .painel-pe {
+    padding-left: 2.6em;
+    padding-right: 2.6em;
+  }
+}

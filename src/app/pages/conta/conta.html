@@ -1,0 +1,92 @@
+<div class="tela" [class.modo-criar]="modo === 'criar'">
+  <div class="lado-vitrine">
+    <app-vitrine-conta></app-vitrine-conta>
+  </div>
+
+  <main class="painel">
+    <div class="painel-topo">
+      <img class="marca" src="/img/banana.transparente.png" alt="" />
+      <div>
+        <h1>{{ modo === 'criar' ? 'Criar sua conta' : 'Bem-vindo de volta' }}</h1>
+        <p class="sub">
+          {{
+            modo === 'criar'
+              ? 'Registre as vendas na roça, mesmo sem sinal, e sincronize depois.'
+              : 'Entre para ver as suas vendas e cuidar do bananal.'
+          }}
+        </p>
+      </div>
+    </div>
+
+    <form class="painel-corpo" (ngSubmit)="enviar()">
+      <p class="erro" *ngIf="error" role="alert">
+        <span class="material-icons" aria-hidden="true">error_outline</span>
+        <span>{{ error }}</span>
+      </p>
+
+      <label class="campo" for="email">
+        <span class="campo-nome">E-mail</span>
+        <span class="campo-caixa">
+          <span class="material-icons" aria-hidden="true">alternate_email</span>
+          <input
+            id="email"
+            type="email"
+            inputmode="email"
+            autocomplete="email"
+            placeholder="voce@exemplo.com"
+            [(ngModel)]="email"
+            name="email"
+            required
+          />
+        </span>
+      </label>
+
+      <div class="campo">
+        <label class="campo-nome" for="senha">Senha</label>
+        <span class="campo-caixa">
+          <span class="material-icons" aria-hidden="true">lock_outline</span>
+          <input
+            id="senha"
+            [type]="verSenha ? 'text' : 'password'"
+            [autocomplete]="modo === 'criar' ? 'new-password' : 'current-password'"
+            [placeholder]="modo === 'criar' ? 'Crie uma senha' : 'Sua senha'"
+            [(ngModel)]="password"
+            name="password"
+            required
+          />
+          <button
+            class="olho"
+            type="button"
+            (click)="verSenha = !verSenha"
+            [attr.aria-label]="verSenha ? 'Esconder a senha' : 'Mostrar a senha'"
+          >
+            <span class="material-icons" aria-hidden="true">{{
+              verSenha ? 'visibility_off' : 'visibility'
+            }}</span>
+          </button>
+        </span>
+        <span class="dica" *ngIf="modo === 'criar'">No mínimo 6 caracteres.</span>
+      </div>
+
+      <a class="link-fraco" *ngIf="modo === 'entrar'" routerLink="/esqueci-senha">
+        Esqueci minha senha
+      </a>
+
+      <button class="btn-principal" type="submit" [disabled]="ocupado">
+        <ng-container *ngIf="modo === 'criar'">{{ ocupado ? 'Criando...' : 'Criar conta' }}</ng-container>
+        <ng-container *ngIf="modo === 'entrar'">{{ ocupado ? 'Entrando...' : 'Entrar' }}</ng-container>
+      </button>
+    </form>
+
+    <div class="painel-pe">
+      <ng-container *ngIf="modo === 'entrar'">
+        Ainda não tem conta?
+        <button type="button" class="link-forte" (click)="trocarModo('criar')">Criar conta</button>
+      </ng-container>
+      <ng-container *ngIf="modo === 'criar'">
+        Já tem conta?
+        <button type="button" class="link-forte" (click)="trocarModo('entrar')">Entrar</button>
+      </ng-container>
+    </div>
+  </main>
+</div>

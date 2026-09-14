@@ -25,11 +25,11 @@ describe('Rotas', () => {
     expect(semTela.map((item) => item.caminho)).toEqual([]);
   });
 
-  // as doze telas do app, incluindo as seis filhas do gerenciador
+  // as treze telas do app, incluindo as seis filhas do gerenciador
   it('encontrou todas as telas esperadas', () => {
     const comTela = rotas.filter(({ rota }) => rota.loadComponent || rota.component);
 
-    expect(comTela.length).toBe(11);
+    expect(comTela.length).toBe(12);
   });
 
   for (const { caminho, rota } of todasAsRotas(routes)) {

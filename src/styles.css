@@ -40,6 +40,30 @@ body::before {
   background: url('/img/bananal.webp') center center / cover no-repeat;
 }
 
+/**
+ * O app é uma coluna: a barra em cima e a tela embaixo, ocupando o que sobrar
+ * da altura. Assim uma tela que quer ir até o fim do visor (as de conta) pede
+ * a altura ao pai, em vez de descontar a altura do header num calc() — número
+ * que muda com a fonte, com o zoom e entre celular e computador, e que
+ * deixava uma faixa de fundo aparecendo embaixo do rodapé.
+ */
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* o outlet é só a âncora onde a tela é inserida; como flex item ele dividiria
+   a altura com ela */
+app-root > router-outlet {
+  display: none;
+}
+
+app-root > :not(app-header) {
+  flex: 1 0 auto;
+}
+
 :root {
   /* MARCA - bananicultor */
   --banana: #f4b400;

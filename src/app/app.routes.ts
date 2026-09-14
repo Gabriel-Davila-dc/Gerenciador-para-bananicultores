@@ -57,12 +57,21 @@ export const routes: Routes = [
     path: 'sobre',
     loadComponent: () => import('./pages/sobre/sobre').then((m) => m.Sobre),
   },
+  // entrar e criar conta são a mesma tela: o modo diz com qual das duas ela
+  // abre, e o painel desliza de um lado para o outro na troca
   {
     path: 'login',
-    loadComponent: () => import('./pages/login-page/login-page').then((m) => m.LoginPage),
+    data: { modo: 'entrar' },
+    loadComponent: () => import('./pages/conta/conta').then((m) => m.Conta),
+  },
+  {
+    path: 'esqueci-senha',
+    loadComponent: () =>
+      import('./pages/esqueci-senha/esqueci-senha').then((m) => m.EsqueciSenha),
   },
   {
     path: 'register',
-    loadComponent: () => import('./pages/register-page/register-page').then((m) => m.RegisterPage),
+    data: { modo: 'criar' },
+    loadComponent: () => import('./pages/conta/conta').then((m) => m.Conta),
   },
 ];

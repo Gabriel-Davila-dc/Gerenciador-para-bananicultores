@@ -1,0 +1,79 @@
+/* o que é só desta tela: o painel que troca de lado.
+
+   Entrar fica à direita e criar conta à esquerda, e a passagem de um para o
+   outro é o painel deslizando por cima do bananal. Só no computador: no
+   celular o painel é a tela inteira e não há para onde deslizar. */
+
+/* escondida por dentro, a coluna do bananal continuaria existindo no grid do
+   celular e roubaria altura do painel */
+.lado-vitrine {
+  display: none;
+}
+
+@media (min-width: 950px) {
+  .lado-vitrine {
+    display: block;
+  }
+
+  .tela {
+    /* sai do grid: as duas metades passam a ser posicionadas, que é o que
+       permite animar a troca de lado */
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .lado-vitrine,
+  .painel {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    transition: left 0.45s ease, right 0.45s ease;
+  }
+
+  /* entrar: painel à direita */
+  .painel {
+    left: 63%;
+    right: 0;
+  }
+
+  .lado-vitrine {
+    left: 0;
+    right: 37%;
+  }
+
+  /* criar conta: painel à esquerda */
+  .tela.modo-criar .painel {
+    left: 0;
+    right: 63%;
+  }
+
+  .tela.modo-criar .lado-vitrine {
+    left: 37%;
+    right: 0;
+  }
+}
+
+/* quem pediu menos movimento no sistema recebe a troca sem o deslize */
+@media (prefers-reduced-motion: reduce) {
+  .lado-vitrine,
+  .painel {
+    transition: none;
+  }
+}
+
+/* o link do rodapé é um botão porque troca o modo em vez de navegar; sem isto
+   ele chegaria com a cara de botão de formulário */
+.link-forte {
+  padding: 0.4em;
+  border: none;
+  background: none;
+  color: var(--folha);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.link-forte:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,62 @@
+/* a metade do bananal nas telas de conta. Só no computador: no celular a tela
+   inteira é do formulário, que é onde o produtor precisa chegar rápido.
+
+   O display fica no :host e não numa div interna: escondida por dentro, a
+   coluna continuaria existindo no grid e roubaria altura do formulário */
+:host {
+  display: none;
+}
+
+@media (min-width: 950px) {
+  :host {
+    display: block;
+    /* o véu precisa cobrir a coluna inteira; sem altura, o host para onde o
+       texto acaba e o bananal volta cru embaixo */
+    height: 100%;
+  }
+
+  .vitrine {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.2em;
+    height: 100%;
+    padding: 3em 4em;
+    /* véu por cima do bananal: sem ele o texto claro some nas folhas */
+    background: linear-gradient(90deg, rgba(46, 32, 19, 0.75) 0%, rgba(46, 32, 19, 0.35) 100%);
+    color: var(--creme);
+  }
+
+  .vitrine-marca {
+    width: 4em;
+  }
+
+  .vitrine h2 {
+    font-family: 'Fredoka', 'Roboto', sans-serif;
+    font-size: clamp(2rem, 3.2vw, 2.8rem);
+    line-height: 1.15;
+    max-width: 12em;
+    margin: 0;
+  }
+
+  .vitrine ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7em;
+    margin: 0;
+    padding: 0;
+    max-width: 22em;
+    font-size: 1.1rem;
+  }
+
+  .vitrine li {
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+  }
+
+  .vitrine .material-icons {
+    color: var(--banana);
+  }
+}

@@ -10,3 +10,7 @@ export interface RegisterResponse {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface EsqueciSenhaResponse {
+  message: string;
+}

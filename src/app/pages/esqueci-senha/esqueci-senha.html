@@ -1,0 +1,123 @@
+<div class="tela">
+  <app-vitrine-conta></app-vitrine-conta>
+
+  <!-- etapa 1: quem é você -->
+  <main class="painel" *ngIf="etapa === 'email'">
+    <div class="painel-topo">
+      <img class="marca" src="/img/banana.transparente.png" alt="" />
+      <div>
+        <h1>Esqueci minha senha</h1>
+        <p class="sub">Mandamos um código de 6 números para o seu e-mail.</p>
+      </div>
+    </div>
+
+    <form class="painel-corpo" (ngSubmit)="pedirCodigo()">
+      <p class="erro" *ngIf="error" role="alert">
+        <span class="material-icons" aria-hidden="true">error_outline</span>
+        <span>{{ error }}</span>
+      </p>
+
+      <label class="campo" for="email">
+        <span class="campo-nome">E-mail da conta</span>
+        <span class="campo-caixa">
+          <span class="material-icons" aria-hidden="true">alternate_email</span>
+          <input
+            id="email"
+            type="email"
+            inputmode="email"
+            autocomplete="email"
+            placeholder="voce@exemplo.com"
+            [(ngModel)]="email"
+            name="email"
+            required
+          />
+        </span>
+      </label>
+
+      <button class="btn-principal" type="submit" [disabled]="enviando">
+        {{ enviando ? 'Enviando...' : 'Enviar código' }}
+      </button>
+      <button class="btn-principal btn-secundario" type="button" routerLink="/login">
+        Voltar para o login
+      </button>
+    </form>
+  </main>
+
+  <!-- etapa 2: o código e a senha nova -->
+  <main class="painel" *ngIf="etapa === 'codigo'">
+    <div class="painel-topo">
+      <img class="marca" src="/img/banana.transparente.png" alt="" />
+      <div>
+        <h1>Nova senha</h1>
+        <p class="sub">O código vale por 15 minutos.</p>
+      </div>
+    </div>
+
+    <form class="painel-corpo" (ngSubmit)="redefinir()">
+      <p class="explica" *ngIf="aviso">{{ aviso }}</p>
+      <p class="explica">
+        Enviado para <strong>{{ email }}</strong>
+      </p>
+
+      <p class="erro" *ngIf="error" role="alert">
+        <span class="material-icons" aria-hidden="true">error_outline</span>
+        <span>{{ error }}</span>
+      </p>
+
+      <label class="campo" for="codigo">
+        <span class="campo-nome">Código de 6 números</span>
+        <span class="campo-caixa">
+          <span class="material-icons" aria-hidden="true">pin</span>
+          <!-- inputmode numeric abre o teclado de números no celular, que é
+               onde o app é usado; type="text" mantém os zeros da frente -->
+          <input
+            id="codigo"
+            class="campo-codigo"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            placeholder="000000"
+            autocomplete="one-time-code"
+            [(ngModel)]="codigo"
+            name="codigo"
+            required
+          />
+        </span>
+      </label>
+
+      <div class="campo">
+        <label class="campo-nome" for="senha">Nova senha</label>
+        <span class="campo-caixa">
+          <span class="material-icons" aria-hidden="true">lock_outline</span>
+          <input
+            id="senha"
+            [type]="verSenha ? 'text' : 'password'"
+            autocomplete="new-password"
+            placeholder="Crie uma senha"
+            [(ngModel)]="password"
+            name="password"
+            required
+          />
+          <button
+            class="olho"
+            type="button"
+            (click)="verSenha = !verSenha"
+            [attr.aria-label]="verSenha ? 'Esconder a senha' : 'Mostrar a senha'"
+          >
+            <span class="material-icons" aria-hidden="true">{{
+              verSenha ? 'visibility_off' : 'visibility'
+            }}</span>
+          </button>
+        </span>
+        <span class="dica">No mínimo 6 caracteres.</span>
+      </div>
+
+      <button class="btn-principal" type="submit" [disabled]="enviando">
+        {{ enviando ? 'Salvando...' : 'Salvar nova senha' }}
+      </button>
+      <button class="btn-principal btn-secundario" type="button" (click)="trocarEmail()">
+        Usar outro e-mail
+      </button>
+    </form>
+  </main>
+</div>

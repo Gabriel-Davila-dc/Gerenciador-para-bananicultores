@@ -1,0 +1,9 @@
+/* a moldura das telas de conta vem de pages/autenticacao.css; aqui fica só o
+   que é desta tela */
+
+/* o código é para conferir dígito por dígito com o e-mail aberto ao lado */
+.campo-codigo {
+  letter-spacing: 0.35em;
+  font-size: 1.3rem;
+  text-align: center;
+}
