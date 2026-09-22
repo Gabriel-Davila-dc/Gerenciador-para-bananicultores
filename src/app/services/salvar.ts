@@ -48,11 +48,7 @@ export class Salvar {
 
     this.sincronizacao.enfileirar(RECURSO, 'criar', venda.id, venda);
 
-    await this.avisar(
-      venda.id,
-      'Venda salva!',
-      'Venda salva no aparelho. Vai para o servidor quando conectar.',
-    );
+    await this.avisar(venda.id, 'Venda salva!', 'Salva no aparelho. Envia ao conectar.');
   }
 
   async atualizarVenda(venda: Venda): Promise<void> {
@@ -77,11 +73,7 @@ export class Salvar {
       this.sincronizacao.enfileirar(RECURSO, 'editar', venda.id!, venda);
     }
 
-    await this.avisar(
-      venda.id!,
-      'Venda atualizada!',
-      'Alteração guardada. Vai para o servidor quando conectar.',
-    );
+    await this.avisar(venda.id!, 'Venda atualizada!', 'Alteração guardada. Envia ao conectar.');
   }
 
   async apagarVenda(id: number): Promise<void> {
@@ -98,7 +90,7 @@ export class Salvar {
     this.sincronizacao.removerDoRegistro(RECURSO, id);
     this.sincronizacao.enfileirar(RECURSO, 'apagar', id);
 
-    await this.avisar(id, 'Venda apagada.', 'Exclusão guardada. Vai para o servidor quando conectar.');
+    await this.avisar(id, 'Venda apagada.', 'Exclusão guardada. Envia ao conectar.');
   }
 
   async pegarVendas(): Promise<Venda[]> {
@@ -134,7 +126,7 @@ export class Salvar {
       return this.marcarPendentes(atualizadas);
     } catch (error) {
       // sem servidor: mostra o cache do jeito que está
-      this.alert.message('Sem conexão. Mostrando o que está salvo no aparelho.', 'alert');
+      this.alert.message('Sem conexão. Mostrando o salvo.', 'alert');
 
       return this.marcarPendentes(this.lerCache()).reverse();
     }
