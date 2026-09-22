@@ -1,0 +1,60 @@
+/* largura definida aqui, não só na .folha lá dentro: em containers flex com
+   align-items diferente de stretch (é o caso das telas que usam isso), um
+   elemento sem largura própria encolhe para o conteúdo — e o conteúdo é um
+   filho com width:100%, que então não tem 100% de quê. Círculo vicioso que
+   colapsa tudo para 0. */
+:host {
+  display: block;
+  width: 100%;
+  /* quem usa o componente pode encolher via --folha-mensagem-largura no
+     próprio seletor do host, sem depender de ordem de cascata */
+  max-width: var(--folha-mensagem-largura, 26em);
+  margin: 0 auto;
+}
+
+.folha {
+  /* dá às unidades cqi abaixo uma largura de referência: a fonte escala com
+     o espaço de verdade disponível, não com a tela toda */
+  container-type: inline-size;
+  position: relative;
+  width: 100%;
+}
+
+.folha img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* área segura dentro do desenho: medida pixel a pixel na imagem, olhando a
+   altura do oval claro em várias colunas — ele afina bastante nas pontas, e
+   uma caixa mais baixa (mas com folga de verdade em cima/embaixo) erra menos
+   do que uma caixa alta e larga demais. */
+.folha-caixa {
+  position: absolute;
+  inset: 38% 27%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.folha-texto {
+  margin: 0;
+  text-align: center;
+  color: var(--terra);
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+  font-weight: 700;
+  line-height: 1.15;
+  /* escala com o próprio componente; o mínimo garante que ainda dá pra ler
+     mesmo bem pequeno, o máximo evita estourar a altura da caixa acima */
+  font-size: clamp(0.58rem, 5.5cqi, 0.88rem);
+
+  /* mensagem grande demais para o espaço: corta em 2 linhas com reticências
+     em vez de vazar por cima do desenho da folha */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
