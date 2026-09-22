@@ -30,9 +30,10 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: auto;
+  /* largura definida, não "auto": o formulário lá dentro tem regras em
+     porcentagem que precisam de uma base concreta para calcular em cima */
+  width: min(94vw, 46em);
   height: 85dvh;
-  max-width: 96vw;
   z-index: 1000;
   overflow-y: scroll;
 

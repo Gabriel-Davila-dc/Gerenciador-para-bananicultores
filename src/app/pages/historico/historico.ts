@@ -5,8 +5,7 @@ import { Salvar } from '../../services/salvar';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { UpdateVenda } from '../../components/update-venda/update-venda';
-import { Contas } from '../../services/contas';
+import { CalculadoraForm } from '../../components/calculadora-form/calculadora-form';
 import { CompradoresService } from '../../services/compradores-service';
 import { Comprador } from '../../models/comprador';
 import { Formatar } from '../../services/formatar';
@@ -15,7 +14,7 @@ import { OpcaoSeletor, Seletor } from '../../components/seletor/seletor';
 @Component({
   standalone: true,
   selector: 'app-historico',
-  imports: [CardSalvo, CommonModule, FormsModule, RouterModule, UpdateVenda, Seletor],
+  imports: [CardSalvo, CommonModule, FormsModule, RouterModule, CalculadoraForm, Seletor],
   templateUrl: './historico.html',
   styleUrl: './historico.css',
 })
@@ -41,7 +40,6 @@ export class Historico {
 
   constructor(
     private salvar: Salvar,
-    private contas: Contas,
     private compradoresService: CompradoresService,
     private rota: ActivatedRoute,
     private cd: ChangeDetectorRef,
@@ -116,6 +114,7 @@ export class Historico {
   async atualizarVenda(vendaAtualizada: Venda) {
     await this.salvar.atualizarVenda(vendaAtualizada);
     this.vendas = await this.salvar.pegarVendas();
+    this.fechar();
     this.cd.markForCheck();
   }
 

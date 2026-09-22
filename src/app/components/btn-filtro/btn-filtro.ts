@@ -9,6 +9,9 @@ import { FormsModule } from '@angular/forms';
 })
 export class BtnFiltro {
   @Input() modelo!: number;
+  // pré-seleciona uma opção do modelo 1 (usado ao reabrir a calculadora numa
+  // venda já existente, que pode ser Classificada); sem valor cai no padrão
+  @Input() selecionado: string | null = null;
 
   //retorna a escolha
   @Output() filtroEscolhido = new EventEmitter<string>();
@@ -30,7 +33,7 @@ export class BtnFiltro {
     if (modelo === 1) {
       this.pergunta = 'Como você negocia?';
       this.name = 'negocia';
-      this.escolha = 'Simples';
+      this.escolha = this.selecionado ?? 'Simples';
       this.escolhasFiltro = ['Simples', 'Classificada'];
     } else if (modelo === 2) {
       this.pergunta = 'Como você mede o preço?';

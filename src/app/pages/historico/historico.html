@@ -51,11 +51,12 @@
 
   <div *ngIf="Editando !== null" class="overlay" (click)="fechar()">
     <div class="editarCentral" (click)="$event.stopPropagation()">
-      <app-update-venda
-        [venda]="Editando"
-        (cancela)="fechar()"
+      <app-calculadora-form
+        [vendaInicial]="Editando"
+        textoBotao="Salvar alterações"
         (salva)="atualizarVenda($event)"
-      ></app-update-venda>
+        (cancelarEdicao)="fechar()"
+      ></app-calculadora-form>
     </div>
   </div>
 </div>

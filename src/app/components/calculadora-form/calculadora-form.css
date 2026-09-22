@@ -1,0 +1,136 @@
+:host {
+  display: block;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Fredoka', 'Roboto', sans-serif;
+}
+
+.container {
+  justify-self: center;
+  width: 100%;
+  /* teto fixo em vez de porcentagem: dentro da calculadora normal o painel
+     que envolve já limita a largura, e dentro do modal de edição o pai tem
+     largura "auto" — uma porcentagem aqui ficaria sem base para calcular */
+  max-width: 40em;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.calculos {
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  border-radius: 1.4em;
+  padding: 1.8em 1em 1.6em;
+  width: 97%;
+  max-width: 42em;
+  border-top: 6px solid var(--folha);
+  box-shadow: 0 16px 36px rgba(46, 32, 19, 0.16), 0 3px 10px rgba(46, 32, 19, 0.08);
+}
+
+.titulo-edicao {
+  margin: 0 0 0.6em;
+  text-align: center;
+  color: var(--terra);
+  font-size: 1.4rem;
+}
+
+.campo-bananal {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+  align-self: center;
+  width: 90%;
+  max-width: 22em;
+  margin-bottom: 0.5em;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--terra);
+}
+
+.input-data {
+  padding: 0.6em 0.7em;
+  border: 1px solid var(--borda-cinza);
+  border-radius: 0.6em;
+  background: var(--bg-branco);
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--casca-escura);
+}
+
+.acoes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6em;
+  margin-top: 1em;
+}
+
+#button {
+  font-size: 1.7em;
+  background: linear-gradient(135deg, var(--folha) 0%, var(--folha-clara) 100%);
+  border: none;
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 0.35em 1em;
+  width: auto;
+  min-width: 8.5em;
+  margin: 0 auto;
+  box-shadow: 0 10px 22px rgba(63, 107, 51, 0.38);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+  /* o caminhão do salvar sai andando de dentro do botão e some na beirada */
+  position: relative;
+  overflow: hidden;
+}
+
+#button:hover {
+  background: linear-gradient(135deg, var(--folha-clara) 0%, var(--folha) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(63, 107, 51, 0.44);
+}
+
+.botao-cancelar {
+  color: var(--erro) !important;
+  border-color: var(--erro) !important;
+}
+
+label {
+  color: #ffffff;
+}
+
+/* ========================= */
+/*   RESPONSIVIDADE DESKTOP  */
+/* ========================= */
+
+@media (min-width: 1024px) {
+  .tela-grande {
+    display: flex;
+    max-width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 2em;
+  }
+}
+
+/* absoluto para não empurrar o texto do botão quando aparece */
+.truck-icon {
+  position: absolute;
+  left: 0.4em;
+  top: 50%;
+  translate: 0 -50%;
+  transform: translateX(0);
+  animation: moverDireita 1.6s ease-in-out forwards;
+  color: inherit;
+}
+
+@keyframes moverDireita {
+  to {
+    transform: translateX(99vw);
+  }
+}
