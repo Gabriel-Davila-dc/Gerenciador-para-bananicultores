@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Venda } from '../models/venda';
 import { VendaService } from './venda-service';
 import { VendaApi } from '../Types/VendaApi';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { AlertService } from './alert-service';
 import { Formatar } from './formatar';
 import { SincronizacaoService } from './sincronizacao-service';
 
@@ -21,7 +21,7 @@ const CHAVE_ANTIGA = 'vendas';
 export class Salvar {
   constructor(
     private vendaService: VendaService,
-    private snackBar: MatSnackBar,
+    private alert: AlertService,
     private formatar: Formatar,
     private sincronizacao: SincronizacaoService,
   ) {
@@ -48,7 +48,11 @@ export class Salvar {
 
     this.sincronizacao.enfileirar(RECURSO, 'criar', venda.id, venda);
 
-    await this.enviarPendentes(venda.id, 'Venda salva no aparelho. Vai para o servidor quando conectar.');
+    await this.avisar(
+      venda.id,
+      'Venda salva!',
+      'Venda salva no aparelho. Vai para o servidor quando conectar.',
+    );
   }
 
   async atualizarVenda(venda: Venda): Promise<void> {
@@ -73,7 +77,11 @@ export class Salvar {
       this.sincronizacao.enfileirar(RECURSO, 'editar', venda.id!, venda);
     }
 
-    await this.enviarPendentes(venda.id!, 'Alteração guardada. Vai para o servidor quando conectar.');
+    await this.avisar(
+      venda.id!,
+      'Venda atualizada!',
+      'Alteração guardada. Vai para o servidor quando conectar.',
+    );
   }
 
   async apagarVenda(id: number): Promise<void> {
@@ -82,6 +90,7 @@ export class Salvar {
     // nunca chegou ao servidor: basta cancelar o que estava na fila
     if (this.sincronizacao.criacaoPendente(RECURSO, id)) {
       this.sincronizacao.removerDoRegistro(RECURSO, id);
+      this.alert.message('Venda apagada.', 'sucess');
       return;
     }
 
@@ -89,7 +98,7 @@ export class Salvar {
     this.sincronizacao.removerDoRegistro(RECURSO, id);
     this.sincronizacao.enfileirar(RECURSO, 'apagar', id);
 
-    await this.enviarPendentes(id, 'Exclusão guardada. Vai para o servidor quando conectar.');
+    await this.avisar(id, 'Venda apagada.', 'Exclusão guardada. Vai para o servidor quando conectar.');
   }
 
   async pegarVendas(): Promise<Venda[]> {
@@ -125,32 +134,27 @@ export class Salvar {
       return this.marcarPendentes(atualizadas);
     } catch (error) {
       // sem servidor: mostra o cache do jeito que está
-      this.snackBar.open('Sem conexão. Mostrando o que está salvo no aparelho.', '📴', {
-        duration: 3000,
-        verticalPosition: 'top',
-        horizontalPosition: 'center',
-      });
+      this.alert.message('Sem conexão. Mostrando o que está salvo no aparelho.', 'alert');
 
       return this.marcarPendentes(this.lerCache()).reverse();
     }
   }
 
   /**
-   * Avisa só se ESTA alteração ficou para depois.
+   * Confirma a operação — sucesso se já foi para o servidor, aviso se ficou
+   * para depois.
    *
-   * Antes olhava o tamanho total da fila, então uma exclusão que já tinha
-   * subido avisava "vai quando conectar" por causa de pendências de outros
-   * recursos que estavam na fila.
+   * Olha só ESTA alteração, não o tamanho total da fila: olhar a fila inteira
+   * fazia uma exclusão que já tinha subido avisar "vai quando conectar" por
+   * causa de pendências de outros recursos que estavam nela.
    */
-  private async enviarPendentes(id: number, avisoSeFicouPendente: string): Promise<void> {
+  private async avisar(id: number, mensagemSucesso: string, mensagemPendente: string): Promise<void> {
     await this.sincronizacao.sincronizar();
 
     if (this.sincronizacao.temPendencia(RECURSO, id)) {
-      this.snackBar.open(avisoSeFicouPendente, '📴', {
-        duration: 3000,
-        verticalPosition: 'top',
-        horizontalPosition: 'center',
-      });
+      this.alert.message(mensagemPendente, 'alert');
+    } else {
+      this.alert.message(mensagemSucesso, 'sucess');
     }
   }
 
