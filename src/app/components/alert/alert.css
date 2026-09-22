@@ -2,7 +2,15 @@
   display: block;
 }
 
-/* menor que o tamanho padrão do componente: aqui é um toast, não um cartaz */
+/* menor que o tamanho padrão do componente: aqui é um toast, não um cartaz.
+   No celular, tela pequena. No computador tem espaço de sobra, e uma folha
+   pequena demais quebrava linha com 2-3 palavras só. */
 .folha-alerta {
-  --folha-mensagem-largura: 15em;
+  --folha-mensagem-largura: 16em;
+}
+
+@media (min-width: 700px) {
+  .folha-alerta {
+    --folha-mensagem-largura: 24em;
+  }
 }
