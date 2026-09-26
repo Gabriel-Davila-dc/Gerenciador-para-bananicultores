@@ -1,8 +1,10 @@
 import {
   ApplicationConfig,
+  isDevMode,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
+import { provideServiceWorker } from '@angular/service-worker';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -25,5 +27,11 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
     importProvidersFrom(FormsModule),
+    // só em produção: no ng serve o service worker seguraria versão velha em cache.
+    // É ele (com o manifest) que faz o Chrome liberar "Instalar app" no celular.
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
   ],
 };
