@@ -31,6 +31,7 @@
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
     "@angular/service-worker": "^20.3.9",
+    "@vercel/analytics": "^2.0.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

@@ -4,8 +4,14 @@ import { App } from './app/app';
 import { routes } from './app/app.routes';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
+import { inject as injetarAnalytics } from '@vercel/analytics';
 
 registerLocaleData(localePt);
+
+// Sem componente pronto pra Angular no pacote (só React/Next/Vue/etc.): esse
+// é o modo genérico. "mode: auto" já detecta localhost sozinho e não manda
+// nada de verdade fora do domínio publicado na Vercel.
+injetarAnalytics({ framework: 'angular' });
 
 /**
  * O navegador muda o valor de <input type="number"> focado ao girar a roda do
