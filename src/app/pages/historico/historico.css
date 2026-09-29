@@ -160,6 +160,55 @@ h1 {
   }
 }
 
+.confirmarApagar {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(90vw, 24em);
+  z-index: 1000;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.4em;
+  padding: 1.6em 1.4em;
+
+  background: var(--creme);
+  border-radius: 1em;
+  box-shadow: var(--sombra);
+}
+
+.confirmarApagar .icone-alerta {
+  color: var(--erro);
+  font-size: 2.2rem;
+  width: 2.2rem;
+  height: 2.2rem;
+}
+
+.confirmarApagar .titulo-confirmar {
+  font-weight: 700;
+  color: var(--casca-escura);
+  margin: 0 0 0.4em;
+}
+
+.botoes-confirmar {
+  display: flex;
+  gap: 0.8em;
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-cancelar {
+  color: var(--folha) !important;
+}
+
+.btn-confirmar-apagar {
+  background-color: var(--erro) !important;
+  color: #ffffff !important;
+}
+
 .aviso {
   padding: 1.5em;
   text-align: center;

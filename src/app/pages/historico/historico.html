@@ -37,7 +37,7 @@
   @for (venda of vendasFiltradas; track venda.id) {
     <app-card-salvo
       [infos]="venda"
-      (apagarVenda)="apagar($event)"
+      (apagarVenda)="pedirConfirmacaoApagar($event)"
       (editarVenda)="editarVenda($event)"
       (alternarPago)="alternarPago($event)"
       class="card-salvo"
@@ -57,6 +57,20 @@
         (salva)="atualizarVenda($event)"
         (cancelarEdicao)="fechar()"
       ></app-calculadora-form>
+    </div>
+  </div>
+
+  <div *ngIf="vendaParaApagar !== null" class="overlay" (click)="cancelarApagar()">
+    <div class="confirmarApagar" (click)="$event.stopPropagation()">
+      <mat-icon class="icone-alerta">warning</mat-icon>
+      <p class="titulo-confirmar">Apagar esta venda?</p>
+
+      <div class="botoes-confirmar">
+        <button mat-button class="btn-cancelar" (click)="cancelarApagar()">Cancelar</button>
+        <button mat-raised-button class="btn-confirmar-apagar" (click)="confirmarApagar()">
+          Apagar
+        </button>
+      </div>
     </div>
   </div>
 </div>

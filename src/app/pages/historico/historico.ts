@@ -10,11 +10,22 @@ import { CompradoresService } from '../../services/compradores-service';
 import { Comprador } from '../../models/comprador';
 import { Formatar } from '../../services/formatar';
 import { OpcaoSeletor, Seletor } from '../../components/seletor/seletor';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   standalone: true,
   selector: 'app-historico',
-  imports: [CardSalvo, CommonModule, FormsModule, RouterModule, CalculadoraForm, Seletor],
+  imports: [
+    CardSalvo,
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    CalculadoraForm,
+    Seletor,
+    MatButtonModule,
+    MatIconModule,
+  ],
   templateUrl: './historico.html',
   styleUrl: './historico.css',
 })
@@ -37,6 +48,9 @@ export class Historico {
   compradorFiltro: number | '' = '';
 
   Editando: Venda | null = null;
+
+  // id da venda aguardando confirmação para apagar; null = nenhum popup aberto
+  vendaParaApagar: number | null = null;
 
   constructor(
     private salvar: Salvar,
@@ -95,9 +109,22 @@ export class Historico {
     return this.formatar.dinheiro(this.totalEmAberto);
   }
 
-  async apagar(id: number) {
-    await this.salvar.apagarVenda(id);
+  pedirConfirmacaoApagar(id: number) {
+    this.vendaParaApagar = id;
+  }
+
+  cancelarApagar() {
+    this.vendaParaApagar = null;
+  }
+
+  async confirmarApagar() {
+    if (this.vendaParaApagar === null) {
+      return;
+    }
+
+    await this.salvar.apagarVenda(this.vendaParaApagar);
     this.vendas = await this.salvar.pegarVendas();
+    this.vendaParaApagar = null;
     this.cd.markForCheck();
   }
 

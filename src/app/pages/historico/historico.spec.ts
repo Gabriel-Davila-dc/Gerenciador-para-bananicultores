@@ -159,9 +159,26 @@ describe('Historico', () => {
     // a próxima leitura devolve a lista já sem a venda apagada
     salvarFalso.pegarVendas = () => Promise.resolve(vendasNoServidor);
 
-    await componente.apagar(1);
+    componente.pedirConfirmacaoApagar(1);
+    await componente.confirmarApagar();
     await fixture.whenStable();
 
     expect(quantosCards()).withContext('o card devia sumir sem clicar de novo').toBe(3);
+  });
+
+  it('pedir para apagar não apaga sem confirmar', async () => {
+    await montar();
+
+    liberarVendas(vendasNoServidor);
+    await deixarOAngularReagir();
+
+    componente.pedirConfirmacaoApagar(1);
+
+    expect(componente.vendaParaApagar).toBe(1);
+    expect(quantosCards()).withContext('nada deve sumir antes de confirmar').toBe(4);
+
+    componente.cancelarApagar();
+
+    expect(componente.vendaParaApagar).toBeNull();
   });
 });
