@@ -28,7 +28,7 @@ export class Salvar {
     this.migrarFormatoAntigo();
 
     this.sincronizacao.registrar(RECURSO, {
-      criar: (dados) => this.vendaService.salvarVenda(dados as Venda),
+      criar: (dados, idOperacao) => this.vendaService.salvarVenda(dados as Venda, idOperacao),
       editar: (dados) => this.vendaService.atualizarVenda(dados as Venda),
       apagar: (id) => this.vendaService.apagarVenda(id),
       aoTrocarId: (idLocal, idServidor) => this.trocarIdNoCache(idLocal, idServidor),

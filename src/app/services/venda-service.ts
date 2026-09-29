@@ -18,10 +18,17 @@ export class VendaService {
 
   constructor(private http: HttpClient) {}
 
-  // devolve o id que o servidor atribuiu à venda
-  async salvarVenda(venda: Venda): Promise<number> {
+  // devolve o id que o servidor atribuiu à venda.
+  // idempotencyKey é o id da operação na fila, o mesmo em toda tentativa de
+  // reenviar esta criação: se a resposta desta chamada se perder numa
+  // reconexão instável, o próximo reenvio chega com a mesma chave, e o
+  // servidor devolve a venda que já existe em vez de duplicá-la.
+  async salvarVenda(venda: Venda, idempotencyKey: string): Promise<number> {
     const resposta = await firstValueFrom(
-      this.http.post<{ venda: VendaApi }>(`${this.apiUrl}/vendas`, venda),
+      this.http.post<{ venda: VendaApi }>(`${this.apiUrl}/vendas`, {
+        ...venda,
+        idempotencyKey,
+      }),
     );
 
     return resposta.venda.id;

@@ -16,8 +16,10 @@ export interface Operacao {
 }
 
 export interface HandlerSincronizacao {
-  // devolve o id que o servidor atribuiu
-  criar(dados: unknown): Promise<number>;
+  // devolve o id que o servidor atribuiu. idOperacao é o mesmo em toda
+  // tentativa de reenviar esta criação - serve de chave de idempotência para
+  // quem quiser usá-la (hoje só vendas usa, mas está disponível pra todos)
+  criar(dados: unknown, idOperacao: string): Promise<number>;
   editar(dados: unknown): Promise<void>;
   apagar(id: number): Promise<void>;
   // chamado quando o registro criado offline recebe o id definitivo
@@ -213,7 +215,7 @@ export class SincronizacaoService {
 
         try {
           if (op.tipo === 'criar') {
-            const idServidor = await handler.criar(op.dados);
+            const idServidor = await handler.criar(op.dados, op.id);
             handler.aoTrocarId(op.idLocal, idServidor);
             this.trocarIdNaFila(op.recurso, op.idLocal, idServidor);
           } else if (op.tipo === 'editar') {

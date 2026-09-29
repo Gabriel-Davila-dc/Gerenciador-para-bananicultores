@@ -139,7 +139,10 @@ describe('SincronizacaoService', () => {
 
       const resultado = await sinc.sincronizar();
 
-      expect(handler.criar).toHaveBeenCalledWith({ id: -1, nome: 'Zé' });
+      // o segundo argumento é o id da operação na fila (chave de
+      // idempotência pra quem usar); varia a cada chamada, então só o tipo
+      // importa aqui
+      expect(handler.criar).toHaveBeenCalledWith({ id: -1, nome: 'Zé' }, jasmine.any(String));
       expect(handler.aoTrocarId).toHaveBeenCalledWith(-1, 100);
       expect(resultado).toEqual({ enviadas: 1, pendentes: 0 });
       expect(fila()).toEqual([]);
